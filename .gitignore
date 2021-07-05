@@ -1,0 +1,6 @@
+# ignore the build and debug folders.
+# uncoment files you need to igno
+#arm/*
+#FreeRTOS/*
+
+# add ignore files here.

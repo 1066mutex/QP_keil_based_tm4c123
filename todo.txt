@@ -1,0 +1,117 @@
+
+
+This holds the todo list for the RTOS based project.
+1, files need:
+port.h
+    This will hold all the ports and pins used in the system/design.
+    LEDs port/pins
+
+TODO:
+    make a single bsp.c out of the two bsps or make a single portable 
+One to use between boards. Have layer or interface between the booster 
+pack functions and tiva base boad function. e.g. bsp.c bsp_booster_pack.
+
+
+List of all functions that will need to be adapted. 
+
+Todo: add the include files for the MCU e.g. CAN.h 
+
+
+    //! debounce BoosterPack user buttons TODO: can select not to use the tiva buttons.
+    current = ~BSTR_BTN_SWS_PORT->DATA_Bits[BSTR_BTN_SW3 | BSTR_BTN_SW4];    /* read SW1 and SW2 */
+    tmp = buttons.depressed;                           /* save the debounced depressed buttons */
+    buttons.depressed |= (buttons.previous & current); /* set depressed */
+    buttons.depressed &= (buttons.previous | current); /* clear released */
+    buttons.previous = current;                        /* update the history */
+    tmp ^= buttons.depressed;                          /* changed debounced depressed */
+    if ((tmp & BSTR_BTN_SW3) != 0U) {                       /* debounced SW1 state changed? */
+        if ((buttons.depressed & BSTR_BTN_SW3) != 0U) {     /* is SW1 depressed? */
+            /* demonstrate the ISR APIs: QF_PUBLISH_FROM_ISR and Q_NEW_FROM_ISR */
+            QF_PUBLISH_FROM_ISR(Q_NEW_FROM_ISR(QEvt, BUTTON3_PRESSED_SIG),
+                                &xHigherPriorityTaskWoken,
+                                &l_TickHook);
+        } else { /* the button is released */
+            /* demonstrate the ISR APIs: POST_FROM_ISR and Q_NEW_FROM_ISR */
+            QACTIVE_POST_FROM_ISR(AO_Table,
+                                  Q_NEW_FROM_ISR(QEvt, BUTTON3_DEPRESSED_SIG),
+                                  &xHigherPriorityTaskWoken,
+                                  &l_TickHook);
+        }
+    }
+
+
+    /*Booster pack peripherals initialisation...........................................*/
+
+/**
+ * @brief configure the booster pack buttons I/O
+ * Initialize a GPIO pin for input, which corresponds
+ * with BoosterPack pin J4.33. button 3
+ * pin J4.32. button 4.
+ * Input: none
+ * Output: none
+ */
+void BSP_bstrPackBtnsInit(void){
+    /* enable clock for to the peripherals used by this application... */
+    SYSCTL->RCGCGPIO |= (1U << 3);        /* enable Run mode for GPIOD */
+    /* unlock gpio port D */
+    BSTR_BTN_SWS_PORT->LOCK = 0x4C4F434B;
+    BSTR_BTN_SWS_PORT->CR = 0xFF;            /* allow changes to PD7-0 */
+    /* configure the Bstr pack User Switches */
+    BSTR_BTN_SWS_PORT->DIR &= ~(BSTR_BTN_SW3 | BSTR_BTN_SW4); /*  set direction: input */
+    ROM_GPIOPadConfigSet(GPIOD_BASE, (BSTR_BTN_SW3 | BSTR_BTN_SW4),
+                         GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
+}
+
+void BSP_bstrPackLedsDigitalInit(void){
+    /* enable clock for to the peripherals used by this application... */
+    SYSCTL->RCGCGPIO |= (1U << 1) | (1U << 2) | (1U << 5); 
+    /* configure the LEDs and push buttons */
+    BSTR_LED_RED_PORT->DIR |= (BSTR_LED_RED);     /* set as output */
+    BSTR_LED_GREEN_PORT->DIR |= (BSTR_LED_GREEN); /* set as output */
+    BSTR_LED_BLUE_PORT->DIR |= (BSTR_LED_BLUE);   /* set as output */
+
+    BSTR_LED_RED_PORT->DEN |= (BSTR_LED_RED);     /* digital enable */
+    BSTR_LED_GREEN_PORT->DEN |= (BSTR_LED_GREEN); /* digital enable */
+    BSTR_LED_BLUE_PORT->DEN |= (BSTR_LED_BLUE);   /* digital enable */
+
+    BSTR_LED_RED_PORT->DATA_Bits[BSTR_LED_RED] = BSTR_LED_RED;    /* turn the LED off */
+    BSTR_LED_GREEN_PORT->DATA_Bits[BSTR_LED_GREEN] = BSTR_LED_GREEN; /* turn the LED off */
+    BSTR_LED_BLUE_PORT->DATA_Bits[BSTR_LED_BLUE] = BSTR_LED_BLUE;    /* turn the LED off */
+}
+
+    // initialies booster pack I/O is being used.
+    // TODO:  use if or ifndef to select when to initialies or use a class
+    //        OOP to make object. or implement this function in the bstrP BSP
+    void bstrPackLedsDigtal_init(void) {
+    /* 
+    initialise only the required or features 
+    make sure they have not been initialised.
+    just call each init function. 
+
+ */
+}
+
+
+
+
+
+    /* enable clock for to the peripherals used by this application... */
+    SYSCTL->RCGCGPIO |= (1U << 5); /* enable Run mode for GPIOF */
+
+    /* configure the LEDs and push buttons */
+    LEDS_PORT->DIR |= (LED_RED | LED_GREEN | LED_BLUE); /* set as output */
+    LEDS_PORT->DEN |= (LED_RED | LED_GREEN | LED_BLUE); /* digital enable */
+    LEDS_PORT->DATA_Bits[LED_RED] = 0U;                 /* turn the LED off */
+    LEDS_PORT->DATA_Bits[LED_GREEN] = 0U;               /* turn the LED off */
+    LEDS_PORT->DATA_Bits[LED_BLUE] = 0U;                /* turn the LED off */
+
+    /* configure the User Switches */
+    LEDS_PORT->DIR &= ~(BTN_SW1 | BTN_SW2); /*  set direction: input */
+    ROM_GPIOPadConfigSet(GPIOF_BASE, (BTN_SW1 | BTN_SW2),
+                         GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
+
+# exclude everything
+somefolder/*
+
+# exception to the rule
+!somefolder/.gitkeep

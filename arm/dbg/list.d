@@ -1,0 +1,12 @@
+.\dbg\list.o: C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\FreeRTOS\Source\list.c
+.\dbg\list.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\dbg\list.o: ..\FreeRTOS\Source\include\FreeRTOS.h
+.\dbg\list.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\dbg\list.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\dbg\list.o: ..\..\FreeRtos_proj\FreeRTOSConfig.h
+.\dbg\list.o: ..\FreeRTOS\Source\include\projdefs.h
+.\dbg\list.o: ..\FreeRTOS\Source\include\portable.h
+.\dbg\list.o: ..\FreeRTOS\Source\include\deprecated_definitions.h
+.\dbg\list.o: ..\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h
+.\dbg\list.o: ..\FreeRTOS\Source\include\mpu_wrappers.h
+.\dbg\list.o: ..\FreeRTOS\Source\include\list.h
