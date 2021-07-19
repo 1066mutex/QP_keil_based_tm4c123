@@ -154,8 +154,7 @@
 #ifndef BSP_BSTPACK_H
 #define BSP_BSTPACK_H
 
-#include "bsp.h"
-#include <stdint.h>
+
 /* !!! device initialisation ##########################################################:
 
 1)
@@ -194,6 +193,20 @@ then use if() to initialise the features.
 /* ################################################################################# */
 
 /* LCD display ###################################################################### */
+
+//color constants                  red  grn  blu
+#define LCD_BLACK 0x0000       //   0,   0,   0
+#define LCD_BLUE 0x001F        //   0,   0, 255
+#define LCD_DARKBLUE 0x34BF    //  50, 150, 255
+#define LCD_RED 0xF800         // 255,   0,   0
+#define LCD_GREEN 0x07E0       //   0, 255,   0
+#define LCD_LIGHTGREEN 0x07EF  //   0, 255, 120
+#define LCD_ORANGE 0xFD60      // 255, 175,   0
+#define LCD_CYAN 0x07FF        //   0, 255, 255
+#define LCD_MAGENTA 0xF81F     // 255,   0, 255
+#define LCD_YELLOW 0xFFE0      // 255, 255,   0
+#define LCD_WHITE 0xFFFF       // 255, 255, 255
+#define LCD_GREY 0x8410        // 128, 128, 128
 
 // ------------BSP_LCD_Init------------
 // Initialize the SPI and GPIO, which correspond with

@@ -11,8 +11,8 @@
  * 
  * git is not tracking this?
  */
-
-#include "bsp_bstPack.h"
+#include "qpc.h"
+#include "bsp_bp.h"
 #include "bsp.h"
 
 
@@ -118,6 +118,19 @@ uint16_t StTextColor = ST7735_YELLOW;
 #define ST7735_GMCTRP1 0xE0
 #define ST7735_GMCTRN1 0xE1
 
+//color constants                  red  grn  blu
+#define LCD_BLACK 0x0000       //   0,   0,   0
+#define LCD_BLUE 0x001F        //   0,   0, 255
+#define LCD_DARKBLUE 0x34BF    //  50, 150, 255
+#define LCD_RED 0xF800         // 255,   0,   0
+#define LCD_GREEN 0x07E0       //   0, 255,   0
+#define LCD_LIGHTGREEN 0x07EF  //   0, 255, 120
+#define LCD_ORANGE 0xFD60      // 255, 175,   0
+#define LCD_CYAN 0x07FF        //   0, 255, 255
+#define LCD_MAGENTA 0xF81F     // 255,   0, 255
+#define LCD_YELLOW 0xFFE0      // 255, 255,   0
+#define LCD_WHITE 0xFFFF       // 255, 255, 255
+#define LCD_GREY 0x8410        // 128, 128, 128
 // Not used for this version------------------------------------------------------//
 //
 // TODO: REMOVE THIS SOFTWARE!?
@@ -539,13 +552,41 @@ static const uint8_t
         ST7735_DISPON, DELAY,  //  4: Main screen turn on, no args w/delay
         100};                  //     100 ms delay
 
+// Companion code to the above tables.  Reads and issues
+// a series of LCD commands stored in ROM byte array.
+void static commandList(const uint8_t *addr) {
+    uint8_t numCommands, numArgs;
+    uint16_t ms;
+
+    numCommands = *(addr++);       // Number of commands to follow
+    while (numCommands--) {        // For each command...
+        BSP_BP_SPIwritecommand(*(addr++));   //   Read, issue command
+        numArgs = *(addr++);       //   Number of args to follow
+        ms = numArgs & DELAY;      //   If hibit set, delay follows args
+        numArgs &= ~DELAY;         //   Mask out delay bit
+        while (numArgs--) {        //   For each argument...
+            BSP_BP_SPIwritedata(*(addr++));  //     Read, issue argument
+        }
+
+        if (ms) {
+            ms = *(addr++);           // Read post-command delay time (ms)
+            // If 255, delay for 500 ms for sysFrq 80Mhz
+            // for 50Mhz, 50/80*500 = 312.
+            if (ms == 255) ms = 312;  
+            BSP_Delay1ms(ms);
+        }
+    }
+}
 
 //------------ST7735_InitR------------
 // Initialization for ST7735R screens (green or red tabs).
 // Input: option one of the enumerated options depending on tabs
 // Output: none
 void static ST7735_InitR(enum initRFlags option) {
+    // initialise the display
     BSP_BP_SPI_TFT_Init(Rcmd1);
+
+    commandList(Rcmd1);
     if (option == INITR_GREENTAB) {
         commandList(Rcmd2green);
         ColStart = 2;
@@ -558,8 +599,8 @@ void static ST7735_InitR(enum initRFlags option) {
 
     // if black, change MADCTL color filter
     if (option == INITR_BLACKTAB) {
-        writecommand(ST7735_MADCTL);
-        writedata(0xC0);
+        BSP_BP_SPIwritecommand(ST7735_MADCTL);
+        BSP_BP_SPIwritedata(0xC0);
     }
     //  TabColor = option;
     BSP_LCD_SetCursor(0, 0);
@@ -582,26 +623,26 @@ void BSP_LCD_Init(void) {
 // (same as Font table is encoded; different from regular bitmap)
 // Requires 11 bytes of transmission
 void static setAddrWindow(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
-    writecommand(ST7735_CASET);  // Column addr set
-    writedata(0x00);
-    writedata(x0 + ColStart);  // XSTART
-    writedata(0x00);
-    writedata(x1 + ColStart);  // XEND
+    BSP_BP_SPIwritecommand(ST7735_CASET);  // Column addr set
+    BSP_BP_SPIwritedata(0x00);
+    BSP_BP_SPIwritedata(x0 + ColStart);  // XSTART
+    BSP_BP_SPIwritedata(0x00);
+    BSP_BP_SPIwritedata(x1 + ColStart);  // XEND
 
-    writecommand(ST7735_RASET);  // Row addr set
-    writedata(0x00);
-    writedata(y0 + RowStart);  // YSTART
-    writedata(0x00);
-    writedata(y1 + RowStart);  // YEND
+    BSP_BP_SPIwritecommand(ST7735_RASET);  // Row addr set
+    BSP_BP_SPIwritedata(0x00);
+    BSP_BP_SPIwritedata(y0 + RowStart);  // YSTART
+    BSP_BP_SPIwritedata(0x00);
+    BSP_BP_SPIwritedata(y1 + RowStart);  // YEND
 
-    writecommand(ST7735_RAMWR);  // write to RAM
+    BSP_BP_SPIwritecommand(ST7735_RAMWR);  // write to RAM
 }
 
 // Send two bytes of data, most significant byte first
 // Requires 2 bytes of transmission
 void static pushColor(uint16_t color) {
-    writedata((uint8_t)(color >> 8));
-    writedata((uint8_t)color);
+    BSP_BP_SPIwritedata((uint8_t)(color >> 8));
+    BSP_BP_SPIwritedata((uint8_t)color);
 }
 
 //------------BSP_LCD_DrawPixel------------
@@ -642,8 +683,8 @@ void BSP_LCD_DrawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
     setAddrWindow(x, y, x, y + h - 1);
 
     while (h--) {
-        writedata(hi);
-        writedata(lo);
+        BSP_BP_SPIwritedata(hi);
+        BSP_BP_SPIwritedata(lo);
     }
 }
 
@@ -665,8 +706,8 @@ void BSP_LCD_DrawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
     setAddrWindow(x, y, x + w - 1, y);
 
     while (w--) {
-        writedata(hi);
-        writedata(lo);
+        BSP_BP_SPIwritedata(hi);
+        BSP_BP_SPIwritedata(lo);
     }
 }
 
@@ -701,8 +742,8 @@ void BSP_LCD_FillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color
 
     for (y = h; y > 0; y--) {
         for (x = w; x > 0; x--) {
-            writedata(hi);
-            writedata(lo);
+            BSP_BP_SPIwritedata(hi);
+            BSP_BP_SPIwritedata(lo);
         }
     }
 }
@@ -784,9 +825,9 @@ void BSP_LCD_DrawBitmap(int16_t x, int16_t y, const uint16_t *image, int16_t w, 
     for (y = 0; y < h; y = y + 1) {
         for (x = 0; x < w; x = x + 1) {
             // send the top 8 bits
-            writedata((uint8_t)(image[i] >> 8));
+            BSP_BP_SPIwritedata((uint8_t)(image[i] >> 8));
             // send the bottom 8 bits
-            writedata((uint8_t)image[i]);
+            BSP_BP_SPIwritedata((uint8_t)image[i]);
             i = i + 1;  // go to the next pixel
         }
         i = i + skipC;

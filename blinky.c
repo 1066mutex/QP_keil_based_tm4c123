@@ -1,6 +1,7 @@
 #include "qpc.h"
 #include "dpp.h"
 #include "bsp.h"
+#include "bsp_bp.h"
 
 /* Active object class  ############################################*/
 
@@ -56,7 +57,8 @@ static QState Heartbeat_initial(Heartbeat* const me, QEvt const* const e){
     QActive_subscribe(&me->super, BUTTON4_PRESSED_SIG);
 
     BSP_ledRedOff();
-    me->buzzer_freq = 10 ;
+    BSP_LCD_Init();
+    me->buzzer_freq = 10;
     return Q_TRAN(&Heartbeat_off);  //*go to off (1)
 }
 static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
@@ -68,7 +70,7 @@ static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
 
         case Q_ENTRY_SIG: {
             /* arm the time event to expire in half a second and every half second */
-            QTimeEvt_armX(&me->timeEvt, BSP_TICKS_PER_SEC / 2U, BSP_TICKS_PER_SEC / 4U);
+            QTimeEvt_armX(&me->timeEvt, BSP_TICKS_PER_SEC / 2U, BSP_TICKS_PER_SEC / 2U);
             //! the timer will expire once for the first value, then use the second value
             //! continuously
             status_ = Q_HANDLED(); //*do entry actions (3).
@@ -78,16 +80,18 @@ static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
         case Q_EXIT_SIG: {
             // dis-arm timer
             QTimeEvt_disarm(&me->timeEvt);
-            //BSP_bstrPackLedBlueOff();
+            //BSP_BP_LedBlueOff();
+            BSP_BP_LedBlueDuty(0);
             status_ = Q_HANDLED();
             break;
         }
         case Q_INIT_SIG: {
-             status_ = Q_TRAN(&Heartbeat_off); //*go back to off (4).
+            
+            status_ = Q_TRAN(&Heartbeat_off);  //*go back to off (4).
             break;
         }
-        /*.${HSMs::QHsmTst::SM::s::s2::s21::G} */
         case BUTTON4_PRESSED_SIG: {
+            BSP_BP_Buzzer_Freq(0.00033);
             status_ = Q_TRAN(&Heartbeat_stop);
             break;
         }
@@ -103,23 +107,24 @@ static QState Heartbeat_on(Heartbeat* const me, QEvt const* const e){
     switch (e->sig) {
         
         case Q_ENTRY_SIG: {
-            BSP_bstrPackLedBlueOn();
-            //BSP_BP_Buzzer_Freq(1000);
-            BSP_BP_Buzzer_Set(500);
+            //BSP_BP_LedBlueOn();
+            BSP_BP_LedBlueDuty(100);
+            //BSP_BP_Buzzer_Set(me->buzzer_freq);
             status_ = Q_HANDLED();
             break;
         }
         
         case Q_EXIT_SIG: {
-            if (me->buzzer_freq > 1000) {
+            if (me->buzzer_freq > 2000) {
                 // reset frequency
                 me->buzzer_freq = 100;
             } else {
 
                 me->buzzer_freq += 10;
             }
-            BSP_bstrPackLedBlueOff();
+            //BSP_BP_LedBlueOff();
             //BSP_BP_Buzzer_Set(0);
+            BSP_BP_LedBlueDuty(10);
             status_ = Q_HANDLED();
             break;
         }
@@ -157,6 +162,8 @@ static QState Heartbeat_stop(Heartbeat* const me, QEvt const* const e){
 
     switch (e->sig) {
         case BUTTON4_DEPRESSED_SIG: {
+            BSP_BP_Buzzer_Freq(0.00);
+            BSP_LCD_DrawString(0, 5, "Hello www", LCD_YELLOW);
             status_ = Q_TRAN(&Heartbeat_start);
             break;
         }

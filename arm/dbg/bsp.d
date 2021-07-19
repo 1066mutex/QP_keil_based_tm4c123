@@ -1,4 +1,4 @@
-.\dbg\bsp.o: C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\bsp.c
+.\dbg\bsp.o: ..\bsp.c
 .\dbg\bsp.o: ..\..\qpc\include\qpc.h
 .\dbg\bsp.o: ..\..\qpc\ports\freertos\qf_port.h
 .\dbg\bsp.o: ..\FreeRTOS\Source\include\FreeRTOS.h
@@ -21,9 +21,10 @@
 .\dbg\bsp.o: ..\..\qpc\include\qpset.h
 .\dbg\bsp.o: ..\..\qpc\include\qassert.h
 .\dbg\bsp.o: ..\..\qpc\include\qs_dummy.h
-.\dbg\bsp.o: C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\dpp.h
-.\dbg\bsp.o: C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\bsp.h
-.\dbg\bsp.o: C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\ports.h
+.\dbg\bsp.o: ..\dpp.h
+.\dbg\bsp.o: ..\arm\bsp_bp.h
+.\dbg\bsp.o: ..\bsp.h
+.\dbg\bsp.o: ..\ports.h
 .\dbg\bsp.o: ..\ek-tm4c123gxl\TM4C123GH6PM.h
 .\dbg\bsp.o: ..\CMSIS\Include\core_cm4.h
 .\dbg\bsp.o: ..\CMSIS\Include\cmsis_version.h

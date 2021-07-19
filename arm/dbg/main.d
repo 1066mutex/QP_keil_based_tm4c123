@@ -1,4 +1,4 @@
-.\dbg\main.o: C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\main.c
+.\dbg\main.o: ..\main.c
 .\dbg\main.o: ..\..\qpc\include\qpc.h
 .\dbg\main.o: ..\..\qpc\ports\freertos\qf_port.h
 .\dbg\main.o: ..\FreeRTOS\Source\include\FreeRTOS.h
@@ -21,5 +21,5 @@
 .\dbg\main.o: ..\..\qpc\include\qpset.h
 .\dbg\main.o: ..\..\qpc\include\qassert.h
 .\dbg\main.o: ..\..\qpc\include\qs_dummy.h
-.\dbg\main.o: C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\dpp.h
-.\dbg\main.o: C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\bsp.h
+.\dbg\main.o: ..\dpp.h
+.\dbg\main.o: ..\bsp.h

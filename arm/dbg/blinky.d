@@ -1,4 +1,4 @@
-.\dbg\blinky.o: C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\blinky.c
+.\dbg\blinky.o: ..\blinky.c
 .\dbg\blinky.o: ..\..\qpc\include\qpc.h
 .\dbg\blinky.o: ..\..\qpc\ports\freertos\qf_port.h
 .\dbg\blinky.o: ..\FreeRTOS\Source\include\FreeRTOS.h
@@ -21,5 +21,6 @@
 .\dbg\blinky.o: ..\..\qpc\include\qpset.h
 .\dbg\blinky.o: ..\..\qpc\include\qassert.h
 .\dbg\blinky.o: ..\..\qpc\include\qs_dummy.h
-.\dbg\blinky.o: C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\dpp.h
-.\dbg\blinky.o: C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\bsp.h
+.\dbg\blinky.o: ..\dpp.h
+.\dbg\blinky.o: ..\bsp.h
+.\dbg\blinky.o: ..\arm\bsp_bp.h

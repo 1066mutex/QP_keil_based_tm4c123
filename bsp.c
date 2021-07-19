@@ -33,6 +33,7 @@
 *****************************************************************************/
 #include "qpc.h"
 #include "dpp.h"
+#include "bsp_bp.h"
 #include "bsp.h"
 #include "ports.h"
 
@@ -45,7 +46,7 @@
 #define TIMER_1A_PSV (TIMER1->TAPV) // TIMER prescaler value.
 #define TIMER_1A_CLK  (SystemCoreClock/TIMER_1A_PSV) // timer 1A clk
 
-
+#define PWM_CYCLES (SystemCoreClock / 2048) // time reload value for RGB (pwm) leds.
 
 Q_DEFINE_THIS_FILE  /* define the name of this file for assertions */
 
@@ -72,13 +73,13 @@ enum KernelAwareISRs {
 /* "kernel-aware" interrupts should not overlap the PendSV priority */
 Q_ASSERT_COMPILE(MAX_KERNEL_AWARE_CMSIS_PRI <= (0xFF >>(8-__NVIC_PRIO_BITS)));
 
-/* LEDs and Switches of the EK-TM4C123GXL board ............................*/
-// #define LED_RED     (1U << 1)
-// #define LED_GREEN   (1U << 3)
-// #define LED_BLUE    (1U << 2)
-
-// #define BTN_SW1     (1U << 4)
-// #define BTN_SW2     (1U << 0)
+/* booster pack LCD display.................................................*/
+// Rather than a bazillion writecommand() and writedata() calls, screen
+// initialization commands and arguments are organized in these tables
+// stored in ROM.  The table may look bulky, but that's mostly the
+// formatting -- storage-wise this is hundreds of bytes more compact
+// than the equivalent code.  Companion function follows.
+#define DELAY 0x80
 
 /* Local-scope objects ------------------------------------------------------*/
 static uint32_t l_rnd; // random seed
@@ -256,7 +257,7 @@ void vApplicationIdleHook(void) {
     float volatile x;
 
     /* toggle the User LED on and then off, see NOTE01 */
-    QF_INT_DISABLE();
+      QF_INT_DISABLE();
     GPIOF->DATA_Bits[LED_BLUE] = 0xFFU;  /* turn the Blue LED on  */
     GPIOF->DATA_Bits[LED_BLUE] = 0U;     /* turn the Blue LED off */
     QF_INT_ENABLE();
@@ -335,8 +336,8 @@ void BSP_init(void) {
     /* NOTE: The VFP (hardware Floating Point) unit is configured by FreeRTOS */
 
     /* enable clock for to the peripherals used by this application... */
-    /* enable Run mode for GPIOB, GPIOC, GPIOD, GPIOF */
-    SYSCTL->RCGCGPIO |= (1U << 1) | (1U << 2) | (1U << 3) | (1U << 5);
+    /* enable Run mode for GPIOD, GPIOF */
+    SYSCTL->RCGCGPIO |= PORTD | PORTF ;
 
     /* configure the LEDs and push buttons */
     LEDS_PORT->DIR |= (LED_RED | LED_GREEN | LED_BLUE); /* set as output */
@@ -345,36 +346,28 @@ void BSP_init(void) {
     LEDS_PORT->DATA_Bits[LED_GREEN] = 0U; /* turn the LED off */
     LEDS_PORT->DATA_Bits[LED_BLUE]  = 0U; /* turn the LED off */
 
-    /* configure the User Switches */
+    /* configure the User Switches on tm4c123 board */
     LEDS_PORT->DIR &= ~(BTN_SW1 | BTN_SW2); /*  set direction: input */
     ROM_GPIOPadConfigSet(GPIOF_BASE, (BTN_SW1 | BTN_SW2),
                          GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
 
-    /* configure BOOSTER PCK Switches and leds */
-    /* BSTR_LED_RED_PORT BSTR_LED_RED have been configured above, same PF1 used */
-    BSTR_LED_GREEN_PORT->DIR |= (BSTR_LED_GREEN); /* set as output */
-    BSTR_LED_BLUE_PORT->DIR |= (BSTR_LED_BLUE);   /* set as output */
-    BSTR_LED_GREEN_PORT->DEN |= (BSTR_LED_GREEN); /* digital enable */
-    BSTR_LED_BLUE_PORT->DEN |= (BSTR_LED_BLUE);   /* digital enable */
-
-    BSTR_LED_GREEN_PORT->DATA_Bits[BSTR_LED_GREEN] = 0U; /* turn the LED off */
-    BSTR_LED_BLUE_PORT->DATA_Bits[BSTR_LED_BLUE] = 0U;    /* turn the LED off */
-
+    /* booster pack User Switches initialization */
     /* unlock gpio port D */
     BSTR_BTN_SWS_PORT->LOCK = 0x4C4F434B;
     BSTR_BTN_SWS_PORT->CR = 0xFF; /* allow changes to PD7-0 */
-    /* configure the Bstr pack User Switches */
     BSTR_BTN_SWS_PORT->DIR &= ~(BSTR_BTN_SW3 | BSTR_BTN_SW4); /*  set direction: input */
+   
     ROM_GPIOPadConfigSet(GPIOD_BASE, (BSTR_BTN_SW3 | BSTR_BTN_SW4),
                          GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
-
+//BSP_BP_D_LedsInit();
+BSP_BP_RGB_ledsInit();
 BSP_BP_BuzzerIO_Init(200);
 
-    BSP_randomSeed(1234U);
+BSP_randomSeed(1234U);
 
-    /* initialize the QS software tracing... */
-    if (QS_INIT((void *)0) == 0U) {
-        Q_ERROR();
+/* initialize the QS software tracing... */
+if (QS_INIT((void *)0) == 0U) {
+    Q_ERROR();
     }
     QS_OBJ_DICTIONARY(&l_TickHook);
     QS_OBJ_DICTIONARY(&l_GPIOPortA_IRQHandler);
@@ -416,33 +409,62 @@ void BSP_ledGreenOff(void) {
 
 /* LEDs on BoosterPack ....................................................................*/
 
-void BSP_bstrPackLedGreenOff(void) {
+void BSP_BP_LedGreenOff(void) {
     BSTR_LED_GREEN_PORT->DATA_Bits[BSTR_LED_GREEN] = 0U;
 }
 
 /*..........................................................................*/
-void BSP_bstrPackLedGreenOn(void) {
+void BSP_BP_LedGreenOn(void) {
     BSTR_LED_GREEN_PORT->DATA_Bits[BSTR_LED_GREEN] = BSTR_LED_GREEN;
 }
 /*..........................................................................*/
-void BSP_bstrPackLedRedOff(void) {
+void BSP_BP_LedRedOff(void) {
     BSTR_LED_RED_PORT->DATA_Bits[BSTR_LED_RED] = 0U;
 }
 
 /*..........................................................................*/
-void BSP_bstrPackLedRedOn(void) {
+void BSP_BP_LedRedOn(void) {
     BSTR_LED_RED_PORT->DATA_Bits[BSTR_LED_RED] = BSTR_LED_RED;
 }
 /*..........................................................................*/
 /*..........................................................................*/
-void BSP_bstrPackLedBlueOff(void) {
+void BSP_BP_LedBlueOff(void) {
     BSTR_LED_BLUE_PORT->DATA_Bits[BSTR_LED_BLUE] = 0U;
 }
 /*..........................................................................*/
-void BSP_bstrPackLedBlueOn(void) {
+void BSP_BP_LedBlueOn(void) {
     BSTR_LED_BLUE_PORT->DATA_Bits[BSTR_LED_BLUE] = BSTR_LED_BLUE;
 }
 /*..........................................................................*/
+
+/* TFT spi I/O BoosterPack ..............................................................*/
+
+void BSP_BP_TFT_CS_LOW(void){
+    BP_SPI_CS_PORT->DATA_Bits[BP_SPI_CS_PIN] = 0U;
+}
+//...........................................................................
+void BSP_BP_TFT_CS_HIGH(void){
+    BP_SPI_CS_PORT->DATA_Bits[BP_SPI_CS_PIN] = BP_SPI_CS_PIN;
+}
+//...........................................................................
+void BSP_BP_TFT_RESET_HIGH(void){
+    BP_LCD_RST_PORT->DATA_Bits[BP_LCD_RST_PIN] = BP_LCD_RST_PIN;
+}
+//...........................................................................
+void BSP_BP_TFT_RESET_LOW(void){
+    BP_LCD_RST_PORT->DATA_Bits[BP_LCD_RST_PIN] = 0U;
+}
+//...........................................................................
+void BSP_BP_TFT_DC_COMMAND(void) {
+    BP_LCD_RS_PORT->DATA_Bits[BP_LCD_RS_PIN] = 0U;
+}
+//...........................................................................
+void BSP_BP_TFT_DC_DATA(void) {
+    BP_LCD_RS_PORT->DATA_Bits[BP_LCD_RS_PIN] = BP_LCD_RS_PIN;
+}
+//...........................................................................
+
+
 
 
 
@@ -699,15 +721,7 @@ void QS_onCommand(uint8_t cmdId,
 /* BSP_booster_pack interface functions #####################################################*/
 
 /* TODO: bst_pack initialisation
-LEDs-------------------------------------
-LEDs digital.
-RGB LED (PWM). 
-PB3 GREEN pwm. TODO: select pwm module.
-PF3 RED   pwm  timer 
-PC4 BLUE  pwm
 
-Buzzer-----------------------------------
-PF2 pwm (alt function) timer1A
 
 Accelerometer----------------------------
 PD2-0 input analogue.
@@ -768,12 +782,12 @@ write data 8bit
 // represented as a 10-bit number.
 // Input: duty is 10-bit duty cycle for the buzzer
 // Output: none
-//TODO: FIX COMMENTS. 
+//TODO: FIX COMMENTS. make it a void void ()
 /**Initialise boosterpack buzzer I/O
  * Buzzer is connected to PF2. 
  * Timer1A is used for the buzzer 
  */
-static uint16_t PWMCycles;  // number of PWM cycles per period
+static uint32_t PWM_sysclk;  // pwm module clock frequency
 void BSP_BP_BuzzerIO_Init(uint16_t duty) {
     if (duty > 1023) {
         return;  // invalid input
@@ -788,37 +802,25 @@ void BSP_BP_BuzzerIO_Init(uint16_t duty) {
     GPIOF->PCTL = (GPIOF->PCTL & 0xFFFFF0FF) + 0x00000500;
     GPIOF->AMSEL &= ~0x04;  // disable analog functionality on PF2
     
-    // SYSCTL->RCGCPWM |= 0x02;     // activate clock for Timer1
-    // while ((SYSCTL->PRPWM & 0x02) == 0) {
-    // };  // allow time for clock to stabilize
-   
-    //     //M1PWM6------------------
-    // //SYSCTL->RCC = ~(1U << 20);    /* Enable System Clock Divisor function  */
-    // //SYSCTL->RCC |= (0x000C0000); /* divide sysclk by 16 */
-    // PWM1->_3_CTL = 0;  // Disable Generator 0 counter
-    // PWM1->_3_CTL &= ~(1 << 1);  // select down count mode of counter 1
-    // // controls when the output is enable and disabled according to Reload and CMPA values
-    // PWM1->_3_GENA |= (0x00000C00 | 0x00000008); /* Set PWM output when counter matches PWMCMPA clear on reload*/
-    // PWM1->_3_LOAD = 5000;              // set load value for 50Hz 16MHz/65 = 250kHz and (250KHz/5000)
-    // PWM1->_3_CMPA = 100;   // set duty cycle to to minumum value
-    // PWM1->_3_CTL |= 0x01;                       // Enable Generator 3 counter
-    // PWM1->ENABLE |= (1U << 6);      /* Enable PWM1 channel 0 output */
-
-    SYSCTL->RCGCTIMER |= 0x02;  // activate clock for Timer1
-    while ((SYSCTL->PRTIMER & 0x02) == 0) {
+    SYSCTL->RCGCPWM |= 0x02;     // activate clock for Timer1
+    while ((SYSCTL->PRPWM & 0x02) == 0) {
     };  // allow time for clock to stabilize
 
-    TIMER1->CTL &= ~ (0x00000001);       // disable Timer1A during setup
-    TIMER1->CFG = (0x00000004);          // configure for 16-bit timer mode
-    TIMER1->TAPR = (0x00000000);          // configure prescaler
-                                         // configure for alternate (PWM) mode
-    TIMER1->TAMR = ((0x00000008) | (0x00000002));
+    //M1PWM6------------------
+    SYSCTL->RCC |= (0x00100000);  /* Enable System Clock Divisor function  */
+    SYSCTL->RCC &= ~(0x000E0000); /* clear divide  */
+    SYSCTL->RCC |= (0x00020000);  /* divide sysclk by 0002 0000 /4. 6 0000 /4. */
+    // update the pwm clock freq divider used.
+    PWM_sysclk = (SystemCoreClock / 4);
+    PWM1->_3_CTL = 0;           // Disable Generator 0 counter
+    PWM1->_3_CTL &= ~(1 << 1);  // select down count mode of counter 1
+    // controls when the output is enable and disabled according to Reload and CMPA values
+    PWM1->_3_GENA |= (0x000000C0 | 0x00000008); /* Set PWM output when counter matches PWMCMPA clear on reload*/
+    PWM1->_3_LOAD = 1;                          // set load value for 50Hz 16MHz/65 = 250kHz and (250KHz/5000)
+    //PWM1->_3_CMPA register not configured, pwm output stays at 0.
+    PWM1->_3_CTL |= 0x01;                       // Enable Generator 3 counter
+    PWM1->ENABLE |= (1U << 6);                  /* Enable PWM1 channel 0 output */
 
-    PWMCycles = 16000000 / 2048;           // system clock/required frequency.
-    TIMER1->TAILR = PWMCycles - 1;                // defines when output signal is set/ load value
-    TIMER1->TAMATCHR = (duty * PWMCycles) >> 10;  // defines when output signal is cleared
-    TIMER1->CTL |= ((0x00000040) | (0x00000001));  // enable Timer1A 16-b, PWM,
-                                                   // inverted to match comments
 }
 
 
@@ -832,26 +834,355 @@ void BSP_BP_BuzzerIO_Init(uint16_t duty) {
 // Assumes: BSP_Buzzer_Init() has been called
 //! the duty affects the output volume !!duty ++ = low volume
 void BSP_BP_Buzzer_Set(uint16_t duty) {
-    if (duty > 1023) {
+    if (duty > 65023) {
         return;  // invalid input
     }
-    TIMER1->TAMATCHR = (duty * PWMCycles) >> 10;  // defines when output signal is cleared
+    PWM1->ENABLE &= ~(1U << 6);
+    // TIMER1->CTL &= ~((0x00000040) | (0x00000001));
+    PWM1->_3_LOAD = duty;
+    PWM1->_3_CMPA = (duty * 40) / 100;  // defines when output signal is cleared
+    PWM1->ENABLE |= (1U << 6);
     //! can use duty as % thus TAMATCHR = duty*pwmcycles
+    // TIMER1->CTL |= ((0x00000040) | (0x00000001));
 }
 
 /**Buzzer TODO:
  * function to adjust frequency(tone) 
  * assumes no divider is used for frequency 50 mhz.
  */
-void BSP_BP_Buzzer_Freq(uint16_t freq) {
-     // system clock/required frequency.
-    
-    PWM1->_3_LOAD = freq - 1;
-    PWM1->_3_CMPB = (freq * 10) / 100;
+void BSP_BP_Buzzer_Freq(float32_t freq) {
+    // system clock/required frequency.
+    float32_t loadValue = (freq);
+    uint16_t sysPMW = (loadValue * PWM_sysclk);
+    PWM1->_3_LOAD = sysPMW;
+    PWM1->_3_CMPA = (sysPMW * 30 / 100);
 }
 //TODO: Test the frequency on a scope for correctness.
+//      Idea. use uint instead of float avoid floating point math?
 
 
 // pwm on pf2 PWM4 M1PWM6
+
+/**!
+ * TODO: led initialisation
+ * -- Initialize all leds as digital 
+ * -- Initialise all leds as PWM
+ * 
+ * -- control individual led pwm. 
+ */
+
+
+void BSP_BP_D_LedsInit(void){
+
+// initialise  PB3 PC4 PF3
+/* enable Run mode for GPIOB, GPIOC, GPIOF */
+SYSCTL->RCGCGPIO |= PORTB | PORTC | PORTF;
+/* configure BOOSTER PCK Switches and leds */
+/* BSTR_LED_RED_PORT BSTR_LED_RED have been configured above, same PF1 used */
+// PB3
+BSTR_LED_GREEN_PORT->DIR |= (BSTR_LED_GREEN);    /* set as output */
+BSTR_LED_GREEN_PORT->AFSEL &= ~(BSTR_LED_GREEN); /* disable alt funct on PB3 */
+BSTR_LED_GREEN_PORT->PUR &= ~(BSTR_LED_GREEN);   /* disable pull-up on PB3 */
+BSTR_LED_GREEN_PORT->DEN |= (BSTR_LED_GREEN);    /* digital enable */
+// PC4
+BSTR_LED_BLUE_PORT->DIR |= (BSTR_LED_BLUE);    /* set as output */
+BSTR_LED_BLUE_PORT->AFSEL &= ~(BSTR_LED_BLUE); /* disable alt funct on PC4 */
+BSTR_LED_BLUE_PORT->PUR &= ~(BSTR_LED_BLUE);   /* disable pull-up on PC4 */
+BSTR_LED_BLUE_PORT->DEN |= (BSTR_LED_BLUE);    /* digital enable */
+// PF3
+BSTR_LED_RED_PORT->DEN |= (BSTR_LED_RED);    /* digital enable */
+BSTR_LED_RED_PORT->AFSEL &= ~(BSTR_LED_RED); /* disable alt funct on PF3 */
+BSTR_LED_RED_PORT->PUR &= ~(BSTR_LED_RED);   /* disable pull-up on PF3 */
+BSTR_LED_RED_PORT->DIR |= (BSTR_LED_RED);    /* set as output */
+// turn off all leds.
+BSTR_LED_GREEN_PORT->DATA_Bits[BSTR_LED_GREEN] = BSTR_LED_GREEN; /* turn the LED off */
+BSTR_LED_BLUE_PORT->DATA_Bits[BSTR_LED_BLUE] = BSTR_LED_BLUE;    /* turn the LED off */
+BSTR_LED_RED_PORT->DATA_Bits[BSTR_LED_RED] = BSTR_LED_RED;       /* turn the LED off */
+}
+
+
+void BSP_BP_RGB_ledsInit(void) {
+    // enable Run mode for GPIOB, GPIOC, GPIOF
+    //
+    SYSCTL->RCGCGPIO |= PORTB | PORTC | PORTF;
+
+    // configure I/O pins for PWM mode.
+    //
+    // PB3
+    BSTR_LED_GREEN_PORT->DIR |= (BSTR_LED_GREEN);                                         /* set as output */
+    BSTR_LED_GREEN_PORT->AFSEL |= (BSTR_LED_GREEN);                                       /* enable alt funct on PB3 */
+    BSTR_LED_GREEN_PORT->PUR &= ~(BSTR_LED_GREEN);                                        /* disable pull-up on PB3 */
+    BSTR_LED_GREEN_PORT->PCTL |= ((BSTR_LED_GREEN_PORT->PCTL & 0xFFFF0FFF) + 0x00007000); /* configure PB3 as PWM */
+    BSTR_LED_GREEN_PORT->AMSEL &= ~(BSTR_LED_GREEN);                                      /* disable analog functionality */
+    BSTR_LED_GREEN_PORT->DEN |= (BSTR_LED_GREEN);                                         /* digital enable */
+    // PC4
+    BSTR_LED_BLUE_PORT->DIR |= (BSTR_LED_BLUE);                                         /* set as output */
+    BSTR_LED_BLUE_PORT->AFSEL |= (BSTR_LED_BLUE);                                      /* disable alt funct on PC4 */
+    BSTR_LED_BLUE_PORT->PUR &= ~(BSTR_LED_BLUE);                                        /* disable pull-up on PC4 */
+    BSTR_LED_BLUE_PORT->PCTL |= ((BSTR_LED_BLUE_PORT->PCTL & 0xFFF0FFFF) + 0x00070000); /* configure PC4 as PWM */
+    BSTR_LED_BLUE_PORT->AMSEL &= ~(BSTR_LED_BLUE);                                      /* disable analog functionality */
+    BSTR_LED_BLUE_PORT->DEN |= (BSTR_LED_BLUE);                                         /* digital enable */
+    // PF3 for Timer1B
+    BSTR_LED_RED_PORT->DIR |= (BSTR_LED_RED);                                         /* set as output */
+    BSTR_LED_RED_PORT->AFSEL |= (BSTR_LED_RED);                                      /* disable alt funct on PF3 */
+    BSTR_LED_RED_PORT->PUR &= ~(BSTR_LED_RED);                                        /* disable pull-up on PF3 */
+    BSTR_LED_RED_PORT->PCTL |= ((BSTR_LED_RED_PORT->PCTL & 0xFFFF0FFF) + 0x00007000); /* configure PF3 as PWM */
+    BSTR_LED_RED_PORT->AMSEL &= ~(BSTR_LED_RED);                                      /* disable analog functionality */
+    BSTR_LED_RED_PORT->DEN |= (BSTR_LED_RED);                                       /* digital enable */
+
+    // enable Timers for pwm clock
+    //
+    // ***************** Timer1B (PF3) initialization *****************
+    SYSCTL->RCGCTIMER |= 0x02;  // activate clock for Timer1
+
+    while ((SYSCTL->PRTIMER & 0x02) == 0) {
+    };                             // allow time for clock to stabilize
+    TIMER1->CTL &= ~(0x00000100);  // disable Timer1B during setup
+    TIMER1->CFG = 0x00000004;      // configure for 16-bit timer mode
+                                   // configure for alternate (PWM) mode
+    TIMER1->TBMR = (0x00000008 | 0x00000002);
+    TIMER1->TBILR = PWM_CYCLES;                // defines when output signal is set
+    //TIMER1->TBMATCHR register is not set, keeps pwm output at 0
+    //
+    // enable Timer1B 16-b, PWM, inverted to match comments
+    TIMER1->CTL |= (0x00004000 | 0x00000100);  
+    //==============================================================================================  
+
+    // ***************** Timer3B (PB3) initialization *****************
+    SYSCTL->RCGCTIMER |= 0x08;  // activate clock for Timer1
+
+    while ((SYSCTL->PRTIMER & 0x08) == 0) {};   // allow time for clock to stabilize
+    TIMER3->CTL &= ~(0x00000100);               // disable Timer3B during setup
+    TIMER3->CFG = 0x00000004;                   // configure for 16-bit timer mode
+                                                // configure for alternate (PWM) mode
+    TIMER3->TBMR = (0x00000008 | 0x00000002);
+    TIMER3->TBILR = PWM_CYCLES;                  // defines when output signal is set
+    //TIMER3->TBMATCHR register is not set, keeps pwm output at 0
+    //
+    // enable Timer1B 16-b, PWM, inverted to match comments
+    TIMER3->CTL |= (0x00004000 | 0x00000100);   // enable PWM
+
+    //==============================================================================================
+
+    // ***************** Wide Timer0A (PC4) initialization *****************
+    SYSCTL->RCGCWTIMER |= 0x01;  // activate clock for Wide Timer0
+
+    while ((SYSCTL->PRWTIMER & 0x01) == 0) {};  // allow time for clock to stabilize
+    WTIMER0->CTL &= ~(0x0000001);               // disable Timer3B during setup
+    WTIMER0->CFG = 0x00000004;                  // configure for 32-bit timer mode
+                                                // configure for alternate (PWM) mode
+    WTIMER0->TAMR = (0x00000008 | 0x00000002);
+    WTIMER0->TAILR = PWM_CYCLES;                 // defines when output signal is set
+    //WTIMER0->TAMATCHR register is not set, keeps pwm output at 0 
+    //
+    // enable Wide Timer0A 32-b, PWM, inverted to match comments
+    WTIMER0->CTL |= (0x00000040 | 0x00000001);  
+    //==============================================================================================
+
+    // End of function ====================================================================//
+}
+
+// set pwm for each led
+// assumes that led rgb init has been called
+// takes duty cycle as percentage.
+// ! check! duty == 0 pwm on for 20ns the lowest to disable use pwm disable. 
+void BSP_BP_LedRedDuty(uint8_t dutyCycle){
+    if (dutyCycle > 100) {
+        /* duty cycle is out of range do nothing */
+        return; // todo: can assert here.
+    }
+    TIMER1->TBMATCHR = ((PWM_CYCLES*dutyCycle)/100)-1;
+}
+void BSP_BP_LedGreenDuty(uint8_t dutyCycle){
+    if (dutyCycle > 100) {
+        /* duty cycle is out of range do nothing */
+        return; // todo: can assert here.
+    }
+    TIMER3->TBMATCHR = ((PWM_CYCLES*dutyCycle)/100)-1;
+}
+void BSP_BP_LedBlueDuty(uint8_t dutyCycle){
+    if (dutyCycle > 100) {
+        /* duty cycle is out of range do nothing */
+        return; // todo: can assert here.
+    }
+    WTIMER0->TAMATCHR = ((PWM_CYCLES*dutyCycle)/100)-1;
+}
+
+/**
+ * TODO: ERROR HANDLING for pwm usage
+ * before setting duty cycle check if pwm timer is enabled first
+ * we can assert if timer is not enable or just enble then set new duty
+ *  = time enable and disable() for power mangment when led duty is set to 0.
+ *  = this will reduce the power consumed by the timer.
+ */
+
+// Booster pack display using spi============================================
+
+// The Data/Command pin must be valid when the eighth bit is
+// sent.  The SSI module has hardware input and output FIFOs
+// that are 8 locations deep; however, they are not used in
+// this implementation.  Each function first stalls while
+// waiting for any pending SSI2 transfers to complete.  Once
+// the SSI2 module is idle, it then prepares the Chip Select
+// pin for the LCD and the Data/Command pin.  Next it starts
+// transmitting the data or command.  Finally once the
+// hardware is idle again, it sets the chip select pin high
+// as required by the serial protocol.  This is a
+// significant change from previous implementations of this
+// function.  It is less efficient without the FIFOs, but it
+// should ensure that the Chip Select and Data/Command pin
+// statuses all match the byte that is actually being
+// transmitted.
+// NOTE: These functions will crash or stall indefinitely if
+// the SSI2 module is not initialized and enabled.
+
+// This is a helper function that sends an 8-bit command to the LCD.
+// Inputs: c  8-bit code to transmit
+// Outputs: 8-bit reply
+// Assumes: SSI2 and ports have already been initialized and enabled
+uint8_t BSP_BP_SPIwritecommand(uint8_t c) {
+    // wait until SSI2 not busy/transmit FIFO empty
+    // todo remove while loop, blocking
+    while ((SSI2->SR & 0x00000010) == 0x00000010) {};
+    BSP_BP_TFT_CS_LOW();
+    BSP_BP_TFT_DC_COMMAND();
+    SSI2->DR = c;  // data out
+    while ((SSI2->SR & 0x00000004) == 0) {};  // wait until response
+    BSP_BP_TFT_CS_HIGH();
+    return (uint8_t)SSI2->DR;  // return the response
+}
+// This is a helper function that sends a piece of 8-bit data to the LCD.
+// Inputs: c  8-bit data to transmit
+// Outputs: 8-bit reply
+// Assumes: SSI2 and ports have already been initialized and enabled
+uint8_t BSP_BP_SPIwritedata(uint8_t c) {
+    // wait until SSI2 not busy/transmit FIFO empty
+    // todo remove while loop.
+    while ((SSI2->SR & 0x00000010) == 0x00000010) {};
+    BSP_BP_TFT_CS_LOW();
+    BSP_BP_TFT_DC_DATA();
+    SSI2->DR = c;  // data out
+    while ((SSI2->SR & 0x00000004) == 0) {};  // wait until response
+    BSP_BP_TFT_CS_HIGH();
+    return (uint8_t)SSI2->DR;  // return the response
+}
+
+//! delay function required for initialisation of LCD display.
+//BUG: not sure if this will work with the arm none eabi gcc compiler!
+// try the TI compiler version  
+
+// delay function from sysctl.c
+// which delays 3.3*ulCount cycles
+// ulCount=23746 => 1ms = 23746*3.3cycle/loop/80,000
+#ifdef __TI_COMPILER_VERSION__
+//Code Composer Studio Code
+void parrotdelay(uint32_t ulCount) {
+    __asm(
+        "    subs    r0, #1\n"
+        "    bne     Delay\n"
+        "    bx      lr\n");
+}
+
+#else
+//Keil uVision Code
+__asm void
+parrotdelay(uint32_t ulCount) {
+    subs    r0, #1 
+    bne     parrotdelay
+    bx      lr
+}
+
+#endif
+
+// ------------BSP_Delay1ms------------
+// Simple delay function which delays about n
+// milliseconds.
+// Inputs: n  number of 1 msec to wait
+// Outputs: none
+void BSP_Delay1ms(uint32_t n) {
+    while (n) {
+        parrotdelay(23746);  // 1 msec, tuned at 80 MHz, originally part of LCD module
+        n--;
+    }
+}
+
+
+// Initialization code common to both 'B' and 'R' type displays
+void BSP_BP_SPI_TFT_Init(const uint8_t *cmdList) {
+    //! ColStart = RowStart = 0;  // May be overridden in init func
+    (void)cmdList; // todo not used should be removed.
+    // toggle RST low to reset; CS low so it'll listen to us
+    // SSI2Fss is not available, so use GPIO on PA4
+    SYSCTL->RCGCGPIO |= 0x00000023;  // 1) activate clock for Ports F, B, and A
+    while ((SYSCTL->PRGPIO & 0x23) != 0x23) {}; // allow time for clocks to stabilize
+    BP_LCD_RST_PORT->LOCK = 0x4C4F434B;  // 2a) unlock GPIO Port F
+    BP_LCD_RST_PORT->CR = 0x1F;          // allow changes to PF4-0
+                                         // 2b) no need to unlock PF4, PB7, PB4, or PA4
+    BP_LCD_RST_PORT->AMSEL &= ~0x11;     // 3a) disable analog on PF4,0
+    BP_SPI_DATA_PORT->AMSEL &= ~0x90;    // 3b) disable analog on PB7,4
+    BP_SPI_CS_PORT->AMSEL &= ~0x10;      // 3c) disable analog on PA4
+                                         // 4a) configure PF4,0 as GPIO
+    BP_LCD_RST_PORT->PCTL = (BP_LCD_RST_PORT->PCTL & 0xFFF0FFF0) + 0x00000000;
+    // 4b) configure PB7,4 as SSI
+    BP_SPI_DATA_PORT->PCTL = (BP_SPI_DATA_PORT->PCTL & 0x0FF0FFFF) + 0x20020000;
+    // 4c) configure PA4 as GPIO
+    BP_SPI_CS_PORT->PCTL = (BP_SPI_CS_PORT->PCTL & 0xFFF0FFFF) + 0x00000000;
+    BP_LCD_RST_PORT->DIR |= 0x11;     // 5a) make PF4,0 output
+    BP_SPI_CS_PORT->DIR |= 0x10;      // 5b) make PA4 output
+    BP_LCD_RST_PORT->AFSEL &= ~0x11;  // 6a) disable alt funct on PF4,0
+    BP_SPI_DATA_PORT->AFSEL |= 0x90;  // 6b) enable alt funct on PB7,4
+    BP_SPI_CS_PORT->AFSEL &= ~0x10;   // 6c) disable alt funct on PA4
+    BP_LCD_RST_PORT->DEN |= 0x11;     // 7a) enable digital I/O on PF4,0
+    BP_SPI_DATA_PORT->DEN |= 0x90;    // 7b) enable digital I/O on PB7,4
+    BP_SPI_CS_PORT->DEN |= 0x10;      // 7c) enable digital I/O on PA4
+
+   // todo can make this into a function.
+   
+    BSP_BP_TFT_CS_LOW();
+    BSP_BP_TFT_RESET_HIGH();
+   // BSP_Delay1ms(100);
+    BSP_BP_TFT_RESET_LOW();
+   // BSP_Delay1ms(100);
+    BSP_BP_TFT_RESET_HIGH();
+   // BSP_Delay1ms(100);
+    BSP_BP_TFT_CS_HIGH(); 
+    
+//=============================================================
+
+    // TFT_CS = TFT_CS_LOW;
+    // RESET = RESET_HIGH;
+    // BSP_Delay1ms(500);
+    // RESET = RESET_LOW;
+    // BSP_Delay1ms(500);
+    // RESET = RESET_HIGH;
+    // BSP_Delay1ms(500);
+    // TFT_CS = TFT_CS_HIGH;
+// =============================================================
+    // initialize SSI2
+    // activate clock for SSI2
+    SYSCTL->RCGCSSI |= 0x00000004;
+    // allow time for clock to stabilize
+    while ((SYSCTL->PRSSI & 0x00000004) == 0) {};
+    SSI2->CR1 &= ~0x00000002;            // disable SSI
+    SSI2->CR1 &= ~0x00000004;            // master mode
+                                         // configure for clock from source PIOSC for baud clock source
+    SSI2->CC = (SSI2->CC & ~0x0000000F) + 0x00000005;
+                                        // clock divider for 4 MHz SSIClk (16 MHz PIOSC/4)
+                                        // PIOSC/(CPSDVSR*(1+SCR))
+                                        // 16/(4*(1+0)) = 4 MHz
+    SSI2->CPSR = (SSI2->CPSR & ~0x000000FF) + 4; // must be even number
+    SSI2->CR0 &= ~(0x0000FF00 |         // SCR = 0 (4 Mbps data rate)
+                   0x00000080 |         // SPH = 0
+                   0x00000040);         // SPO = 0
+                                        // FRF = Freescale format
+    SSI2->CR0 = (SSI2->CR0 & ~0x00000030) + 0x00000000;
+                                        // DSS = 8-bit data
+    SSI2->CR0 = (SSI2->CR0 & ~0x0000000F) + 0x00000007;
+    SSI2->CR1 |= 0x00000002;             // enable SSI
+
+   //!if (cmdList) commandList(cmdList); // removed
+}
+
+// BSP Booster pack LCD display functions======================================
 
 

@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>__FPU_PRESENT</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\FreeRtos_proj;..\..\qpc\include;..\..\qpc\src;..\..\qpc\ports\freertos;..\FreeRTOS\Source\include;..\FreeRTOS\Source\portable\RVDS\ARM_CM4F;..\CMSIS\Include;..\ek-tm4c123gxl</IncludePath>
+              <IncludePath>..\..\FreeRtos_proj;..\..\qpc\include;..\..\qpc\src;..\..\qpc\ports\freertos;..\FreeRTOS\Source\include;..\FreeRTOS\Source\portable\RVDS\ARM_CM4F;..\CMSIS\Include;..\ek-tm4c123gxl;..j\Booster_pack;..\Booster_pack;..\Booster_pack\bsp_bstPack.h;..\arm</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -449,6 +449,11 @@
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_defer.c</FilePath>
             </File>
             <File>
+              <FileName>qf_time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_time.c</FilePath>
+            </File>
+            <File>
               <FileName>qf_dyn.c</FileName>
               <FileType>1</FileType>
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_dyn.c</FilePath>
@@ -477,11 +482,6 @@
               <FileName>qf_qmact.c</FileName>
               <FileType>1</FileType>
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_qmact.c</FilePath>
-            </File>
-            <File>
-              <FileName>qf_time.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_time.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -611,6 +611,46 @@
               <FileName>portmacro.h</FileName>
               <FileType>5</FileType>
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application</GroupName>
+          <Files>
+            <File>
+              <FileName>blinky.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\blinky.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>philo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\philo.c</FilePath>
+            </File>
+            <File>
+              <FileName>table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\table.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_bp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp_bp.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_bp.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\arm\bsp_bp.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1059,6 +1099,11 @@
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_defer.c</FilePath>
             </File>
             <File>
+              <FileName>qf_time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_time.c</FilePath>
+            </File>
+            <File>
               <FileName>qf_dyn.c</FileName>
               <FileType>1</FileType>
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_dyn.c</FilePath>
@@ -1087,11 +1132,6 @@
               <FileName>qf_qmact.c</FileName>
               <FileType>1</FileType>
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_qmact.c</FilePath>
-            </File>
-            <File>
-              <FileName>qf_time.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_time.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1221,6 +1261,46 @@
               <FileName>portmacro.h</FileName>
               <FileType>5</FileType>
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application</GroupName>
+          <Files>
+            <File>
+              <FileName>blinky.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\blinky.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>philo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\philo.c</FilePath>
+            </File>
+            <File>
+              <FileName>table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\table.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_bp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp_bp.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_bp.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\arm\bsp_bp.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1669,6 +1749,11 @@
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_defer.c</FilePath>
             </File>
             <File>
+              <FileName>qf_time.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_time.c</FilePath>
+            </File>
+            <File>
               <FileName>qf_dyn.c</FileName>
               <FileType>1</FileType>
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_dyn.c</FilePath>
@@ -1697,11 +1782,6 @@
               <FileName>qf_qmact.c</FileName>
               <FileType>1</FileType>
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_qmact.c</FilePath>
-            </File>
-            <File>
-              <FileName>qf_time.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\src\qf\qf_time.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1762,6 +1842,46 @@
               <FileName>portmacro.h</FileName>
               <FileType>5</FileType>
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\FreeRTOS\Source\portable\RVDS\ARM_CM4F\portmacro.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application</GroupName>
+          <Files>
+            <File>
+              <FileName>blinky.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\blinky.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>philo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\philo.c</FilePath>
+            </File>
+            <File>
+              <FileName>table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\table.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_bp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp_bp.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_bp.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\arm\bsp_bp.h</FilePath>
             </File>
           </Files>
         </Group>
