@@ -41,6 +41,7 @@
 #include "rom.h"                 /* the built-in ROM functions (TI) */
 #include "sysctl.h"              /* system control driver (TI) */
 #include "gpio.h"                /* GPIO driver (TI) */
+#include "hw_i2c.h"
 /* add other drivers if necessary... */
 
 #define TIMER_1A_PSV (TIMER1->TAPV) // TIMER prescaler value.
@@ -65,13 +66,15 @@ Q_ASSERT_COMPILE(
    <= (configMAX_SYSCALL_INTERRUPT_PRIORITY >> (8-__NVIC_PRIO_BITS)));
 
 enum KernelAwareISRs {
-    SYSTICK_PRIO = (configMAX_SYSCALL_INTERRUPT_PRIORITY >> (8-__NVIC_PRIO_BITS)),
-    GPIOA_PRIO,
+    SYSTICK_PRIO = (configMAX_SYSCALL_INTERRUPT_PRIORITY >> (8 - __NVIC_PRIO_BITS)),  //5
+    GPIOA_PRIO = (configMAX_SYSCALL_INTERRUPT_PRIORITY >> (8 - __NVIC_PRIO_BITS)),    //5
+    ADC0SS3_PRIO,  /* ADC0 SS3 priority */                                                                   
     /* ... */
     MAX_KERNEL_AWARE_CMSIS_PRI /* keep always last */
+
 };
 /* "kernel-aware" interrupts should not overlap the PendSV priority */
-Q_ASSERT_COMPILE(MAX_KERNEL_AWARE_CMSIS_PRI <= (0xFF >>(8-__NVIC_PRIO_BITS)));
+Q_ASSERT_COMPILE(MAX_KERNEL_AWARE_CMSIS_PRI <= (0xFF >> (8 - __NVIC_PRIO_BITS)));
 
 /* booster pack LCD display.................................................*/
 // Rather than a bazillion writecommand() and writedata() calls, screen
@@ -105,8 +108,10 @@ static uint32_t l_rnd; // random seed
     };
 
 #endif
+/* Local-scope functions ------------------------------------------------------*/
+    void mcuTempSensorInit(void);
 
-/* ISRs used in this project ===============================================*/
+    /* ISRs used in this project ===============================================*/
 
 /* NOTE: this ISR is for testing of the various preemption scenarios
 *  by triggering the GPIOPortA interrupt from the debugger. You achieve
@@ -123,21 +128,25 @@ static uint32_t l_rnd; // random seed
 *  select the "Other Systems Register" group. From there, you need to write
 *  0 to the STIR write-only register and press enter.
 */
-/* NOTE: only the "FromISR" FreeRTOS API variants are allowed in the ISRs! */
-void GPIOPortA_IRQHandler(void); /* prototype */
-void GPIOPortA_IRQHandler(void) {
-    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    /* NOTE: only the "FromISR" FreeRTOS API variants are allowed in the ISRs! */
+    void GPIOPortA_IRQHandler(void); /* prototype */
+    void GPIOPortA_IRQHandler(void) {
+        BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    /* for testing... */
-    QACTIVE_POST_FROM_ISR(AO_Table,
-        Q_NEW_FROM_ISR(QEvt, MAX_PUB_SIG),
-        &xHigherPriorityTaskWoken,
-        &l_GPIOPortA_IRQHandler);
+        /* for testing... */
+        QACTIVE_POST_FROM_ISR(AO_Table,
+                              Q_NEW_FROM_ISR(QEvt, MAX_PUB_SIG),
+                              &xHigherPriorityTaskWoken,
+                              &l_GPIOPortA_IRQHandler);
 
-    /* the usual end of FreeRTOS ISR... */
-    portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+        /* the usual end of FreeRTOS ISR... */
+        portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
 /*..........................................................................*/
+/* TODO: implement
+* Move all my ISR to this section 
+*/
+
 #ifdef Q_SPY
 /*
 * ISR for receiving bytes from the QSPY Back-End
@@ -167,15 +176,22 @@ void vApplicationTickHook(void) { //! called by freeRtos tick()
     } buttons = { ~0U, ~0U };
     uint32_t current;
     uint32_t tmp;
-
     // booster pack buttons
-    // 
+    //
     static struct ButtonsDebouncing1 {
         uint32_t depressed1;
         uint32_t previous1;
     } buttons1 = { ~0U, ~0U };
     uint32_t current1;
     uint32_t tmp1;
+    
+    // joystick button debouncing.
+    static struct ButtonsDebouncing2 {
+        uint32_t depressed1;
+        uint32_t previous1;
+    } buttons2 = { ~0U, ~0U };
+    uint32_t current2;
+    uint32_t tmp2;
     //! used to inform RTOS of a thread switch request.
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
@@ -188,6 +204,8 @@ void vApplicationTickHook(void) { //! called by freeRtos tick()
         QS_tickTime_ += QS_tickPeriod_; /* account for the clock rollover */
     }
 #endif
+// TODO combine all the button debounce into one variable, get the state of each button
+//      and pack into one variable then debounce them 
 
     /* Perform the debouncing of buttons. The algorithm for debouncing
     * adapted from the book "Embedded Systems Dictionary" by Jack Ganssle
@@ -249,6 +267,27 @@ void vApplicationTickHook(void) { //! called by freeRtos tick()
         }
     }
 
+    //! debounce BoosterPack Joystick button TODO: can select not to use the tiva buttons.
+    current2 = ~BSP_BP_JST_BTN_PORT->DATA_Bits[BSP_BP_JST_BTN_PIN]; /* read SW1 and SW2 */
+    tmp2 = buttons2.depressed1;                                              /* save the debounced depressed1 buttons1 */
+    buttons2.depressed1 |= (buttons2.previous1 & current2);                    /* set depressed1 */
+    buttons2.depressed1 &= (buttons2.previous1 | current2);                    /* clear released */
+    buttons2.previous1 = current2;                                           /* update the history */
+    tmp2 ^= buttons2.depressed1;                                             /* changed debounced depressed1 */
+    if ((tmp2 & BSP_BP_JST_BTN_PIN) != 0U) {                                 /* debounced SW1 state changed? */
+        if ((buttons2.depressed1 & BSP_BP_JST_BTN_PIN) != 0U) {              /* is SW1 depressed1? */
+            /* demonstrate the ISR APIs: QF_PUBLISH_FROM_ISR and Q_NEW_FROM_ISR */
+            QF_PUBLISH_FROM_ISR(Q_NEW_FROM_ISR(QEvt, JOYSTICK_PRESSED_SIG),
+                                &xHigherPriorityTaskWoken,
+                                &l_TickHook);
+        } else { /* the button is released */
+            /* demonstrate the ISR APIs: POST_FROM_ISR and Q_NEW_FROM_ISR */
+            QACTIVE_POST_FROM_ISR(AO_Heartbeat, // BUG: this was set to AO_table
+                                  Q_NEW_FROM_ISR(QEvt, JOYSTICK_DEPRESSED_SIG),
+                                  &xHigherPriorityTaskWoken,
+                                  &l_TickHook);
+        }
+    }
     /* notify FreeRTOS to perform context switch from ISR, if needed */
     portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
@@ -362,7 +401,10 @@ void BSP_init(void) {
 //BSP_BP_D_LedsInit();
 BSP_BP_RGB_ledsInit();
 BSP_BP_BuzzerIO_Init(200);
-
+BSP_BP_Joystick_Init();
+BSP_BP_SPI_TFT_Init();
+BSP_Microphone_Init();
+mcuTempSensorInit();
 BSP_randomSeed(1234U);
 
 /* initialize the QS software tracing... */
@@ -536,10 +578,12 @@ void QF_onStartup(void) {
     NVIC_SetPriority(UART0_IRQn,     UART0_PRIO);
     NVIC_SetPriority(SysTick_IRQn,   SYSTICK_PRIO);
     NVIC_SetPriority(GPIOA_IRQn,     GPIOA_PRIO);
+    NVIC_SetPriority(ADC0SS3_IRQn, ADC0SS3_PRIO);
     /* ... */
 
     /* enable IRQs... */
     NVIC_EnableIRQ(GPIOA_IRQn);
+    NVIC_EnableIRQ(ADC0SS3_IRQn);
 
 #ifdef Q_SPY
     NVIC_EnableIRQ(UART0_IRQn);  /* UART0 interrupt used for QS-RX */
@@ -1099,6 +1143,7 @@ parrotdelay(uint32_t ulCount) {
 // milliseconds.
 // Inputs: n  number of 1 msec to wait
 // Outputs: none
+// Note: this is based on a 80Mhz sysClk
 void BSP_Delay1ms(uint32_t n) {
     while (n) {
         parrotdelay(23746);  // 1 msec, tuned at 80 MHz, originally part of LCD module
@@ -1106,15 +1151,13 @@ void BSP_Delay1ms(uint32_t n) {
     }
 }
 
-
-// Initialization code common to both 'B' and 'R' type displays
-void BSP_BP_SPI_TFT_Init(const uint8_t *cmdList) {
-    //! ColStart = RowStart = 0;  // May be overridden in init func
-    (void)cmdList; // todo not used should be removed.
+// Initialization SPI interface for BP TFT display.
+void BSP_BP_SPI_TFT_Init(void) {
     // toggle RST low to reset; CS low so it'll listen to us
     // SSI2Fss is not available, so use GPIO on PA4
     SYSCTL->RCGCGPIO |= 0x00000023;  // 1) activate clock for Ports F, B, and A
-    while ((SYSCTL->PRGPIO & 0x23) != 0x23) {}; // allow time for clocks to stabilize
+    while ((SYSCTL->PRGPIO & 0x23) != 0x23) {
+    };                                   // allow time for clocks to stabilize
     BP_LCD_RST_PORT->LOCK = 0x4C4F434B;  // 2a) unlock GPIO Port F
     BP_LCD_RST_PORT->CR = 0x1F;          // allow changes to PF4-0
                                          // 2b) no need to unlock PF4, PB7, PB4, or PA4
@@ -1136,53 +1179,662 @@ void BSP_BP_SPI_TFT_Init(const uint8_t *cmdList) {
     BP_SPI_DATA_PORT->DEN |= 0x90;    // 7b) enable digital I/O on PB7,4
     BP_SPI_CS_PORT->DEN |= 0x10;      // 7c) enable digital I/O on PA4
 
-   // todo can make this into a function.
-   
+    // reset display
     BSP_BP_TFT_CS_LOW();
     BSP_BP_TFT_RESET_HIGH();
-   // BSP_Delay1ms(100);
+    BSP_Delay1ms(50);
     BSP_BP_TFT_RESET_LOW();
-   // BSP_Delay1ms(100);
+    BSP_Delay1ms(50);
     BSP_BP_TFT_RESET_HIGH();
-   // BSP_Delay1ms(100);
-    BSP_BP_TFT_CS_HIGH(); 
-    
-//=============================================================
+    BSP_Delay1ms(50);
+    BSP_BP_TFT_CS_HIGH();
 
-    // TFT_CS = TFT_CS_LOW;
-    // RESET = RESET_HIGH;
-    // BSP_Delay1ms(500);
-    // RESET = RESET_LOW;
-    // BSP_Delay1ms(500);
-    // RESET = RESET_HIGH;
-    // BSP_Delay1ms(500);
-    // TFT_CS = TFT_CS_HIGH;
-// =============================================================
-    // initialize SSI2
     // activate clock for SSI2
     SYSCTL->RCGCSSI |= 0x00000004;
     // allow time for clock to stabilize
-    while ((SYSCTL->PRSSI & 0x00000004) == 0) {};
-    SSI2->CR1 &= ~0x00000002;            // disable SSI
-    SSI2->CR1 &= ~0x00000004;            // master mode
-                                         // configure for clock from source PIOSC for baud clock source
+    while ((SYSCTL->PRSSI & 0x00000004) == 0) {
+    };
+    SSI2->CR1 &= ~0x00000002;  // disable SSI
+    SSI2->CR1 &= ~0x00000004;  // master mode
+                               // configure for clock from source PIOSC for baud clock source
     SSI2->CC = (SSI2->CC & ~0x0000000F) + 0x00000005;
-                                        // clock divider for 4 MHz SSIClk (16 MHz PIOSC/4)
-                                        // PIOSC/(CPSDVSR*(1+SCR))
-                                        // 16/(4*(1+0)) = 4 MHz
-    SSI2->CPSR = (SSI2->CPSR & ~0x000000FF) + 4; // must be even number
-    SSI2->CR0 &= ~(0x0000FF00 |         // SCR = 0 (4 Mbps data rate)
-                   0x00000080 |         // SPH = 0
-                   0x00000040);         // SPO = 0
-                                        // FRF = Freescale format
+    // clock divider for 4 MHz SSIClk (16 MHz PIOSC/4)
+    // PIOSC/(CPSDVSR*(1+SCR))
+    // 16/(4*(1+0)) = 4 MHz
+    SSI2->CPSR = (SSI2->CPSR & ~0x000000FF) + 4;  // must be even number
+    SSI2->CR0 &= ~(0x0000FF00 |                   // SCR = 0 (4 Mbps data rate)
+                   0x00000080 |                   // SPH = 0
+                   0x00000040);                   // SPO = 0
+                                                  // FRF = Freescale format
     SSI2->CR0 = (SSI2->CR0 & ~0x00000030) + 0x00000000;
-                                        // DSS = 8-bit data
+    // DSS = 8-bit data
     SSI2->CR0 = (SSI2->CR0 & ~0x0000000F) + 0x00000007;
-    SSI2->CR1 |= 0x00000002;             // enable SSI
-
-   //!if (cmdList) commandList(cmdList); // removed
+    SSI2->CR1 |= 0x00000002;  // enable SSI
 }
 
-// BSP Booster pack LCD display functions======================================
+// END LCD display functions===================================================//
+//
+
+// ADC initialisation==========================================================//
+// There are six analog inputs on the Educational BoosterPack MKII:
+// microphone (J1.6/PE5/AIN8)
+// joystick X (J1.2/PB5/AIN11) and Y (J3.26/PD3/AIN4)
+// accelerometer X (J3.23/PD0/AIN7), Y (J3.24/PD1/AIN6), and Z (J3.25/PD2/AIN5)
+// All six initialization functions can use this general ADC
+// initialization.  The joystick uses sample sequencer 1,
+// the accelerometer sample sequencer 2, and the microphone
+// uses sample sequencer 3.
+static void adcinit(void) {
+    SYSCTL->RCGCADC |= 0x00000001;  // 1) activate ADC0
+    while ((SYSCTL->PRADC & 0x01) == 0) {
+    };                     // 2) allow time for clock to stabilize
+                           // 3-7) GPIO initialization in more specific functions
+    ADC0->PC &= ~0xF;      // 8) clear max sample rate field
+    ADC0->PC |= 0x2;       //    configure for 125K samples/sec ** see data sheet 
+    ADC0->SSPRI = 0x3210;  // 9) Sequencer 3 is lowest priority
+                           // 10-15) sample sequencer initialization in more specific functions
+}
+
+// BSP Booster pack Joystick functions======================================
+//
+void BSP_BP_Joystick_Init(void) {
+    /* enable Run mode for GPIOE, GPIOB, GPIOD */
+    SYSCTL->RCGCGPIO |= PORTE | PORTB | PORTD;
+    /* booster pack User Switches initialization */
+
+    BSP_BP_JST_BTN_PORT->DIR &= ~(BSP_BP_JST_BTN_PIN); /*  set direction: input */
+
+    ROM_GPIOPadConfigSet(GPIOE_BASE, (BSP_BP_JST_BTN_PIN),
+                         GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
+
+    BSP_BP_ADC_Y_PORT->AMSEL |= 0x08;  // 3b) enable analog on PD3
+    BSP_BP_ADC_X_PORT->AMSEL |= 0x20;  // 3c) enable analog on PB5
+
+    BSP_BP_ADC_Y_PORT->DIR &= ~0x08;  // 5b) make PD3 input
+    BSP_BP_ADC_X_PORT->DIR &= ~0x20;  // 5c) make PB5 input
+
+    BSP_BP_ADC_Y_PORT->AFSEL |= 0x08;  // 6b) enable alt funct on PD3
+    BSP_BP_ADC_X_PORT->AFSEL |= 0x20;  // 6c) enable alt funct on PB5
+    BSP_BP_ADC_Y_PORT->DEN &= ~0x08;   // 7b) enable analog functionality on PD3
+    BSP_BP_ADC_X_PORT->DEN &= ~0x20;   // 7c) enable analog functionality on PB5
+
+    adcinit();  // 8-9) general ADC initialization
+
+    ADC0->ACTSS &= ~0x0002;  // 10) disable sample sequencer 1
+    ADC0->EMUX &= ~0x00F0;   // 11) seq1 is software trigger
+    ADC0->SSMUX1 = 0x004B;   // 12) set channels for SS1
+    ADC0->SSCTL1 = 0x0060;   // 13) no TS0 D0 IE0 END0 TS1 D1, yes IE1 END1
+    ADC0->IM &= ~0x0002;     // 14) disable SS1 interrupts
+    ADC0->ACTSS |= 0x0002;   // 15) enable sample sequencer 1
+}
+
+// ------------BSP_Joystick_Input------------
+// Read and return the immediate status of the
+// joystick.  Button de-bouncing for the Select
+// button is not considered.  The joystick X- and
+// Y-positions are returned as 10-bit numbers,
+// even if the ADC on the LaunchPad is more precise.
+// Input: x is pointer to store X-position (0 to 1023)
+//        y is pointer to store Y-position (0 to 1023)
+//        select is pointer to store Select status (0 if pressed)
+// Output: none
+// Assumes: BSP_Joystick_Init() has been called
+
+void BSP_Joystick_Input(uint16_t *x, uint16_t *y) {
+    // ADC0->PSSI = 0x0002;  // 1) initiate SS1
+    // while ((ADC0->RIS & 0x02) == 0) {
+    // };                         // 2) wait for conversion done
+
+    // static uint32_t adcLPS = 0; // low pass filtered ADC reading
+    // static uint32_t joystickX = 0; // last joystick x position
+    // static uint32_t joystickY = 0; // last joystick y position
+    // unsigned long tmp;
+    /* 1st order low-pass filter: time constant ~= 2^n samples
+        * TF = (1/2^n)/(z-((2^n - 1)/2^n)),
+        * e.g., n=3, y(k+1) = y(k) - y(k)/8 + x(k)/8 => y += (x - y)/8
+        */
+       
+    *x = ADC0->SSFIFO1 >> 2;  // read first result
+
+    *y = ADC0->SSFIFO1 >> 2;  // 3b) read second result
+    ADC0->ISC = 0x0002;       // 4) acknowledge completion
+}
+
+// trigger joystick ADC
+void BSP_Joystick_Trigger(void) {
+    ADC0->PSSI |= (1 << 1); /* Enable SS2 conversion or start sampling data from AN0 */
+}
+
+// ADC initialization for onboard temp sensor.
+// Using intrrupt mode.
+static void mcuTempSensorInit(void) {
+    SYSCTL->RCGCADC |= 1; /* enable clock to ADC0 */
+    /* initialize ADC0 */
+    ADC0->ACTSS &= ~8;         /* disable SS3 during configuration */
+    ADC0->EMUX &= ~0xF000;     /* software trigger conversion seq 0 */
+    ADC0->SSMUX3 = 0;          /* get input from channel 0 */
+    ADC0->SSCTL3 |= 0x0E;      /* take chip temperature, set flag at 1st sample */
+    ADC0->IM |= 0x0008;        //  enable SS3 interrupts
+    ADC0->ACTSS |= (1U << 3);  //  enable sample sequencer 3
+}
+// TODO place in the isr section above.
+void ADCSeq3_IRQHandler(void) {
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+    ADC0->ISC |= (1U << 3);  // clear interrupt flag
+
+    TempEvt *reading = Q_NEW_FROM_ISR(TempEvt, NEW_TEMP_DATA_SIG);
+
+    // read adc coversion result from SS3 FIFO and convert to °C using
+    // Temp = 147.5 – ((75 × Vref(+) – Vref(–)) × ADC_output)) / 4096. tm4c vref == 3.3v
+    //
+    reading->temp = 147 - ((247 * ADC0->SSFIFO3) / 4096);
+    QACTIVE_POST_FROM_ISR(AO_Heartbeat,
+                          (QEvt *)reading,
+                          &xHigherPriorityTaskWoken,
+                          &ADCSeq3_IRQHandler);
+
+    /* the usual end of FreeRTOS ISR... */
+    portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+}
+
+// trigger the ADC to sample the MCU temperature sensor.
+void BSP_SystemTempGet(void) {
+    ADC0->PSSI |= (1 << 3); /* Enable SS3 conversion or start sampling data from AN0 */
+}
+
+// ------------BSP_Accelerometer_Init------------
+// Initialize three ADC pins, which correspond with
+// BoosterPack pins J3.23 (X), J3.24 (Y), and
+// J3.25 (Y).
+// Input: none
+// Output: none
+void BSP_Accelerometer_Init(void) {
+    adcinit();
+    SYSCTL->RCGCGPIO |= 0x00000008;  // 1) activate clock for Port D
+    while ((SYSCTL->PRGPIO & 0x08) == 0) {
+    };                           // allow time for clock to stabilize
+                                 // 2) no need to unlock PD2-0
+    GPIOD->AMSEL |= 0x07;  // 3) enable analog on PD2-0
+                                 // 4) configure PD2-0 as ?? (skip this line because PCTL is for digital only)
+    GPIOD->DIR &= ~0x07;   // 5) make PD2-0 input
+    GPIOD->AFSEL |= 0x07;  // 6) enable alt funct on PD2-0
+    GPIOD->DEN &= ~0x07;   // 7) enable analog functionality on PD2-0
+    adcinit();                   // 8-9) general ADC initialization
+    ADC0->ACTSS &= ~0x0004;     // 10) disable sample sequencer 2
+    ADC0->EMUX &= ~0x0F00;      // 11) seq2 is software trigger
+    ADC0->SSMUX2 = 0x0567;      // 12) set channels for SS2
+    ADC0->SSCTL2 = 0x0600;      // 13) no D0 END0 IE0 TS0 D1 END1 IE1 TS1 D2 TS2, yes IE2 END2
+    ADC0->IM &= ~0x0004;        // 14) disable SS2 interrupts
+    ADC0->ACTSS |= 0x0004;      // 15) enable sample sequencer 2
+}
+
+// ------------BSP_Accelerometer_Input------------
+// Read and return the immediate status of the
+// accelerometer.  The accelerometer X-, Y-, and
+// Z-measurements are returned as 10-bit numbers,
+// even if the ADC on the LaunchPad is more precise.
+// Input: x is pointer to store X-measurement (0 to 1023)
+//        y is pointer to store Y-measurement (0 to 1023)
+//        z is pointer to store Z-measurement (0 to 1023)
+// Output: none
+// Assumes: BSP_Accelerometer_Init() has been called
+void BSP_Accelerometer_Input(uint16_t *x, uint16_t *y, uint16_t *z) {
+    ADC0->PSSI = 0x0004;  // 1) initiate SS2
+    while ((ADC0->RIS & 0x04) == 0) {};// 2) wait for conversion done
+    *x = ADC0->SSFIFO2 >> 2;  // 3a) read first result
+    *y = ADC0->SSFIFO2 >> 2;  // 3b) read second result
+    *z = ADC0->SSFIFO2 >> 2;  // 3c) read third result
+    ADC0->ISC = 0x0004;       // 4) acknowledge completion
+}
+
+// trigger the ADC to sample the Accelerometer sensor.
+void BSP_AccelerometerGet(void) {
+    ADC0->PSSI |= (1 << 2);  // initiate SS2
+}
+
+// TODO: isr for accelerometer ADC
+
+// TODO: use the ADC1 for the microphone. can set higher sample rate. change ADC0 to ADC1.
+//       isr for microphone
+
+// ------------BSP_Microphone_Init------------
+// Initialize one ADC pin, which corresponds with
+// BoosterPack pin J1.6. tm4c123 pin PE5.
+// Input: none
+// Output: none
+void BSP_Microphone_Init(void) {
+    adcinit();
+    SYSCTL->RCGCGPIO |= 0x00000010;  // 1) activate clock for Port E
+    while ((SYSCTL->PRGPIO & 0x10) == 0) {
+    };                           // allow time for clock to stabilize
+                                 // 2) no need to unlock PE5
+    GPIOE->AMSEL |= 0x20;  // 3) enable analog on PE5
+                                 // 4) configure PE5 as ?? (skip this line because PCTL is for digital only)
+    GPIOE->DIR &= ~0x20;   // 5) make PE5 input
+    GPIOE->AFSEL |= 0x20;  // 6) enable alt funct on PE5
+    GPIOE->DEN &= ~0x20;   // 7) enable analog functionality on PE5
+    adcinit();                   // 8-9) general ADC initialization
+    ADC0->ACTSS &= ~0x0008;     // 10) disable sample sequencer 3
+    ADC0->EMUX &= ~0xF000;      // 11) seq3 is software trigger
+    ADC0->SSMUX3 = 0x0008;      // 12) set channels for SS3
+    ADC0->SSCTL3 = 0x0006;      // 13) no D0 TS0, yes IE0 END0
+    ADC0->IM &= ~0x0008;        // 14) disable SS3 interrupts
+    ADC0->ACTSS |= 0x0008;      // 15) enable sample sequencer 3
+}
+
+// ------------BSP_Microphone_Input------------
+// Read and return the immediate status of the
+// microphone.  The sound measurement is returned
+// as a 10-bit number, even if the ADC on the
+// LaunchPad is more precise.
+// Input: mic is pointer to store sound measurement (0 to 1023)
+// Output: none
+// Assumes: BSP_Microphone_Init() has been called
+void BSP_Microphone_Input(uint16_t *mic) {
+    // ADC0->PSSI = 0x0008;  // 1) initiate SS3
+    // while ((ADC0->RIS & 0x08) == 0) {
+    // };                           // 2) wait for conversion done
+    *mic = ADC0->SSFIFO3 >> 2;  // 3) read result
+    ADC0->ISC = 0x0008;         // 4) acknowledge completion
+}
+
+// trigger the ADC to sample the mic input.
+void BSP_Microphone_Get(void){
+    ADC0->PSSI = 0x0008;  // 1) initiate SS3
+}
 
 
+// I2C initialization==============================================
+
+// There are two I2C devices on the Educational BoosterPack MKII:
+// OPT3001 Light Sensor
+// !TMP006 Temperature sensor not populated.
+// Both initialization functions can use this general I2C
+// initialization.
+#define MAXRETRIES 5  // number of receive attempts before giving up
+void static i2cinit(void) {
+    SYSCTL->RCGCI2C |= 0x0002;   // 1a) activate clock for I2C1
+    SYSCTL->RCGCGPIO |= PORTA;   // 1b) activate clock for Port A
+    while ((SYSCTL->PRGPIO & 0x01) == 0) {
+    };                            // allow time for clock to stabilize
+                                  // 2) no need to unlock PA7-6
+    GPIOA->AMSEL &= ~0xC0;        // 3) disable analog functionality on PA7-6
+                                  // 4) configure PA7-6 as I2C1
+    GPIOA->PCTL = (GPIOA->PCTL & 0x00FFFFFF) + 0x33000000;
+    GPIOA->ODR |= 0x80;           // 5) enable open drain on PA7 only
+    GPIOA->AFSEL |= 0xC0;         // 6) enable alt funct on PA7-6
+    GPIOA->DEN |= 0xC0;           // 7) enable digital I/O on PA7-6
+    I2C1->MCR = 0x00000010;       // 8) master function enable
+    I2C1->MTPR = 39;              // 9) configure for 100 kbps clock
+                                  // 20*(TPR+1)*12.5ns = 10us, with TPR=39
+
+}
+
+// receives two bytes from specified slave
+// Note for HMC6352 compass only:
+// Used with 'A' commands
+// Note for TMP102 thermometer only:
+// Used to read the contents of the pointer register
+uint16_t static I2C_Recv2(int8_t slave) {
+    uint8_t data1, data2;
+    int retryCounter = 1;
+    do {
+        while (I2C1->MCS & I2C_MCS_BUSY) {
+        };                                 // wait for I2C ready
+        I2C1->MSA = (slave << 1) & 0xFE;  // MSA[7:1] is slave address
+        I2C1->MSA |= 0x01;                // MSA[0] is 1 for receive
+        I2C1->MCS = (0 | I2C_MCS_ACK      // positive data ack
+                                           //                         & ~I2C_MCS_STOP    // no stop
+                      | I2C_MCS_START      // generate start/restart
+                      | I2C_MCS_RUN);      // master enable
+        while (I2C1->MCS & I2C_MCS_BUSY) {
+        };                            // wait for transmission done
+        data1 = (I2C1->MDR & 0xFF);  // MSB data sent first
+        I2C1->MCS = (0
+                      //                         & ~I2C_MCS_ACK     // negative data ack (last byte)
+                      | I2C_MCS_STOP   // generate stop
+                                       //                         & ~I2C_MCS_START   // no start/restart
+                      | I2C_MCS_RUN);  // master enable
+        while (I2C1->MCS & I2C_MCS_BUSY) {
+        };                                // wait for transmission done
+        data2 = (I2C1->MDR & 0xFF);      // LSB data sent last
+        retryCounter = retryCounter + 1;  // increment retry counter
+    }                                     // repeat if error
+    while (((I2C1->MCS & (I2C_MCS_ADRACK | I2C_MCS_ERROR)) != 0) && (retryCounter <= MAXRETRIES));
+    return (data1 << 8) + data2;  // usually returns 0xFFFF on error
+}
+
+// sends one byte to specified slave
+// Note for HMC6352 compass only:
+// Used with 'S', 'W', 'O', 'C', 'E', 'L', and 'A' commands
+//  For 'A' commands, I2C_Recv2() should also be called
+// Note for TMP102 thermometer only:
+// Used to change the pointer register
+// Returns 0 if successful, nonzero if error
+uint16_t static I2C_Send1(int8_t slave, uint8_t data1) {
+    while (I2C1->MCS & I2C_MCS_BUSY) {
+    };                                 // wait for I2C ready
+    I2C1->MSA = (slave << 1) & 0xFE;  // MSA[7:1] is slave address
+    I2C1->MSA &= ~0x01;               // MSA[0] is 0 for send
+    I2C1->MDR = data1 & 0xFF;         // prepare first byte
+    I2C1->MCS = (0
+                  //                       & ~I2C_MCS_ACK     // no data ack (no data on send)
+                  | I2C_MCS_STOP   // generate stop
+                  | I2C_MCS_START  // generate start/restart
+                  | I2C_MCS_RUN);  // master enable
+    while (I2C1->MCS & I2C_MCS_BUSY) {
+    };  // wait for transmission done
+        // return error bits
+    return (I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR));
+}
+
+// sends three bytes to specified slave
+// Note for HMC6352 compass only:
+// Used with 'w' and 'G' commands
+// Note for TMP102 thermometer only:
+// Used to change the contents of the pointer register
+// Returns 0 if successful, nonzero if error
+uint16_t static I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2, uint8_t data3) {
+    while (I2C1->MCS & I2C_MCS_BUSY) {
+    };                                 // wait for I2C ready
+    I2C1->MSA = (slave << 1) & 0xFE;  // MSA[7:1] is slave address
+    I2C1->MSA &= ~0x01;               // MSA[0] is 0 for send
+    I2C1->MDR = data1 & 0xFF;         // prepare first byte
+    I2C1->MCS = (0
+                  //                       & ~I2C_MCS_ACK     // no data ack (no data on send)
+                  //                       & ~I2C_MCS_STOP    // no stop
+                  | I2C_MCS_START  // generate start/restart
+                  | I2C_MCS_RUN);  // master enable
+    while (I2C1->MCS & I2C_MCS_BUSY) {
+    };  // wait for transmission done
+        // check error bits
+    if ((I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR)) != 0) {
+        I2C1->MCS = (0               // send stop if nonzero
+                                      //                       & ~I2C_MCS_ACK     // no data ack (no data on send)
+                      | I2C_MCS_STOP  // stop
+                                      //                       & ~I2C_MCS_START   // no start/restart
+                                      //                       & ~I2C_MCS_RUN     // master disable
+        );
+        // return error bits if nonzero
+        return (I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR));
+    }
+    I2C1->MDR = data2 & 0xFF;  // prepare second byte
+    I2C1->MCS = (0
+                  //                       & ~I2C_MCS_ACK     // no data ack (no data on send)
+                  //                       & ~I2C_MCS_STOP    // no stop
+                  //                       & ~I2C_MCS_START   // no start/restart
+                  | I2C_MCS_RUN);  // master enable
+    while (I2C1->MCS & I2C_MCS_BUSY) {
+    };  // wait for transmission done
+        // check error bits
+    if ((I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR)) != 0) {
+        I2C1->MCS = (0               // send stop if nonzero
+                                      //                       & ~I2C_MCS_ACK     // no data ack (no data on send)
+                      | I2C_MCS_STOP  // stop
+                                      //                       & ~I2C_MCS_START   // no start/restart
+                                      //                       & ~I2C_MCS_RUN   // master disable
+        );
+        // return error bits if nonzero
+        return (I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR));
+    }
+    I2C1->MDR = data3 & 0xFF;  // prepare third byte
+    I2C1->MCS = (0
+                  //                       & ~I2C_MCS_ACK     // no data ack (no data on send)
+                  | I2C_MCS_STOP   // generate stop
+                                   //                       & ~I2C_MCS_START   // no start/restart
+                  | I2C_MCS_RUN);  // master enable
+    while (I2C1->MCS & I2C_MCS_BUSY) {
+    };  // wait for transmission done
+        // return error bits
+    return (I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR));
+}
+
+// ------------BSP_LightSensor_Init------------
+// Initialize a GPIO pin for input, which corresponds
+// with BoosterPack pins J1.8 (Light Sensor interrupt).
+// Initialize two I2C pins, which correspond with
+// BoosterPack pins J1.9 (SCL) and J1.10 (SDA).
+// Input: none
+// Output: none
+void BSP_LightSensor_Init(void) {
+    i2cinit();
+    // 1) activate clock for Port A (done in i2cinit())
+    // allow time for clock to stabilize (done in i2cinit())
+    // 2) no need to unlock PA5
+    GPIOA->AMSEL &= ~0x20;  // 3) disable analog on PA5
+                                  // 4) configure PA5 as GPIO
+    GPIOA->PCTL = (GPIOA->PCTL & 0xFF0FFFFF) + 0x00000000;
+    GPIOA->DIR &= ~0x20;    // 5) make PA5 input
+    GPIOA->AFSEL &= ~0x20;  // 6) disable alt funct on PA5
+    GPIOA->DEN |= 0x20;     // 7) enable digital I/O on PA5
+}
+
+// Send the appropriate codes to initiate a
+// measurement with an OPT3001 light sensor at I2C
+// slave address 'slaveAddress'.
+// Assumes: BSP_LightSensor_Init() has been called
+void static lightsensorstart(uint8_t slaveAddress) {
+    // configure Low Limit Register (0x02) for:
+    // INT pin active after each conversion completes
+    I2C_Send3(slaveAddress, 0x02, 0xC0, 0x00);
+    // configure Configuration Register (0x01) for:
+    // 15-12 RN         range number         1100b = automatic full-scale setting mode
+    // 11    CT         conversion time         1b = 800 ms
+    // 10-9  M          mode of conversion     01b = single-shot
+    // 8     OVF        overflow flag field     0b (read only)
+    // 7     CRF        conversion ready field  0b (read only)
+    // 6     FH         flag high field         0b (read only)
+    // 5     FL         flag low field          0b (read only)
+    // 4     L          latch                   1b = latch interrupt if measurement exceeds programmed ranges
+    // 3     POL        polarity                0b = INT pin reports active low
+    // 2     ME         mask exponent           0b = do not mask exponent (more math later)
+    // 1-0   FC         fault count            00b = 1 fault triggers interrupt
+    I2C_Send3(slaveAddress, 0x01, 0xCA, 0x10);
+    I2C_Recv2(slaveAddress);  // read Configuration Register to reset conversion ready
+}
+
+// Send the appropriate codes to end a measurement
+// with an OPT3001 light sensor at I2C slave address
+// 'slaveAddress'.  Return results (units 100*lux).
+// Assumes: BSP_LightSensor_Init() has been called and measurement is ready
+int32_t static lightsensorend(uint8_t slaveAddress) {
+    uint16_t raw, config;
+    I2C_Send1(slaveAddress, 0x00);  // pointer register 0x00 = Result Register
+    raw = I2C_Recv2(slaveAddress);
+    // force the INT pin to clear by clearing and resetting the latch bit of the Configuration Register (0x01)
+    I2C_Send1(slaveAddress, 0x01);     // pointer register 0x01 = Configuration Register
+    config = I2C_Recv2(slaveAddress);  // current Configuration Register
+    I2C_Send3(slaveAddress, 0x01, (config & 0xFF00) >> 8, (config & 0x00FF) & ~0x0010);
+    I2C_Send3(slaveAddress, 0x01, (config & 0xFF00) >> 8, (config & 0x00FF) | 0x0010);
+    return (1 << (raw >> 12)) * (raw & 0x0FFF);
+}
+
+// ------------BSP_LightSensor_Input------------
+// Query the OPT3001 light sensor for a measurement.
+// Wait until the measurement is ready, which may
+// take 800 ms.
+// Input: none
+// Output: light intensity (units 100*lux)
+// Assumes: BSP_LightSensor_Init() has been called
+#define LIGHTINT (*((volatile uint32_t *)0x40004080)) /* PA5 */
+int LightBusy = 0;                                    // 0 = idle; 1 = measuring
+uint32_t BSP_LightSensor_Input(void) {
+    uint32_t light;
+    LightBusy = 1;
+    lightsensorstart(0x44);
+    while (LIGHTINT == 0x20) {
+    };  // wait for conversion to complete
+    light = lightsensorend(0x44);
+    LightBusy = 0;
+    return light;
+}
+
+// ------------BSP_LightSensor_Start------------
+// Start a measurement using the OPT3001.
+// If a measurement is currently in progress, return
+// immediately.
+// Input: none
+// Output: none
+// Assumes: BSP_LightSensor_Init() has been called
+void BSP_LightSensor_Start(void) {
+    if (LightBusy == 0) {
+        // no measurement is in progress, so start one
+        LightBusy = 1;
+        lightsensorstart(0x44);
+    }
+}
+
+// ------------BSP_LightSensor_End------------
+// Query the OPT3001 light sensor for a measurement.
+// If no measurement is currently in progress, start
+// one and return zero immediately.  If the measurement
+// is not yet complete, return zero immediately.  If
+// the measurement is complete, store the result in the
+// pointer provided and return one.
+// Input: light is pointer to store light intensity (units 100*lux)
+// Output: one if measurement is ready and pointer is valid
+//         zero if measurement is not ready and pointer unchanged
+// Assumes: BSP_LightSensor_Init() has been called
+int BSP_LightSensor_End(uint32_t *light) {
+    uint32_t lightLocal;
+    if (LightBusy == 0) {
+        // no measurement is in progress, so start one
+        LightBusy = 1;
+        lightsensorstart(0x44);
+        return 0;  // measurement needs more time to complete
+    } else {
+        // measurement is in progress
+        if (LIGHTINT == 0x20) {
+            return 0;  // measurement needs more time to complete
+        } else {
+            lightLocal = lightsensorend(0x44);
+            *light = lightLocal;
+            LightBusy = 0;
+            return 1;  // measurement is complete; pointer valid
+        }
+    }
+}
+
+
+// ------------BSP_TempSensor_Init------------
+// Initialize a GPIO pin for input, which corresponds
+// with BoosterPack pins J2.11 (Temperature Sensor
+// interrupt).  Initialize two I2C pins, which
+// correspond with BoosterPack pins J1.9 (SCL) and
+// J1.10 (SDA).
+// Input: none
+// Output: none
+void BSP_TempSensor_Init(void) {
+    i2cinit();
+    // 1) activate clock for Port A (done in i2cinit())
+    // allow time for clock to stabilize (done in i2cinit())
+    // 2) no need to unlock PA2
+    GPIOA->AMSEL &= ~0x04;  // 3) disable analog on PA2
+                                  // 4) configure PA2 as GPIO
+    GPIOA->PCTL = (GPIOA->PCTL & 0xFFFFF0FF) + 0x00000000;
+    GPIOA->DIR &= ~0x04;    // 5) make PA5 input
+    GPIOA->AFSEL &= ~0x04;  // 6) disable alt funct on PA2
+    GPIOA->DEN |= 0x04;     // 7) enable digital I/O on PA2
+}
+
+// Send the appropriate codes to initiate a
+// measurement with a TMP006 temperature sensor at
+// I2C slave address 'slaveAddress'.
+// Assumes: BSP_TempSensor_Init() has been called
+void static tempsensorstart(uint8_t slaveAddress) {
+    // configure Configuration Register (0x02) for:
+    // 15    RST        software reset bit      0b = normal operation
+    // 14-12 MOD        mode of operation     111b = sensor and die continuous conversion
+    // 11-9  CR         ADC conversion rate   010b = 1 sample/sec
+    // 8     EN         interrupt pin enable    1b = ~DRDY pin enabled (J2.11/P3.6)
+    // 7     ~DRDY      data ready bit          0b (read only, automatic clear)
+    // 6-0   reserved                      000000b (reserved)
+    I2C_Send3(slaveAddress, 0x02, 0x75, 0x00);
+}
+
+// Send the appropriate codes to end a measurement
+// with a TMP006 temperature sensor at I2C slave
+// address 'slaveAddress'.  Store the results at the
+// provided pointers.
+// Assumes: BSP_TempSensor_Init() has been called and measurement is ready
+void static tempsensorend(uint8_t slaveAddress, int32_t *sensorV, int32_t *localT) {
+    int16_t raw;
+    I2C_Send1(slaveAddress, 0x00);  // pointer register 0x00 = Sensor Voltage Register
+    raw = I2C_Recv2(slaveAddress);
+    *sensorV = raw * 15625;         // 156.25 nV per LSB
+    I2C_Send1(slaveAddress, 0x01);  // pointer register 0x01 = Local Temperature Register
+    raw = I2C_Recv2(slaveAddress);
+    *localT = (raw >> 2) * 3125;  // 0.03125 C per LSB
+}
+
+// ------------BSP_TempSensor_Input------------
+// Query the TMP006 temperature sensor for a
+// measurement.  Wait until the measurement is ready,
+// which may take 4 seconds.
+// Input: sensorV is signed pointer to store sensor voltage (units 100*nV)
+//        localT is signed pointer to store local temperature (units 100,000*C)
+// Output: none
+// Assumes: BSP_TempSensor_Init() has been called
+#define TEMPINT (*((volatile uint32_t *)0x40004010)) /* PA2 */
+int TempBusy = 0;                                    // 0 = idle; 1 = measuring
+void BSP_TempSensor_Input(int32_t *sensorV, int32_t *localT) {
+    int32_t volt, temp;
+    TempBusy = 1;
+    tempsensorstart(0x40);
+    while (TEMPINT == 0x04) {
+    };  // wait for conversion to complete
+    tempsensorend(0x40, &volt, &temp);
+    *sensorV = volt;
+    *localT = temp;
+    TempBusy = 0;
+}
+
+// ------------BSP_TempSensor_Start------------
+// Start a measurement using the TMP006.
+// If a measurement is currently in progress, return
+// immediately.
+// Input: none
+// Output: none
+// Assumes: BSP_TempSensor_Init() has been called
+void BSP_TempSensor_Start(void) {
+    if (TempBusy == 0) {
+        // no measurement is in progress, so start one
+        TempBusy = 1;
+        tempsensorstart(0x40);
+    }
+}
+
+// ------------BSP_TempSensor_End------------
+// Query the TMP006 temperature sensor for a
+// measurement.  If no measurement is currently in
+// progress, start one and return zero immediately.
+// If the measurement is not yet complete, return
+// zero immediately.  If the measurement is complete,
+// store the result in the pointers provided and
+// return one.
+// Input: sensorV is signed pointer to store sensor voltage (units 100*nV)
+//        localT is signed pointer to store local temperature (units 100,000*C)
+// Output: one if measurement is ready and pointers are valid
+//         zero if measurement is not ready and pointers unchanged
+// Assumes: BSP_TempSensor_Init() has been called
+int BSP_TempSensor_End(int32_t *sensorV, int32_t *localT) {
+    int32_t volt, temp;
+    if (TempBusy == 0) {
+        // no measurement is in progress, so start one
+        TempBusy = 1;
+        tempsensorstart(0x40);
+        return 0;  // measurement needs more time to complete
+    } else {
+        // measurement is in progress
+        if (TEMPINT == 0x04) {
+            return 0;  // measurement needs more time to complete
+        } else {
+            tempsensorend(0x40, &volt, &temp);
+            *sensorV = volt;
+            *localT = temp;
+            TempBusy = 0;
+            return 1;  // measurement is complete; pointers valid
+        }
+    }
+}

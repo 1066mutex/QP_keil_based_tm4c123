@@ -88,24 +88,42 @@ void BSP_bstrPackBtnsInit(void);  // buttons initialisation.
 void BSP_bstrPackLedsDigitalInit(void); 
 
 /* Booster TFT SPI  */
-void BSP_BP_SPI_TFT_Init(const uint8_t *cmdList);
+void BSP_BP_SPI_TFT_Init(void);
 void BSP_BP_TFT_CS_LOW(void);
 void BSP_BP_TFT_CS_HIGH(void);
 
 /* Booster TFT REST  */
 void BSP_BP_TFT_RESET_HIGH(void);
 void BSP_BP_TFT_RESET_LOW(void);
+
 // This is a helper function that sends a piece of 8-bit data to the LCD.
 // Inputs: c  8-bit data to transmit
 // Outputs: 8-bit reply
 // Assumes: SSI2 and ports have already been initialized and enabled
+//
 uint8_t BSP_BP_SPIwritedata(uint8_t c);
+
 // This is a helper function that sends an 8-bit command to the LCD.
 // Inputs: c  8-bit code to transmit
 // Outputs: 8-bit reply
 // Assumes: SSI2 and ports have already been initialized and enabled
+//
 uint8_t BSP_BP_SPIwritecommand(uint8_t c);
 
 
+// JOYSTICK ===============================
+
+void BSP_BP_Joystick_Init(void);
+void BSP_Joystick_Trigger(void);
+void BSP_Joystick_Input(uint16_t *x, uint16_t *y);
+
+// System temp ===============================
+void BSP_SystemTempGet(void);
+
+// Microphone =================================================
+
+void BSP_Microphone_Input(uint16_t *mic);
+void BSP_Microphone_Init(void);
+void BSP_Microphone_Get(void);
 
 #endif /* BSP_H */

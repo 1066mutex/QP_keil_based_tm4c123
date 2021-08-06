@@ -60,6 +60,7 @@ int main() {
     QF_psInit(subscrSto, Q_DIM(subscrSto));
 
     /* initialize event pools... */
+    //!  for more info see book page 350
     QF_poolInit(smlPoolSto, sizeof(smlPoolSto), sizeof(smlPoolSto[0]));
 
     /* initialize the Board Support Package

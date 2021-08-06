@@ -584,7 +584,7 @@ void static commandList(const uint8_t *addr) {
 // Output: none
 void static ST7735_InitR(enum initRFlags option) {
     // initialise the display
-    BSP_BP_SPI_TFT_Init(Rcmd1);
+    BSP_BP_SPI_TFT_Init();
 
     commandList(Rcmd1);
     if (option == INITR_GREENTAB) {
@@ -1273,3 +1273,13 @@ void BSP_LCD_PlotIncrement(void) {
 /* ********************** */
 /*   End of LCD Section   */
 /* ********************** */
+
+
+// TODO:
+// have an led class holds led modes digital/pwm 
+// selects which function to call based on the current mode selected.
+// initialise different mods. 
+// use separate .c file for leds, display, etc????
+
+
+

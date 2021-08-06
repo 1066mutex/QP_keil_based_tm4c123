@@ -20,21 +20,24 @@
 #define dpp_h
 
 enum DPPSignals {
-    EAT_SIG = Q_USER_SIG, /* published by Table to let a philosopher eat */
-    DONE_SIG,             /* published by Philosopher when done eating */
-    PAUSE_SIG,            /* published by BSP to pause serving forks */
-    SERVE_SIG,            /* published by BSP to serve re-start serving forks */
-    TEST_SIG,             /* published by BSP to test the application */
-    BUTTON3_PRESSED_SIG,
-    BUTTON3_DEPRESSED_SIG,
-    BUTTON4_PRESSED_SIG,
-    BUTTON4_DEPRESSED_SIG,
-    MAX_PUB_SIG, /* the last published signal */
+  EAT_SIG = Q_USER_SIG, /* published by Table to let a philosopher eat */
+  DONE_SIG,             /* published by Philosopher when done eating */
+  PAUSE_SIG,            /* published by BSP to pause serving forks */
+  SERVE_SIG,            /* published by BSP to serve re-start serving forks */
+  TEST_SIG,             /* published by BSP to test the application */
+  BUTTON3_PRESSED_SIG,
+  BUTTON3_DEPRESSED_SIG,
+  BUTTON4_PRESSED_SIG,
+  BUTTON4_DEPRESSED_SIG,
+  JOYSTICK_PRESSED_SIG,
+  JOYSTICK_DEPRESSED_SIG,
+  NEW_TEMP_DATA_SIG,
+  MAX_PUB_SIG, /* the last published signal */
 
-    HUNGRY_SIG,   /* posted direclty to Table from hungry Philo */
-    TIMEOUT_SIG,  /* used by Philosophers for time events */
-    TIMEOUT1_SIG, /* used by Philosophers for time events */
-    MAX_SIG       /* the last signal */
+  HUNGRY_SIG,   /* posted direclty to Table from hungry Philo */
+  TIMEOUT_SIG,  /* used by Philosophers for time events */
+  TIMEOUT1_SIG, /* used by Philosophers for time events */
+  MAX_SIG       /* the last signal */
 };
 
 /*$declare${Events::TableEvt} ##############################################*/
@@ -73,6 +76,17 @@ void Heartbeat_ctor(void);
 extern QActive * const AO_Heartbeat;
 
 /* AO_Heartbeat  ##########################################################*/
+
+/* Events TempEvt========================================================= */
+
+typedef struct{
+/* protected: */
+QEvt super;
+/* public: */
+uint32_t temp;
+} TempEvt;
+
+
 
 #ifdef qxk_h
     void

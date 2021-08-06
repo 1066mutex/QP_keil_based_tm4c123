@@ -14,6 +14,7 @@ Section Cross References
     startup_tm4c123gh6pm.o(RESET) refers to port.o(.emb_text) for SVC_Handler
     startup_tm4c123gh6pm.o(RESET) refers to port.o(i.SysTick_Handler) for SysTick_Handler
     startup_tm4c123gh6pm.o(RESET) refers to bsp.o(i.GPIOPortA_IRQHandler) for GPIOPortA_IRQHandler
+    startup_tm4c123gh6pm.o(RESET) refers to bsp.o(i.ADCSeq3_IRQHandler) for ADCSeq3_IRQHandler
     startup_tm4c123gh6pm.o(.text) refers (Special) to heapauxi.o(.text) for __use_two_region_memory
     startup_tm4c123gh6pm.o(.text) refers to bsp.o(i.Q_onAssert) for Q_onAssert
     startup_tm4c123gh6pm.o(.text) refers to system_tm4c123gh6pm.o(i.SystemInit) for SystemInit
@@ -490,10 +491,22 @@ Section Cross References
     blinky.o(i.Heartbeat_initial) refers to qf_ps.o(i.QActive_subscribe) for QActive_subscribe
     blinky.o(i.Heartbeat_initial) refers to bsp.o(i.BSP_ledRedOff) for BSP_ledRedOff
     blinky.o(i.Heartbeat_initial) refers to bsp_bp.o(i.BSP_LCD_Init) for BSP_LCD_Init
+    blinky.o(i.Heartbeat_initial) refers to bsp.o(i.BSP_BP_Joystick_Init) for BSP_BP_Joystick_Init
+    blinky.o(i.Heartbeat_initial) refers to bsp_bp.o(i.BSP_LCD_DrawString) for BSP_LCD_DrawString
     blinky.o(i.Heartbeat_initial) refers to blinky.o(i.Heartbeat_off) for Heartbeat_off
+    blinky.o(i.Heartbeat_off) refers to bsp_bp.o(i.BSP_LCD_SetCursor) for BSP_LCD_SetCursor
+    blinky.o(i.Heartbeat_off) refers to bsp_bp.o(i.BSP_LCD_OutUDec) for BSP_LCD_OutUDec
     blinky.o(i.Heartbeat_off) refers to blinky.o(i.Heartbeat_on) for Heartbeat_on
     blinky.o(i.Heartbeat_off) refers to blinky.o(i.Heartbeat_start) for Heartbeat_start
     blinky.o(i.Heartbeat_on) refers to bsp.o(i.BSP_BP_LedBlueDuty) for BSP_BP_LedBlueDuty
+    blinky.o(i.Heartbeat_on) refers to bsp.o(i.BSP_Joystick_Trigger) for BSP_Joystick_Trigger
+    blinky.o(i.Heartbeat_on) refers to bsp.o(i.BSP_Microphone_Get) for BSP_Microphone_Get
+    blinky.o(i.Heartbeat_on) refers to bsp.o(i.BSP_Joystick_Input) for BSP_Joystick_Input
+    blinky.o(i.Heartbeat_on) refers to bsp.o(i.BSP_Microphone_Input) for BSP_Microphone_Input
+    blinky.o(i.Heartbeat_on) refers to bsp_bp.o(i.BSP_LCD_FillRect) for BSP_LCD_FillRect
+    blinky.o(i.Heartbeat_on) refers to bsp_bp.o(i.BSP_LCD_SetCursor) for BSP_LCD_SetCursor
+    blinky.o(i.Heartbeat_on) refers to bsp_bp.o(i.BSP_LCD_OutUDec4) for BSP_LCD_OutUDec4
+    blinky.o(i.Heartbeat_on) refers to bsp.o(i.BSP_SystemTempGet) for BSP_SystemTempGet
     blinky.o(i.Heartbeat_on) refers to blinky.o(i.Heartbeat_off) for Heartbeat_off
     blinky.o(i.Heartbeat_on) refers to blinky.o(i.Heartbeat_start) for Heartbeat_start
     blinky.o(i.Heartbeat_start) refers to qf_time.o(i.QTimeEvt_armX) for QTimeEvt_armX
@@ -504,19 +517,25 @@ Section Cross References
     blinky.o(i.Heartbeat_start) refers to blinky.o(i.Heartbeat_stop) for Heartbeat_stop
     blinky.o(i.Heartbeat_start) refers to qep_hsm.o(i.QHsm_top) for QHsm_top
     blinky.o(i.Heartbeat_stop) refers to bsp.o(i.BSP_BP_Buzzer_Freq) for BSP_BP_Buzzer_Freq
-    blinky.o(i.Heartbeat_stop) refers to bsp_bp.o(i.BSP_LCD_DrawString) for BSP_LCD_DrawString
+    blinky.o(i.Heartbeat_stop) refers to bsp.o(i.BSP_Microphone_Get) for BSP_Microphone_Get
     blinky.o(i.Heartbeat_stop) refers to blinky.o(i.Heartbeat_start) for Heartbeat_start
     blinky.o(i.Heartbeat_stop) refers to qep_hsm.o(i.QHsm_top) for QHsm_top
     blinky.o(.constdata) refers to blinky.o(.bss) for l_Heartbeat
+    bsp.o(i.ADCSeq3_IRQHandler) refers to qf_port.o(i.QF_newXFromISR_) for QF_newXFromISR_
+    bsp.o(i.ADCSeq3_IRQHandler) refers to qf_port.o(i.QActive_postFromISR_) for QActive_postFromISR_
+    bsp.o(i.ADCSeq3_IRQHandler) refers to blinky.o(.constdata) for AO_Heartbeat
+    bsp.o(i.BSP_Accelerometer_Init) refers to bsp.o(i.adcinit) for adcinit
     bsp.o(i.BSP_BP_BuzzerIO_Init) refers to system_tm4c123gh6pm.o(.data) for SystemCoreClock
     bsp.o(i.BSP_BP_BuzzerIO_Init) refers to bsp.o(.data) for PWM_sysclk
     bsp.o(i.BSP_BP_Buzzer_Freq) refers to bsp.o(.data) for PWM_sysclk
+    bsp.o(i.BSP_BP_Joystick_Init) refers to bsp.o(i.adcinit) for adcinit
     bsp.o(i.BSP_BP_LedBlueDuty) refers to system_tm4c123gh6pm.o(.data) for SystemCoreClock
     bsp.o(i.BSP_BP_LedGreenDuty) refers to system_tm4c123gh6pm.o(.data) for SystemCoreClock
     bsp.o(i.BSP_BP_LedRedDuty) refers to system_tm4c123gh6pm.o(.data) for SystemCoreClock
     bsp.o(i.BSP_BP_RGB_ledsInit) refers to system_tm4c123gh6pm.o(.data) for SystemCoreClock
     bsp.o(i.BSP_BP_SPI_TFT_Init) refers to bsp.o(i.BSP_BP_TFT_CS_LOW) for BSP_BP_TFT_CS_LOW
     bsp.o(i.BSP_BP_SPI_TFT_Init) refers to bsp.o(i.BSP_BP_TFT_RESET_HIGH) for BSP_BP_TFT_RESET_HIGH
+    bsp.o(i.BSP_BP_SPI_TFT_Init) refers to bsp.o(i.BSP_Delay1ms) for BSP_Delay1ms
     bsp.o(i.BSP_BP_SPI_TFT_Init) refers to bsp.o(i.BSP_BP_TFT_RESET_LOW) for BSP_BP_TFT_RESET_LOW
     bsp.o(i.BSP_BP_SPI_TFT_Init) refers to bsp.o(i.BSP_BP_TFT_CS_HIGH) for BSP_BP_TFT_CS_HIGH
     bsp.o(i.BSP_BP_SPIwritecommand) refers to bsp.o(i.BSP_BP_TFT_CS_LOW) for BSP_BP_TFT_CS_LOW
@@ -526,9 +545,14 @@ Section Cross References
     bsp.o(i.BSP_BP_SPIwritedata) refers to bsp.o(i.BSP_BP_TFT_DC_DATA) for BSP_BP_TFT_DC_DATA
     bsp.o(i.BSP_BP_SPIwritedata) refers to bsp.o(i.BSP_BP_TFT_CS_HIGH) for BSP_BP_TFT_CS_HIGH
     bsp.o(i.BSP_Delay1ms) refers to bsp.o(.emb_text) for parrotdelay
+    bsp.o(i.BSP_Microphone_Init) refers to bsp.o(i.adcinit) for adcinit
     bsp.o(i.BSP_init) refers to system_tm4c123gh6pm.o(i.SystemCoreClockUpdate) for SystemCoreClockUpdate
     bsp.o(i.BSP_init) refers to bsp.o(i.BSP_BP_RGB_ledsInit) for BSP_BP_RGB_ledsInit
     bsp.o(i.BSP_init) refers to bsp.o(i.BSP_BP_BuzzerIO_Init) for BSP_BP_BuzzerIO_Init
+    bsp.o(i.BSP_init) refers to bsp.o(i.BSP_BP_Joystick_Init) for BSP_BP_Joystick_Init
+    bsp.o(i.BSP_init) refers to bsp.o(i.BSP_BP_SPI_TFT_Init) for BSP_BP_SPI_TFT_Init
+    bsp.o(i.BSP_init) refers to bsp.o(i.BSP_Microphone_Init) for BSP_Microphone_Init
+    bsp.o(i.BSP_init) refers to bsp.o(i.mcuTempSensorInit) for mcuTempSensorInit
     bsp.o(i.BSP_init) refers to bsp.o(i.BSP_randomSeed) for BSP_randomSeed
     bsp.o(i.BSP_random) refers to tasks.o(i.vTaskSuspendAll) for vTaskSuspendAll
     bsp.o(i.BSP_random) refers to tasks.o(i.xTaskResumeAll) for xTaskResumeAll
@@ -538,6 +562,7 @@ Section Cross References
     bsp.o(i.GPIOPortA_IRQHandler) refers to qf_port.o(i.QActive_postFromISR_) for QActive_postFromISR_
     bsp.o(i.GPIOPortA_IRQHandler) refers to table.o(.constdata) for AO_Table
     bsp.o(i.QF_onStartup) refers to bsp.o(i.__NVIC_SetPriority) for __NVIC_SetPriority
+    bsp.o(i.QF_onStartup) refers to bsp.o(i.__NVIC_EnableIRQ) for __NVIC_EnableIRQ
     bsp.o(i.QF_onStartup) refers to system_tm4c123gh6pm.o(.data) for SystemCoreClock
     bsp.o(i.vApplicationGetIdleTaskMemory) refers to bsp.o(.bss) for xIdleTaskTCB
     bsp.o(i.vApplicationStackOverflowHook) refers to bsp.o(i.Q_onAssert) for Q_onAssert
@@ -886,6 +911,9 @@ Removing Unused input sections from the image.
     Removing bsp.o(.rev16_text), (4 bytes).
     Removing bsp.o(.revsh_text), (4 bytes).
     Removing bsp.o(.rrx_text), (6 bytes).
+    Removing bsp.o(i.BSP_AccelerometerGet), (20 bytes).
+    Removing bsp.o(i.BSP_Accelerometer_Init), (176 bytes).
+    Removing bsp.o(i.BSP_Accelerometer_Input), (72 bytes).
     Removing bsp.o(i.BSP_BP_Buzzer_Set), (64 bytes).
     Removing bsp.o(i.BSP_BP_D_LedsInit), (240 bytes).
     Removing bsp.o(i.BSP_BP_LedBlueOff), (12 bytes).
@@ -910,22 +938,17 @@ Removing Unused input sections from the image.
     Removing bsp_bp.o(i.BSP_LCD_DrawFastVLine), (124 bytes).
     Removing bsp_bp.o(i.BSP_LCD_DrawPixel), (72 bytes).
     Removing bsp_bp.o(i.BSP_LCD_Drawaxes), (292 bytes).
-    Removing bsp_bp.o(i.BSP_LCD_OutUDec), (144 bytes).
-    Removing bsp_bp.o(i.BSP_LCD_OutUDec4), (136 bytes).
     Removing bsp_bp.o(i.BSP_LCD_OutUDec5), (136 bytes).
     Removing bsp_bp.o(i.BSP_LCD_OutUFix2_1), (112 bytes).
     Removing bsp_bp.o(i.BSP_LCD_OutUHex2), (112 bytes).
     Removing bsp_bp.o(i.BSP_LCD_PlotIncrement), (56 bytes).
     Removing bsp_bp.o(i.BSP_LCD_PlotPoint), (100 bytes).
     Removing bsp_bp.o(i.BSP_LCD_SwapColor), (18 bytes).
-    Removing bsp_bp.o(i.fillmessage), (72 bytes).
     Removing bsp_bp.o(i.fillmessage2_1), (88 bytes).
     Removing bsp_bp.o(i.fillmessage2_Hex), (84 bytes).
-    Removing bsp_bp.o(i.fillmessage4), (100 bytes).
     Removing bsp_bp.o(i.fillmessage5), (128 bytes).
-    Removing bsp_bp.o(.bss), (12 bytes).
 
-108 unused section(s) (total 7762 bytes) removed from the image.
+106 unused section(s) (total 7566 bytes) removed from the image.
 
 ==============================================================================
 
@@ -936,54 +959,54 @@ Image Symbol Table
     Symbol Name                              Value     Ov Type        Size  Object(Section)
 
     RESET                                    0x00000000   Section      620  startup_tm4c123gh6pm.o(RESET)
-    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit3.o ABSOLUTE
-    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardshut.o ABSOLUTE
     ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit1.o ABSOLUTE
     ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit2.o ABSOLUTE
-    ../clib/angel/handlers.s                 0x00000000   Number         0  __scatter_copy.o ABSOLUTE
+    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardinit3.o ABSOLUTE
+    ../clib/angel/boardlib.s                 0x00000000   Number         0  boardshut.o ABSOLUTE
     ../clib/angel/handlers.s                 0x00000000   Number         0  __scatter_zi.o ABSOLUTE
-    ../clib/angel/kernel.s                   0x00000000   Number         0  __rtentry.o ABSOLUTE
+    ../clib/angel/handlers.s                 0x00000000   Number         0  __scatter_copy.o ABSOLUTE
     ../clib/angel/kernel.s                   0x00000000   Number         0  __rtentry4.o ABSOLUTE
-    ../clib/angel/kernel.s                   0x00000000   Number         0  __rtentry2.o ABSOLUTE
     ../clib/angel/kernel.s                   0x00000000   Number         0  rtexit.o ABSOLUTE
     ../clib/angel/kernel.s                   0x00000000   Number         0  rtexit2.o ABSOLUTE
+    ../clib/angel/kernel.s                   0x00000000   Number         0  __rtentry2.o ABSOLUTE
+    ../clib/angel/kernel.s                   0x00000000   Number         0  __rtentry.o ABSOLUTE
     ../clib/angel/rt.s                       0x00000000   Number         0  rt_raise.o ABSOLUTE
     ../clib/angel/scatter.s                  0x00000000   Number         0  __scatter.o ABSOLUTE
     ../clib/angel/startup.s                  0x00000000   Number         0  __main.o ABSOLUTE
-    ../clib/angel/sys.s                      0x00000000   Number         0  use_no_semi.o ABSOLUTE
-    ../clib/angel/sys.s                      0x00000000   Number         0  libspace.o ABSOLUTE
-    ../clib/angel/sys.s                      0x00000000   Number         0  indicate_semi.o ABSOLUTE
     ../clib/angel/sys.s                      0x00000000   Number         0  sys_stackheap_outer.o ABSOLUTE
+    ../clib/angel/sys.s                      0x00000000   Number         0  libspace.o ABSOLUTE
+    ../clib/angel/sys.s                      0x00000000   Number         0  use_no_semi.o ABSOLUTE
+    ../clib/angel/sys.s                      0x00000000   Number         0  indicate_semi.o ABSOLUTE
     ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_command.o ABSOLUTE
-    ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_wrch.o ABSOLUTE
     ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_exit.o ABSOLUTE
+    ../clib/angel/sysapp.c                   0x00000000   Number         0  sys_wrch.o ABSOLUTE
+    ../clib/armsys.c                         0x00000000   Number         0  argv_veneer.o ABSOLUTE
+    ../clib/armsys.c                         0x00000000   Number         0  argv_veneer.o ABSOLUTE
     ../clib/armsys.c                         0x00000000   Number         0  _get_argv_nomalloc.o ABSOLUTE
     ../clib/armsys.c                         0x00000000   Number         0  no_argv.o ABSOLUTE
-    ../clib/armsys.c                         0x00000000   Number         0  argv_veneer.o ABSOLUTE
-    ../clib/armsys.c                         0x00000000   Number         0  argv_veneer.o ABSOLUTE
     ../clib/heapalloc.c                      0x00000000   Number         0  hrguard.o ABSOLUTE
     ../clib/heapaux.c                        0x00000000   Number         0  heapauxi.o ABSOLUTE
-    ../clib/libinit.s                        0x00000000   Number         0  libshutdown2.o ABSOLUTE
-    ../clib/libinit.s                        0x00000000   Number         0  libinit2.o ABSOLUTE
-    ../clib/libinit.s                        0x00000000   Number         0  libinit.o ABSOLUTE
     ../clib/libinit.s                        0x00000000   Number         0  libshutdown.o ABSOLUTE
-    ../clib/memcpset.s                       0x00000000   Number         0  aeabi_memset.o ABSOLUTE
+    ../clib/libinit.s                        0x00000000   Number         0  libinit.o ABSOLUTE
+    ../clib/libinit.s                        0x00000000   Number         0  libinit2.o ABSOLUTE
+    ../clib/libinit.s                        0x00000000   Number         0  libshutdown2.o ABSOLUTE
     ../clib/memcpset.s                       0x00000000   Number         0  rt_memclr.o ABSOLUTE
     ../clib/memcpset.s                       0x00000000   Number         0  rt_memclr_w.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_rtred_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_stak_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_general.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_pvfn_inner.o ABSOLUTE
+    ../clib/memcpset.s                       0x00000000   Number         0  aeabi_memset.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_fpe_inner.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_abrt_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_cppl_inner.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_other.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_segv_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_general.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  __raise.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_exit.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_formal.o ABSOLUTE
     ../clib/signal.c                         0x00000000   Number         0  defsig_rtmem_outer.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_exit.o ABSOLUTE
-    ../clib/signal.c                         0x00000000   Number         0  defsig_fpe_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_other.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_segv_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_cppl_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_pvfn_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_stak_inner.o ABSOLUTE
+    ../clib/signal.c                         0x00000000   Number         0  defsig_rtred_inner.o ABSOLUTE
     ../clib/signal.s                         0x00000000   Number         0  defsig.o ABSOLUTE
     ../clib/stdlib.c                         0x00000000   Number         0  exit.o ABSOLUTE
     ../fplib/fpinit.s                        0x00000000   Number         0  fpinit.o ABSOLUTE
@@ -1077,214 +1100,234 @@ Image Symbol Table
     .text                                    0x0000055c   Section        0  sys_exit.o(.text)
     .text                                    0x00000568   Section        2  use_no_semi.o(.text)
     .text                                    0x0000056a   Section        0  indicate_semi.o(.text)
-    i.BSP_BP_BuzzerIO_Init                   0x0000056c   Section        0  bsp.o(i.BSP_BP_BuzzerIO_Init)
-    i.BSP_BP_Buzzer_Freq                     0x00000680   Section        0  bsp.o(i.BSP_BP_Buzzer_Freq)
-    i.BSP_BP_LedBlueDuty                     0x000006c0   Section        0  bsp.o(i.BSP_BP_LedBlueDuty)
-    i.BSP_BP_RGB_ledsInit                    0x000006e8   Section        0  bsp.o(i.BSP_BP_RGB_ledsInit)
-    i.BSP_BP_SPI_TFT_Init                    0x00000914   Section        0  bsp.o(i.BSP_BP_SPI_TFT_Init)
-    i.BSP_BP_SPIwritecommand                 0x00000ad4   Section        0  bsp.o(i.BSP_BP_SPIwritecommand)
-    i.BSP_BP_SPIwritedata                    0x00000b10   Section        0  bsp.o(i.BSP_BP_SPIwritedata)
-    i.BSP_BP_TFT_CS_HIGH                     0x00000b4c   Section        0  bsp.o(i.BSP_BP_TFT_CS_HIGH)
-    i.BSP_BP_TFT_CS_LOW                      0x00000b56   Section        0  bsp.o(i.BSP_BP_TFT_CS_LOW)
-    i.BSP_BP_TFT_DC_COMMAND                  0x00000b60   Section        0  bsp.o(i.BSP_BP_TFT_DC_COMMAND)
-    i.BSP_BP_TFT_DC_DATA                     0x00000b6c   Section        0  bsp.o(i.BSP_BP_TFT_DC_DATA)
-    i.BSP_BP_TFT_RESET_HIGH                  0x00000b78   Section        0  bsp.o(i.BSP_BP_TFT_RESET_HIGH)
-    i.BSP_BP_TFT_RESET_LOW                   0x00000b84   Section        0  bsp.o(i.BSP_BP_TFT_RESET_LOW)
-    i.BSP_Delay1ms                           0x00000b90   Section        0  bsp.o(i.BSP_Delay1ms)
-    i.BSP_LCD_DrawChar                       0x00000ba8   Section        0  bsp_bp.o(i.BSP_LCD_DrawChar)
-    i.BSP_LCD_DrawString                     0x00000cb8   Section        0  bsp_bp.o(i.BSP_LCD_DrawString)
-    i.BSP_LCD_FillRect                       0x00000d0c   Section        0  bsp_bp.o(i.BSP_LCD_FillRect)
-    i.BSP_LCD_FillScreen                     0x00000db8   Section        0  bsp_bp.o(i.BSP_LCD_FillScreen)
-    i.BSP_LCD_Init                           0x00000ddc   Section        0  bsp_bp.o(i.BSP_LCD_Init)
-    i.BSP_LCD_SetCursor                      0x00000de8   Section        0  bsp_bp.o(i.BSP_LCD_SetCursor)
-    i.BSP_displayPaused                      0x00000e08   Section        0  bsp.o(i.BSP_displayPaused)
-    i.BSP_displayPhilStat                    0x00000e1c   Section        0  bsp.o(i.BSP_displayPhilStat)
-    i.BSP_init                               0x00000e34   Section        0  bsp.o(i.BSP_init)
-    i.BSP_ledRedOff                          0x00000ee4   Section        0  bsp.o(i.BSP_ledRedOff)
-    i.BSP_random                             0x00000ef0   Section        0  bsp.o(i.BSP_random)
-    i.BSP_randomSeed                         0x00000f34   Section        0  bsp.o(i.BSP_randomSeed)
-    i.GPIOPortA_IRQHandler                   0x00000f40   Section        0  bsp.o(i.GPIOPortA_IRQHandler)
-    i.Heartbeat_ctor                         0x00000f84   Section        0  blinky.o(i.Heartbeat_ctor)
-    i.Heartbeat_initial                      0x00000fac   Section        0  blinky.o(i.Heartbeat_initial)
-    Heartbeat_initial                        0x00000fad   Thumb Code    44  blinky.o(i.Heartbeat_initial)
-    i.Heartbeat_off                          0x00000fdc   Section        0  blinky.o(i.Heartbeat_off)
-    Heartbeat_off                            0x00000fdd   Thumb Code    28  blinky.o(i.Heartbeat_off)
-    i.Heartbeat_on                           0x00001000   Section        0  blinky.o(i.Heartbeat_on)
-    Heartbeat_on                             0x00001001   Thumb Code    92  blinky.o(i.Heartbeat_on)
-    i.Heartbeat_start                        0x00001064   Section        0  blinky.o(i.Heartbeat_start)
-    Heartbeat_start                          0x00001065   Thumb Code   100  blinky.o(i.Heartbeat_start)
-    i.Heartbeat_stop                         0x000010d8   Section        0  blinky.o(i.Heartbeat_stop)
-    Heartbeat_stop                           0x000010d9   Thumb Code    56  blinky.o(i.Heartbeat_stop)
-    i.Philo_ctor                             0x00001128   Section        0  philo.o(i.Philo_ctor)
-    i.Philo_eating                           0x00001160   Section        0  philo.o(i.Philo_eating)
-    Philo_eating                             0x00001161   Thumb Code   166  philo.o(i.Philo_eating)
-    i.Philo_hungry                           0x00001218   Section        0  philo.o(i.Philo_hungry)
-    Philo_hungry                             0x00001219   Thumb Code   152  philo.o(i.Philo_hungry)
-    i.Philo_initial                          0x000012c4   Section        0  philo.o(i.Philo_initial)
-    Philo_initial                            0x000012c5   Thumb Code    44  philo.o(i.Philo_initial)
-    i.Philo_thinking                         0x000012f8   Section        0  philo.o(i.Philo_thinking)
-    Philo_thinking                           0x000012f9   Thumb Code   150  philo.o(i.Philo_thinking)
-    i.QActive_ctor                           0x000013a0   Section        0  qf_qact.o(i.QActive_ctor)
-    i.QActive_get_                           0x000013c0   Section        0  qf_actq.o(i.QActive_get_)
-    i.QActive_postFromISR_                   0x00001438   Section        0  qf_port.o(i.QActive_postFromISR_)
-    i.QActive_postLIFO_                      0x00001510   Section        0  qf_actq.o(i.QActive_postLIFO_)
-    i.QActive_post_                          0x00001590   Section        0  qf_actq.o(i.QActive_post_)
-    i.QActive_setAttr                        0x00001648   Section        0  qf_port.o(i.QActive_setAttr)
-    i.QActive_start_                         0x00001670   Section        0  qf_port.o(i.QActive_start_)
-    i.QActive_subscribe                      0x00001720   Section        0  qf_ps.o(i.QActive_subscribe)
-    i.QEQueue_init                           0x00001788   Section        0  qf_qeq.o(i.QEQueue_init)
-    i.QF_LOG2                                0x000017a0   Section        0  qf_act.o(i.QF_LOG2)
-    i.QF_add_                                0x000017c8   Section        0  qf_act.o(i.QF_add_)
-    i.QF_bzero                               0x00001804   Section        0  qf_act.o(i.QF_bzero)
-    i.QF_gc                                  0x00001818   Section        0  qf_dyn.o(i.QF_gc)
-    i.QF_gcFromISR                           0x00001874   Section        0  qf_port.o(i.QF_gcFromISR)
-    i.QF_init                                0x000018ec   Section        0  qf_port.o(i.QF_init)
-    i.QF_newXFromISR_                        0x000018f0   Section        0  qf_port.o(i.QF_newXFromISR_)
-    i.QF_newX_                               0x00001988   Section        0  qf_dyn.o(i.QF_newX_)
-    i.QF_onStartup                           0x00001a20   Section        0  bsp.o(i.QF_onStartup)
-    i.QF_poolInit                            0x00001ab8   Section        0  qf_dyn.o(i.QF_poolInit)
-    i.QF_psInit                              0x00001b28   Section        0  qf_ps.o(i.QF_psInit)
-    i.QF_publishFromISR_                     0x00001b48   Section        0  qf_port.o(i.QF_publishFromISR_)
-    i.QF_publish_                            0x00001c0c   Section        0  qf_ps.o(i.QF_publish_)
-    i.QF_run                                 0x00001cbc   Section        0  qf_port.o(i.QF_run)
-    i.QF_tickXFromISR_                       0x00001cd8   Section        0  qf_port.o(i.QF_tickXFromISR_)
-    i.QF_tickX_                              0x00001dcc   Section        0  qf_time.o(i.QF_tickX_)
-    i.QHsm_ctor                              0x00001e88   Section        0  qep_hsm.o(i.QHsm_ctor)
-    i.QHsm_dispatch_                         0x00001e9c   Section        0  qep_hsm.o(i.QHsm_dispatch_)
-    i.QHsm_init_                             0x00001fa8   Section        0  qep_hsm.o(i.QHsm_init_)
-    i.QHsm_top                               0x0000205c   Section        0  qep_hsm.o(i.QHsm_top)
-    i.QHsm_tran_                             0x00002064   Section        0  qep_hsm.o(i.QHsm_tran_)
-    QHsm_tran_                               0x00002065   Thumb Code   338  qep_hsm.o(i.QHsm_tran_)
-    i.QMPool_get                             0x000021c0   Section        0  qf_mem.o(i.QMPool_get)
-    i.QMPool_getFromISR                      0x00002250   Section        0  qf_port.o(i.QMPool_getFromISR)
-    i.QMPool_init                            0x000022e8   Section        0  qf_mem.o(i.QMPool_init)
-    i.QMPool_put                             0x00002378   Section        0  qf_mem.o(i.QMPool_put)
-    i.QMPool_putFromISR                      0x000023b8   Section        0  qf_port.o(i.QMPool_putFromISR)
-    i.QTicker_dispatch_                      0x00002410   Section        0  qf_actq.o(i.QTicker_dispatch_)
-    QTicker_dispatch_                        0x00002411   Thumb Code    38  qf_actq.o(i.QTicker_dispatch_)
-    i.QTicker_init_                          0x00002436   Section        0  qf_actq.o(i.QTicker_init_)
-    QTicker_init_                            0x00002437   Thumb Code     6  qf_actq.o(i.QTicker_init_)
-    i.QTicker_postLIFO_                      0x0000243c   Section        0  qf_actq.o(i.QTicker_postLIFO_)
-    QTicker_postLIFO_                        0x0000243d   Thumb Code    18  qf_actq.o(i.QTicker_postLIFO_)
-    i.QTicker_post_                          0x00002454   Section        0  qf_actq.o(i.QTicker_post_)
-    QTicker_post_                            0x00002455   Thumb Code    66  qf_actq.o(i.QTicker_post_)
-    i.QTimeEvt_armX                          0x0000249c   Section        0  qf_time.o(i.QTimeEvt_armX)
-    i.QTimeEvt_ctorX                         0x0000250c   Section        0  qf_time.o(i.QTimeEvt_ctorX)
-    i.QTimeEvt_disarm                        0x00002544   Section        0  qf_time.o(i.QTimeEvt_disarm)
-    i.Q_onAssert                             0x00002574   Section        0  bsp.o(i.Q_onAssert)
-    i.ST7735_InitR                           0x000025e0   Section        0  bsp_bp.o(i.ST7735_InitR)
-    ST7735_InitR                             0x000025e1   Thumb Code    92  bsp_bp.o(i.ST7735_InitR)
-    i.SysTick_Handler                        0x00002658   Section        0  port.o(i.SysTick_Handler)
-    i.SystemCoreClockUpdate                  0x0000268c   Section        0  system_tm4c123gh6pm.o(i.SystemCoreClockUpdate)
-    i.SystemInit                             0x00002750   Section        0  system_tm4c123gh6pm.o(i.SystemInit)
-    i.Table_active                           0x00002804   Section        0  table.o(i.Table_active)
-    Table_active                             0x00002805   Thumb Code    46  table.o(i.Table_active)
-    i.Table_ctor                             0x0000283c   Section        0  table.o(i.Table_ctor)
-    i.Table_initial                          0x0000286c   Section        0  table.o(i.Table_initial)
-    Table_initial                            0x0000286d   Thumb Code    78  table.o(i.Table_initial)
-    i.Table_paused                           0x000028cc   Section        0  table.o(i.Table_paused)
-    Table_paused                             0x000028cd   Thumb Code   222  table.o(i.Table_paused)
-    i.Table_serving                          0x000029d0   Section        0  table.o(i.Table_serving)
-    Table_serving                            0x000029d1   Thumb Code   568  table.o(i.Table_serving)
-    i.__NVIC_SetPriority                     0x00002c38   Section        0  bsp.o(i.__NVIC_SetPriority)
-    __NVIC_SetPriority                       0x00002c39   Thumb Code    32  bsp.o(i.__NVIC_SetPriority)
-    i.commandList                            0x00002c60   Section        0  bsp_bp.o(i.commandList)
-    commandList                              0x00002c61   Thumb Code    86  bsp_bp.o(i.commandList)
-    i.getOscClk                              0x00002cb8   Section        0  system_tm4c123gh6pm.o(i.getOscClk)
-    getOscClk                                0x00002cb9   Thumb Code   182  system_tm4c123gh6pm.o(i.getOscClk)
-    i.main                                   0x00002db0   Section        0  main.o(i.main)
-    i.prvAddCurrentTaskToDelayedList         0x00002f14   Section        0  tasks.o(i.prvAddCurrentTaskToDelayedList)
-    prvAddCurrentTaskToDelayedList           0x00002f15   Thumb Code   104  tasks.o(i.prvAddCurrentTaskToDelayedList)
-    i.prvAddNewTaskToReadyList               0x00002f94   Section        0  tasks.o(i.prvAddNewTaskToReadyList)
-    prvAddNewTaskToReadyList                 0x00002f95   Thumb Code   150  tasks.o(i.prvAddNewTaskToReadyList)
-    i.prvCheckTasksWaitingTermination        0x00003048   Section        0  tasks.o(i.prvCheckTasksWaitingTermination)
-    prvCheckTasksWaitingTermination          0x00003049   Thumb Code    60  tasks.o(i.prvCheckTasksWaitingTermination)
-    i.prvDeleteTCB                           0x00003090   Section        0  tasks.o(i.prvDeleteTCB)
-    prvDeleteTCB                             0x00003091   Thumb Code     2  tasks.o(i.prvDeleteTCB)
-    i.prvIdleTask                            0x00003092   Section        0  tasks.o(i.prvIdleTask)
-    prvIdleTask                              0x00003093   Thumb Code    12  tasks.o(i.prvIdleTask)
-    i.prvInitialiseNewTask                   0x000030a0   Section        0  tasks.o(i.prvInitialiseNewTask)
-    prvInitialiseNewTask                     0x000030a1   Thumb Code   178  tasks.o(i.prvInitialiseNewTask)
-    i.prvInitialiseTaskLists                 0x00003158   Section        0  tasks.o(i.prvInitialiseTaskLists)
-    prvInitialiseTaskLists                   0x00003159   Thumb Code    64  tasks.o(i.prvInitialiseTaskLists)
-    i.prvResetNextTaskUnblockTime            0x000031b4   Section        0  tasks.o(i.prvResetNextTaskUnblockTime)
-    prvResetNextTaskUnblockTime              0x000031b5   Thumb Code    42  tasks.o(i.prvResetNextTaskUnblockTime)
-    i.prvTaskExitError                       0x000031e8   Section        0  port.o(i.prvTaskExitError)
-    prvTaskExitError                         0x000031e9   Thumb Code    46  port.o(i.prvTaskExitError)
-    i.pushColor                              0x00003220   Section        0  bsp_bp.o(i.pushColor)
-    pushColor                                0x00003221   Thumb Code    18  bsp_bp.o(i.pushColor)
-    i.pxPortInitialiseStack                  0x00003234   Section        0  port.o(i.pxPortInitialiseStack)
-    i.setAddrWindow                          0x00003260   Section        0  bsp_bp.o(i.setAddrWindow)
-    setAddrWindow                            0x00003261   Thumb Code   106  bsp_bp.o(i.setAddrWindow)
-    i.task_function                          0x000032d4   Section        0  qf_port.o(i.task_function)
-    task_function                            0x000032d5   Thumb Code    32  qf_port.o(i.task_function)
-    i.ulTaskNotifyTake                       0x000032f4   Section        0  tasks.o(i.ulTaskNotifyTake)
-    i.uxListRemove                           0x00003368   Section        0  list.o(i.uxListRemove)
-    i.vApplicationGetIdleTaskMemory          0x00003390   Section        0  bsp.o(i.vApplicationGetIdleTaskMemory)
-    i.vApplicationIdleHook                   0x000033a8   Section        0  bsp.o(i.vApplicationIdleHook)
-    i.vApplicationStackOverflowHook          0x000033f0   Section        0  bsp.o(i.vApplicationStackOverflowHook)
-    i.vApplicationTickHook                   0x00003400   Section        0  bsp.o(i.vApplicationTickHook)
-    i.vListInitialise                        0x00003550   Section        0  list.o(i.vListInitialise)
-    i.vListInitialiseItem                    0x0000356a   Section        0  list.o(i.vListInitialiseItem)
-    i.vListInsert                            0x00003570   Section        0  list.o(i.vListInsert)
-    i.vListInsertEnd                         0x000035a4   Section        0  list.o(i.vListInsertEnd)
-    i.vPortEnterCritical                     0x000035bc   Section        0  port.o(i.vPortEnterCritical)
-    i.vPortExitCritical                      0x0000360c   Section        0  port.o(i.vPortExitCritical)
-    i.vPortSetupTimerInterrupt               0x00003644   Section        0  port.o(i.vPortSetupTimerInterrupt)
-    i.vPortValidateInterruptPriority         0x0000366c   Section        0  port.o(i.vPortValidateInterruptPriority)
-    i.vTaskNotifyGiveFromISR                 0x000036d0   Section        0  tasks.o(i.vTaskNotifyGiveFromISR)
-    i.vTaskStartScheduler                    0x000037ac   Section        0  tasks.o(i.vTaskStartScheduler)
-    i.vTaskSuspendAll                        0x00003854   Section        0  tasks.o(i.vTaskSuspendAll)
-    i.vTaskSwitchContext                     0x00003864   Section        0  tasks.o(i.vTaskSwitchContext)
-    i.xPortStartScheduler                    0x00003920   Section        0  port.o(i.xPortStartScheduler)
-    i.xTaskCreateStatic                      0x00003a3c   Section        0  tasks.o(i.xTaskCreateStatic)
-    i.xTaskGenericNotify                     0x00003ad0   Section        0  tasks.o(i.xTaskGenericNotify)
-    i.xTaskIncrementTick                     0x00003bd8   Section        0  tasks.o(i.xTaskIncrementTick)
-    i.xTaskResumeAll                         0x00003d24   Section        0  tasks.o(i.xTaskResumeAll)
-    x$fpl$fpinit                             0x00003e20   Section       10  fpinit.o(x$fpl$fpinit)
-    $v0                                      0x00003e20   Number         0  fpinit.o(x$fpl$fpinit)
-    .constdata                               0x00003e2c   Section       40  qep_hsm.o(.constdata)
-    Q_this_module_                           0x00003e2c   Data           8  qep_hsm.o(.constdata)
-    QEP_reservedEvt_                         0x00003e3c   Data          16  qep_hsm.o(.constdata)
-    vtbl                                     0x00003e4c   Data           8  qep_hsm.o(.constdata)
-    .constdata                               0x00003e54   Section       23  qf_act.o(.constdata)
-    Q_this_module_                           0x00003e54   Data           7  qf_act.o(.constdata)
-    log2LUT                                  0x00003e5b   Data          16  qf_act.o(.constdata)
-    .constdata                               0x00003e6c   Section       32  qf_actq.o(.constdata)
-    Q_this_module_                           0x00003e6c   Data           8  qf_actq.o(.constdata)
-    vtbl                                     0x00003e74   Data          20  qf_actq.o(.constdata)
-    tickEvt                                  0x00003e88   Data           4  qf_actq.o(.constdata)
-    .constdata                               0x00003e8c   Section        8  qf_time.o(.constdata)
-    Q_this_module_                           0x00003e8c   Data           8  qf_time.o(.constdata)
-    .constdata                               0x00003e94   Section        7  qf_dyn.o(.constdata)
-    Q_this_module_                           0x00003e94   Data           7  qf_dyn.o(.constdata)
-    .constdata                               0x00003e9b   Section        7  qf_mem.o(.constdata)
-    Q_this_module_                           0x00003e9b   Data           7  qf_mem.o(.constdata)
-    .constdata                               0x00003ea2   Section        6  qf_ps.o(.constdata)
-    Q_this_module_                           0x00003ea2   Data           6  qf_ps.o(.constdata)
-    .constdata                               0x00003ea8   Section       20  qf_qact.o(.constdata)
-    vtbl                                     0x00003ea8   Data          20  qf_qact.o(.constdata)
-    .constdata                               0x00003ebc   Section        8  qf_port.o(.constdata)
-    Q_this_module_                           0x00003ebc   Data           8  qf_port.o(.constdata)
-    .constdata                               0x00003ec4   Section        4  blinky.o(.constdata)
-    .constdata                               0x00003ec8   Section       18  bsp.o(.constdata)
-    Q_this_module_                           0x00003ec8   Data           9  bsp.o(.constdata)
-    btn4prsEvt                               0x00003ed2   Data           4  bsp.o(.constdata)
-    btn4DeprsEvt                             0x00003ed6   Data           4  bsp.o(.constdata)
-    .constdata                               0x00003eda   Section       10  main.o(.constdata)
-    Q_this_module_                           0x00003eda   Data          10  main.o(.constdata)
-    .constdata                               0x00003ee4   Section       32  philo.o(.constdata)
-    Q_this_module_                           0x00003ee4   Data          11  philo.o(.constdata)
-    .constdata                               0x00003f04   Section       16  table.o(.constdata)
-    Q_this_module_                           0x00003f04   Data          11  table.o(.constdata)
-    .constdata                               0x00003f14   Section     1403  bsp_bp.o(.constdata)
-    Font                                     0x00003f14   Data        1275  bsp_bp.o(.constdata)
-    Rcmd1                                    0x0000440f   Data          59  bsp_bp.o(.constdata)
-    Rcmd2green                               0x0000444a   Data          13  bsp_bp.o(.constdata)
-    Rcmd2red                                 0x00004457   Data          13  bsp_bp.o(.constdata)
-    Rcmd3                                    0x00004464   Data          43  bsp_bp.o(.constdata)
-    .conststring                             0x00004490   Section       94  tasks.o(.conststring)
-    .conststring                             0x000044f0   Section      116  port.o(.conststring)
+    i.ADCSeq3_IRQHandler                     0x0000056c   Section        0  bsp.o(i.ADCSeq3_IRQHandler)
+    i.BSP_BP_BuzzerIO_Init                   0x000005d4   Section        0  bsp.o(i.BSP_BP_BuzzerIO_Init)
+    i.BSP_BP_Buzzer_Freq                     0x000006e8   Section        0  bsp.o(i.BSP_BP_Buzzer_Freq)
+    i.BSP_BP_Joystick_Init                   0x00000728   Section        0  bsp.o(i.BSP_BP_Joystick_Init)
+    i.BSP_BP_LedBlueDuty                     0x0000081c   Section        0  bsp.o(i.BSP_BP_LedBlueDuty)
+    i.BSP_BP_RGB_ledsInit                    0x00000844   Section        0  bsp.o(i.BSP_BP_RGB_ledsInit)
+    i.BSP_BP_SPI_TFT_Init                    0x00000a70   Section        0  bsp.o(i.BSP_BP_SPI_TFT_Init)
+    i.BSP_BP_SPIwritecommand                 0x00000c40   Section        0  bsp.o(i.BSP_BP_SPIwritecommand)
+    i.BSP_BP_SPIwritedata                    0x00000c7c   Section        0  bsp.o(i.BSP_BP_SPIwritedata)
+    i.BSP_BP_TFT_CS_HIGH                     0x00000cb8   Section        0  bsp.o(i.BSP_BP_TFT_CS_HIGH)
+    i.BSP_BP_TFT_CS_LOW                      0x00000cc2   Section        0  bsp.o(i.BSP_BP_TFT_CS_LOW)
+    i.BSP_BP_TFT_DC_COMMAND                  0x00000ccc   Section        0  bsp.o(i.BSP_BP_TFT_DC_COMMAND)
+    i.BSP_BP_TFT_DC_DATA                     0x00000cd8   Section        0  bsp.o(i.BSP_BP_TFT_DC_DATA)
+    i.BSP_BP_TFT_RESET_HIGH                  0x00000ce4   Section        0  bsp.o(i.BSP_BP_TFT_RESET_HIGH)
+    i.BSP_BP_TFT_RESET_LOW                   0x00000cf0   Section        0  bsp.o(i.BSP_BP_TFT_RESET_LOW)
+    i.BSP_Delay1ms                           0x00000cfc   Section        0  bsp.o(i.BSP_Delay1ms)
+    i.BSP_Joystick_Input                     0x00000d14   Section        0  bsp.o(i.BSP_Joystick_Input)
+    i.BSP_Joystick_Trigger                   0x00000d34   Section        0  bsp.o(i.BSP_Joystick_Trigger)
+    i.BSP_LCD_DrawChar                       0x00000d48   Section        0  bsp_bp.o(i.BSP_LCD_DrawChar)
+    i.BSP_LCD_DrawString                     0x00000e58   Section        0  bsp_bp.o(i.BSP_LCD_DrawString)
+    i.BSP_LCD_FillRect                       0x00000eac   Section        0  bsp_bp.o(i.BSP_LCD_FillRect)
+    i.BSP_LCD_FillScreen                     0x00000f58   Section        0  bsp_bp.o(i.BSP_LCD_FillScreen)
+    i.BSP_LCD_Init                           0x00000f7c   Section        0  bsp_bp.o(i.BSP_LCD_Init)
+    i.BSP_LCD_OutUDec                        0x00000f88   Section        0  bsp_bp.o(i.BSP_LCD_OutUDec)
+    i.BSP_LCD_OutUDec4                       0x00001018   Section        0  bsp_bp.o(i.BSP_LCD_OutUDec4)
+    i.BSP_LCD_SetCursor                      0x000010a0   Section        0  bsp_bp.o(i.BSP_LCD_SetCursor)
+    i.BSP_Microphone_Get                     0x000010c0   Section        0  bsp.o(i.BSP_Microphone_Get)
+    i.BSP_Microphone_Init                    0x000010cc   Section        0  bsp.o(i.BSP_Microphone_Init)
+    i.BSP_Microphone_Input                   0x00001178   Section        0  bsp.o(i.BSP_Microphone_Input)
+    i.BSP_SystemTempGet                      0x00001190   Section        0  bsp.o(i.BSP_SystemTempGet)
+    i.BSP_displayPaused                      0x000011a4   Section        0  bsp.o(i.BSP_displayPaused)
+    i.BSP_displayPhilStat                    0x000011b8   Section        0  bsp.o(i.BSP_displayPhilStat)
+    i.BSP_init                               0x000011d0   Section        0  bsp.o(i.BSP_init)
+    i.BSP_ledRedOff                          0x00001290   Section        0  bsp.o(i.BSP_ledRedOff)
+    i.BSP_random                             0x0000129c   Section        0  bsp.o(i.BSP_random)
+    i.BSP_randomSeed                         0x000012e0   Section        0  bsp.o(i.BSP_randomSeed)
+    i.GPIOPortA_IRQHandler                   0x000012ec   Section        0  bsp.o(i.GPIOPortA_IRQHandler)
+    i.Heartbeat_ctor                         0x00001330   Section        0  blinky.o(i.Heartbeat_ctor)
+    i.Heartbeat_initial                      0x00001358   Section        0  blinky.o(i.Heartbeat_initial)
+    Heartbeat_initial                        0x00001359   Thumb Code    70  blinky.o(i.Heartbeat_initial)
+    i.Heartbeat_off                          0x000013b0   Section        0  blinky.o(i.Heartbeat_off)
+    Heartbeat_off                            0x000013b1   Thumb Code   116  blinky.o(i.Heartbeat_off)
+    i.Heartbeat_on                           0x0000142c   Section        0  blinky.o(i.Heartbeat_on)
+    Heartbeat_on                             0x0000142d   Thumb Code   192  blinky.o(i.Heartbeat_on)
+    i.Heartbeat_start                        0x000014f8   Section        0  blinky.o(i.Heartbeat_start)
+    Heartbeat_start                          0x000014f9   Thumb Code   100  blinky.o(i.Heartbeat_start)
+    i.Heartbeat_stop                         0x0000156c   Section        0  blinky.o(i.Heartbeat_stop)
+    Heartbeat_stop                           0x0000156d   Thumb Code    46  blinky.o(i.Heartbeat_stop)
+    i.Philo_ctor                             0x000015a8   Section        0  philo.o(i.Philo_ctor)
+    i.Philo_eating                           0x000015e0   Section        0  philo.o(i.Philo_eating)
+    Philo_eating                             0x000015e1   Thumb Code   166  philo.o(i.Philo_eating)
+    i.Philo_hungry                           0x00001698   Section        0  philo.o(i.Philo_hungry)
+    Philo_hungry                             0x00001699   Thumb Code   152  philo.o(i.Philo_hungry)
+    i.Philo_initial                          0x00001744   Section        0  philo.o(i.Philo_initial)
+    Philo_initial                            0x00001745   Thumb Code    44  philo.o(i.Philo_initial)
+    i.Philo_thinking                         0x00001778   Section        0  philo.o(i.Philo_thinking)
+    Philo_thinking                           0x00001779   Thumb Code   150  philo.o(i.Philo_thinking)
+    i.QActive_ctor                           0x00001820   Section        0  qf_qact.o(i.QActive_ctor)
+    i.QActive_get_                           0x00001840   Section        0  qf_actq.o(i.QActive_get_)
+    i.QActive_postFromISR_                   0x000018b8   Section        0  qf_port.o(i.QActive_postFromISR_)
+    i.QActive_postLIFO_                      0x00001990   Section        0  qf_actq.o(i.QActive_postLIFO_)
+    i.QActive_post_                          0x00001a10   Section        0  qf_actq.o(i.QActive_post_)
+    i.QActive_setAttr                        0x00001ac8   Section        0  qf_port.o(i.QActive_setAttr)
+    i.QActive_start_                         0x00001af0   Section        0  qf_port.o(i.QActive_start_)
+    i.QActive_subscribe                      0x00001ba0   Section        0  qf_ps.o(i.QActive_subscribe)
+    i.QEQueue_init                           0x00001c08   Section        0  qf_qeq.o(i.QEQueue_init)
+    i.QF_LOG2                                0x00001c20   Section        0  qf_act.o(i.QF_LOG2)
+    i.QF_add_                                0x00001c48   Section        0  qf_act.o(i.QF_add_)
+    i.QF_bzero                               0x00001c84   Section        0  qf_act.o(i.QF_bzero)
+    i.QF_gc                                  0x00001c98   Section        0  qf_dyn.o(i.QF_gc)
+    i.QF_gcFromISR                           0x00001cf4   Section        0  qf_port.o(i.QF_gcFromISR)
+    i.QF_init                                0x00001d6c   Section        0  qf_port.o(i.QF_init)
+    i.QF_newXFromISR_                        0x00001d70   Section        0  qf_port.o(i.QF_newXFromISR_)
+    i.QF_newX_                               0x00001e08   Section        0  qf_dyn.o(i.QF_newX_)
+    i.QF_onStartup                           0x00001ea0   Section        0  bsp.o(i.QF_onStartup)
+    i.QF_poolInit                            0x00001f30   Section        0  qf_dyn.o(i.QF_poolInit)
+    i.QF_psInit                              0x00001fa0   Section        0  qf_ps.o(i.QF_psInit)
+    i.QF_publishFromISR_                     0x00001fc0   Section        0  qf_port.o(i.QF_publishFromISR_)
+    i.QF_publish_                            0x00002084   Section        0  qf_ps.o(i.QF_publish_)
+    i.QF_run                                 0x00002134   Section        0  qf_port.o(i.QF_run)
+    i.QF_tickXFromISR_                       0x00002150   Section        0  qf_port.o(i.QF_tickXFromISR_)
+    i.QF_tickX_                              0x00002244   Section        0  qf_time.o(i.QF_tickX_)
+    i.QHsm_ctor                              0x00002300   Section        0  qep_hsm.o(i.QHsm_ctor)
+    i.QHsm_dispatch_                         0x00002314   Section        0  qep_hsm.o(i.QHsm_dispatch_)
+    i.QHsm_init_                             0x00002420   Section        0  qep_hsm.o(i.QHsm_init_)
+    i.QHsm_top                               0x000024d4   Section        0  qep_hsm.o(i.QHsm_top)
+    i.QHsm_tran_                             0x000024dc   Section        0  qep_hsm.o(i.QHsm_tran_)
+    QHsm_tran_                               0x000024dd   Thumb Code   338  qep_hsm.o(i.QHsm_tran_)
+    i.QMPool_get                             0x00002638   Section        0  qf_mem.o(i.QMPool_get)
+    i.QMPool_getFromISR                      0x000026c8   Section        0  qf_port.o(i.QMPool_getFromISR)
+    i.QMPool_init                            0x00002760   Section        0  qf_mem.o(i.QMPool_init)
+    i.QMPool_put                             0x000027f0   Section        0  qf_mem.o(i.QMPool_put)
+    i.QMPool_putFromISR                      0x00002830   Section        0  qf_port.o(i.QMPool_putFromISR)
+    i.QTicker_dispatch_                      0x00002888   Section        0  qf_actq.o(i.QTicker_dispatch_)
+    QTicker_dispatch_                        0x00002889   Thumb Code    38  qf_actq.o(i.QTicker_dispatch_)
+    i.QTicker_init_                          0x000028ae   Section        0  qf_actq.o(i.QTicker_init_)
+    QTicker_init_                            0x000028af   Thumb Code     6  qf_actq.o(i.QTicker_init_)
+    i.QTicker_postLIFO_                      0x000028b4   Section        0  qf_actq.o(i.QTicker_postLIFO_)
+    QTicker_postLIFO_                        0x000028b5   Thumb Code    18  qf_actq.o(i.QTicker_postLIFO_)
+    i.QTicker_post_                          0x000028cc   Section        0  qf_actq.o(i.QTicker_post_)
+    QTicker_post_                            0x000028cd   Thumb Code    66  qf_actq.o(i.QTicker_post_)
+    i.QTimeEvt_armX                          0x00002914   Section        0  qf_time.o(i.QTimeEvt_armX)
+    i.QTimeEvt_ctorX                         0x00002984   Section        0  qf_time.o(i.QTimeEvt_ctorX)
+    i.QTimeEvt_disarm                        0x000029bc   Section        0  qf_time.o(i.QTimeEvt_disarm)
+    i.Q_onAssert                             0x000029ec   Section        0  bsp.o(i.Q_onAssert)
+    i.ST7735_InitR                           0x00002a58   Section        0  bsp_bp.o(i.ST7735_InitR)
+    ST7735_InitR                             0x00002a59   Thumb Code    90  bsp_bp.o(i.ST7735_InitR)
+    i.SysTick_Handler                        0x00002ad0   Section        0  port.o(i.SysTick_Handler)
+    i.SystemCoreClockUpdate                  0x00002b04   Section        0  system_tm4c123gh6pm.o(i.SystemCoreClockUpdate)
+    i.SystemInit                             0x00002bc8   Section        0  system_tm4c123gh6pm.o(i.SystemInit)
+    i.Table_active                           0x00002c7c   Section        0  table.o(i.Table_active)
+    Table_active                             0x00002c7d   Thumb Code    46  table.o(i.Table_active)
+    i.Table_ctor                             0x00002cb4   Section        0  table.o(i.Table_ctor)
+    i.Table_initial                          0x00002ce4   Section        0  table.o(i.Table_initial)
+    Table_initial                            0x00002ce5   Thumb Code    78  table.o(i.Table_initial)
+    i.Table_paused                           0x00002d44   Section        0  table.o(i.Table_paused)
+    Table_paused                             0x00002d45   Thumb Code   222  table.o(i.Table_paused)
+    i.Table_serving                          0x00002e48   Section        0  table.o(i.Table_serving)
+    Table_serving                            0x00002e49   Thumb Code   568  table.o(i.Table_serving)
+    i.__NVIC_EnableIRQ                       0x000030b0   Section        0  bsp.o(i.__NVIC_EnableIRQ)
+    __NVIC_EnableIRQ                         0x000030b1   Thumb Code    26  bsp.o(i.__NVIC_EnableIRQ)
+    i.__NVIC_SetPriority                     0x000030cc   Section        0  bsp.o(i.__NVIC_SetPriority)
+    __NVIC_SetPriority                       0x000030cd   Thumb Code    32  bsp.o(i.__NVIC_SetPriority)
+    i.adcinit                                0x000030f4   Section        0  bsp.o(i.adcinit)
+    adcinit                                  0x000030f5   Thumb Code    58  bsp.o(i.adcinit)
+    i.commandList                            0x00003140   Section        0  bsp_bp.o(i.commandList)
+    commandList                              0x00003141   Thumb Code    86  bsp_bp.o(i.commandList)
+    i.fillmessage                            0x00003198   Section        0  bsp_bp.o(i.fillmessage)
+    fillmessage                              0x00003199   Thumb Code    64  bsp_bp.o(i.fillmessage)
+    i.fillmessage4                           0x000031e0   Section        0  bsp_bp.o(i.fillmessage4)
+    fillmessage4                             0x000031e1   Thumb Code    90  bsp_bp.o(i.fillmessage4)
+    i.getOscClk                              0x00003244   Section        0  system_tm4c123gh6pm.o(i.getOscClk)
+    getOscClk                                0x00003245   Thumb Code   182  system_tm4c123gh6pm.o(i.getOscClk)
+    i.main                                   0x0000333c   Section        0  main.o(i.main)
+    i.mcuTempSensorInit                      0x000034a0   Section        0  bsp.o(i.mcuTempSensorInit)
+    mcuTempSensorInit                        0x000034a1   Thumb Code    80  bsp.o(i.mcuTempSensorInit)
+    i.prvAddCurrentTaskToDelayedList         0x000034f8   Section        0  tasks.o(i.prvAddCurrentTaskToDelayedList)
+    prvAddCurrentTaskToDelayedList           0x000034f9   Thumb Code   104  tasks.o(i.prvAddCurrentTaskToDelayedList)
+    i.prvAddNewTaskToReadyList               0x00003578   Section        0  tasks.o(i.prvAddNewTaskToReadyList)
+    prvAddNewTaskToReadyList                 0x00003579   Thumb Code   150  tasks.o(i.prvAddNewTaskToReadyList)
+    i.prvCheckTasksWaitingTermination        0x0000362c   Section        0  tasks.o(i.prvCheckTasksWaitingTermination)
+    prvCheckTasksWaitingTermination          0x0000362d   Thumb Code    60  tasks.o(i.prvCheckTasksWaitingTermination)
+    i.prvDeleteTCB                           0x00003674   Section        0  tasks.o(i.prvDeleteTCB)
+    prvDeleteTCB                             0x00003675   Thumb Code     2  tasks.o(i.prvDeleteTCB)
+    i.prvIdleTask                            0x00003676   Section        0  tasks.o(i.prvIdleTask)
+    prvIdleTask                              0x00003677   Thumb Code    12  tasks.o(i.prvIdleTask)
+    i.prvInitialiseNewTask                   0x00003684   Section        0  tasks.o(i.prvInitialiseNewTask)
+    prvInitialiseNewTask                     0x00003685   Thumb Code   178  tasks.o(i.prvInitialiseNewTask)
+    i.prvInitialiseTaskLists                 0x0000373c   Section        0  tasks.o(i.prvInitialiseTaskLists)
+    prvInitialiseTaskLists                   0x0000373d   Thumb Code    64  tasks.o(i.prvInitialiseTaskLists)
+    i.prvResetNextTaskUnblockTime            0x00003798   Section        0  tasks.o(i.prvResetNextTaskUnblockTime)
+    prvResetNextTaskUnblockTime              0x00003799   Thumb Code    42  tasks.o(i.prvResetNextTaskUnblockTime)
+    i.prvTaskExitError                       0x000037cc   Section        0  port.o(i.prvTaskExitError)
+    prvTaskExitError                         0x000037cd   Thumb Code    46  port.o(i.prvTaskExitError)
+    i.pushColor                              0x00003804   Section        0  bsp_bp.o(i.pushColor)
+    pushColor                                0x00003805   Thumb Code    18  bsp_bp.o(i.pushColor)
+    i.pxPortInitialiseStack                  0x00003818   Section        0  port.o(i.pxPortInitialiseStack)
+    i.setAddrWindow                          0x00003844   Section        0  bsp_bp.o(i.setAddrWindow)
+    setAddrWindow                            0x00003845   Thumb Code   106  bsp_bp.o(i.setAddrWindow)
+    i.task_function                          0x000038b8   Section        0  qf_port.o(i.task_function)
+    task_function                            0x000038b9   Thumb Code    32  qf_port.o(i.task_function)
+    i.ulTaskNotifyTake                       0x000038d8   Section        0  tasks.o(i.ulTaskNotifyTake)
+    i.uxListRemove                           0x0000394c   Section        0  list.o(i.uxListRemove)
+    i.vApplicationGetIdleTaskMemory          0x00003974   Section        0  bsp.o(i.vApplicationGetIdleTaskMemory)
+    i.vApplicationIdleHook                   0x0000398c   Section        0  bsp.o(i.vApplicationIdleHook)
+    i.vApplicationStackOverflowHook          0x000039d4   Section        0  bsp.o(i.vApplicationStackOverflowHook)
+    i.vApplicationTickHook                   0x000039e4   Section        0  bsp.o(i.vApplicationTickHook)
+    i.vListInitialise                        0x00003bb0   Section        0  list.o(i.vListInitialise)
+    i.vListInitialiseItem                    0x00003bca   Section        0  list.o(i.vListInitialiseItem)
+    i.vListInsert                            0x00003bd0   Section        0  list.o(i.vListInsert)
+    i.vListInsertEnd                         0x00003c04   Section        0  list.o(i.vListInsertEnd)
+    i.vPortEnterCritical                     0x00003c1c   Section        0  port.o(i.vPortEnterCritical)
+    i.vPortExitCritical                      0x00003c6c   Section        0  port.o(i.vPortExitCritical)
+    i.vPortSetupTimerInterrupt               0x00003ca4   Section        0  port.o(i.vPortSetupTimerInterrupt)
+    i.vPortValidateInterruptPriority         0x00003ccc   Section        0  port.o(i.vPortValidateInterruptPriority)
+    i.vTaskNotifyGiveFromISR                 0x00003d30   Section        0  tasks.o(i.vTaskNotifyGiveFromISR)
+    i.vTaskStartScheduler                    0x00003e0c   Section        0  tasks.o(i.vTaskStartScheduler)
+    i.vTaskSuspendAll                        0x00003eb4   Section        0  tasks.o(i.vTaskSuspendAll)
+    i.vTaskSwitchContext                     0x00003ec4   Section        0  tasks.o(i.vTaskSwitchContext)
+    i.xPortStartScheduler                    0x00003f80   Section        0  port.o(i.xPortStartScheduler)
+    i.xTaskCreateStatic                      0x0000409c   Section        0  tasks.o(i.xTaskCreateStatic)
+    i.xTaskGenericNotify                     0x00004130   Section        0  tasks.o(i.xTaskGenericNotify)
+    i.xTaskIncrementTick                     0x00004238   Section        0  tasks.o(i.xTaskIncrementTick)
+    i.xTaskResumeAll                         0x00004384   Section        0  tasks.o(i.xTaskResumeAll)
+    x$fpl$fpinit                             0x00004480   Section       10  fpinit.o(x$fpl$fpinit)
+    $v0                                      0x00004480   Number         0  fpinit.o(x$fpl$fpinit)
+    .constdata                               0x0000448c   Section       40  qep_hsm.o(.constdata)
+    Q_this_module_                           0x0000448c   Data           8  qep_hsm.o(.constdata)
+    QEP_reservedEvt_                         0x0000449c   Data          16  qep_hsm.o(.constdata)
+    vtbl                                     0x000044ac   Data           8  qep_hsm.o(.constdata)
+    .constdata                               0x000044b4   Section       23  qf_act.o(.constdata)
+    Q_this_module_                           0x000044b4   Data           7  qf_act.o(.constdata)
+    log2LUT                                  0x000044bb   Data          16  qf_act.o(.constdata)
+    .constdata                               0x000044cc   Section       32  qf_actq.o(.constdata)
+    Q_this_module_                           0x000044cc   Data           8  qf_actq.o(.constdata)
+    vtbl                                     0x000044d4   Data          20  qf_actq.o(.constdata)
+    tickEvt                                  0x000044e8   Data           4  qf_actq.o(.constdata)
+    .constdata                               0x000044ec   Section        8  qf_time.o(.constdata)
+    Q_this_module_                           0x000044ec   Data           8  qf_time.o(.constdata)
+    .constdata                               0x000044f4   Section        7  qf_dyn.o(.constdata)
+    Q_this_module_                           0x000044f4   Data           7  qf_dyn.o(.constdata)
+    .constdata                               0x000044fb   Section        7  qf_mem.o(.constdata)
+    Q_this_module_                           0x000044fb   Data           7  qf_mem.o(.constdata)
+    .constdata                               0x00004502   Section        6  qf_ps.o(.constdata)
+    Q_this_module_                           0x00004502   Data           6  qf_ps.o(.constdata)
+    .constdata                               0x00004508   Section       20  qf_qact.o(.constdata)
+    vtbl                                     0x00004508   Data          20  qf_qact.o(.constdata)
+    .constdata                               0x0000451c   Section        8  qf_port.o(.constdata)
+    Q_this_module_                           0x0000451c   Data           8  qf_port.o(.constdata)
+    .constdata                               0x00004524   Section        4  blinky.o(.constdata)
+    .constdata                               0x00004528   Section       18  bsp.o(.constdata)
+    Q_this_module_                           0x00004528   Data           9  bsp.o(.constdata)
+    btn4prsEvt                               0x00004532   Data           4  bsp.o(.constdata)
+    btn4DeprsEvt                             0x00004536   Data           4  bsp.o(.constdata)
+    .constdata                               0x0000453a   Section       10  main.o(.constdata)
+    Q_this_module_                           0x0000453a   Data          10  main.o(.constdata)
+    .constdata                               0x00004544   Section       32  philo.o(.constdata)
+    Q_this_module_                           0x00004544   Data          11  philo.o(.constdata)
+    .constdata                               0x00004564   Section       16  table.o(.constdata)
+    Q_this_module_                           0x00004564   Data          11  table.o(.constdata)
+    .constdata                               0x00004574   Section     1403  bsp_bp.o(.constdata)
+    Font                                     0x00004574   Data        1275  bsp_bp.o(.constdata)
+    Rcmd1                                    0x00004a6f   Data          59  bsp_bp.o(.constdata)
+    Rcmd2green                               0x00004aaa   Data          13  bsp_bp.o(.constdata)
+    Rcmd2red                                 0x00004ab7   Data          13  bsp_bp.o(.constdata)
+    Rcmd3                                    0x00004ac4   Data          43  bsp_bp.o(.constdata)
+    .conststring                             0x00004af0   Section       94  tasks.o(.conststring)
+    .conststring                             0x00004b50   Section      116  port.o(.conststring)
     .data                                    0x20000000   Section        4  system_tm4c123gh6pm.o(.data)
     .data                                    0x20000004   Section        4  qf_dyn.o(.data)
     .data                                    0x20000008   Section        8  qf_ps.o(.data)
@@ -1307,53 +1350,55 @@ Image Symbol Table
     uxCriticalNesting                        0x2000004c   Data           4  port.o(.data)
     ucMaxSysCallPriority                     0x20000050   Data           1  port.o(.data)
     ulMaxPRIGROUPValue                       0x20000054   Data           4  port.o(.data)
-    .data                                    0x20000058   Section       24  bsp.o(.data)
+    .data                                    0x20000058   Section       32  bsp.o(.data)
     l_rnd                                    0x20000058   Data           4  bsp.o(.data)
     PWM_sysclk                               0x2000005c   Data           4  bsp.o(.data)
     buttons                                  0x20000060   Data           8  bsp.o(.data)
     buttons1                                 0x20000068   Data           8  bsp.o(.data)
-    .data                                    0x20000070   Section        1  philo.o(.data)
-    registered                               0x20000070   Data           1  philo.o(.data)
-    .data                                    0x20000074   Section       38  bsp_bp.o(.data)
-    ColStart                                 0x2000007e   Data           1  bsp_bp.o(.data)
-    RowStart                                 0x2000007f   Data           1  bsp_bp.o(.data)
-    _width                                   0x20000080   Data           2  bsp_bp.o(.data)
-    _height                                  0x20000082   Data           2  bsp_bp.o(.data)
-    .bss                                     0x2000009c   Section      132  qf_act.o(.bss)
-    .bss                                     0x20000120   Section       16  qf_time.o(.bss)
-    .bss                                     0x20000130   Section       60  qf_dyn.o(.bss)
-    .bss                                     0x2000016c   Section      720  tasks.o(.bss)
-    pxReadyTasksLists                        0x2000016c   Data         640  tasks.o(.bss)
-    xDelayedTaskList1                        0x200003ec   Data          20  tasks.o(.bss)
-    xDelayedTaskList2                        0x20000400   Data          20  tasks.o(.bss)
-    xPendingReadyList                        0x20000414   Data          20  tasks.o(.bss)
-    xTasksWaitingTermination                 0x20000428   Data          20  tasks.o(.bss)
-    .bss                                     0x2000043c   Section      128  blinky.o(.bss)
-    l_Heartbeat                              0x2000043c   Data         128  blinky.o(.bss)
-    .bss                                     0x200004bc   Section     1100  bsp.o(.bss)
-    xIdleTaskTCB                             0x200004bc   Data          76  bsp.o(.bss)
-    uxIdleTaskStack                          0x20000508   Data        1024  bsp.o(.bss)
-    .bss                                     0x20000908   Section     7460  main.o(.bss)
-    tableQueueSto                            0x20000908   Data          20  main.o(.bss)
-    philoQueueSto                            0x2000091c   Data         100  main.o(.bss)
-    heartbeatQueueSto                        0x20000980   Data          40  main.o(.bss)
-    subscrSto                                0x200009a8   Data          52  main.o(.bss)
-    smlPoolSto                               0x200009dc   Data          80  main.o(.bss)
-    philoStack                               0x20000a2c   Data        5120  main.o(.bss)
-    tableStack                               0x20001e2c   Data        1024  main.o(.bss)
-    heartbeatStack                           0x2000222c   Data        1024  main.o(.bss)
-    .bss                                     0x2000262c   Section      620  philo.o(.bss)
-    l_philo                                  0x2000262c   Data         620  philo.o(.bss)
-    .bss                                     0x20002898   Section      120  table.o(.bss)
-    l_table                                  0x20002898   Data         120  table.o(.bss)
-    .bss                                     0x20002910   Section       96  libspace.o(.bss)
-    HEAP                                     0x20002970   Section       16  startup_tm4c123gh6pm.o(HEAP)
-    __heap_base                              0x20002970   Data           0  startup_tm4c123gh6pm.o(HEAP)
-    STACK                                    0x20002980   Section     1024  startup_tm4c123gh6pm.o(STACK)
-    __heap_limit                             0x20002980   Data           0  startup_tm4c123gh6pm.o(HEAP)
-    __stack_base                             0x20002980   Data           0  startup_tm4c123gh6pm.o(STACK)
-    __initial_sp                             0x20002d80   Data           0  startup_tm4c123gh6pm.o(STACK)
-    __stack_limit                            0x20002d80   Data           0  startup_tm4c123gh6pm.o(STACK)
+    buttons2                                 0x20000070   Data           8  bsp.o(.data)
+    .data                                    0x20000078   Section        1  philo.o(.data)
+    registered                               0x20000078   Data           1  philo.o(.data)
+    .data                                    0x2000007c   Section       38  bsp_bp.o(.data)
+    ColStart                                 0x20000086   Data           1  bsp_bp.o(.data)
+    RowStart                                 0x20000087   Data           1  bsp_bp.o(.data)
+    _width                                   0x20000088   Data           2  bsp_bp.o(.data)
+    _height                                  0x2000008a   Data           2  bsp_bp.o(.data)
+    .bss                                     0x200000a4   Section      132  qf_act.o(.bss)
+    .bss                                     0x20000128   Section       16  qf_time.o(.bss)
+    .bss                                     0x20000138   Section       60  qf_dyn.o(.bss)
+    .bss                                     0x20000174   Section      720  tasks.o(.bss)
+    pxReadyTasksLists                        0x20000174   Data         640  tasks.o(.bss)
+    xDelayedTaskList1                        0x200003f4   Data          20  tasks.o(.bss)
+    xDelayedTaskList2                        0x20000408   Data          20  tasks.o(.bss)
+    xPendingReadyList                        0x2000041c   Data          20  tasks.o(.bss)
+    xTasksWaitingTermination                 0x20000430   Data          20  tasks.o(.bss)
+    .bss                                     0x20000444   Section      140  blinky.o(.bss)
+    l_Heartbeat                              0x20000444   Data         140  blinky.o(.bss)
+    .bss                                     0x200004d0   Section     1100  bsp.o(.bss)
+    xIdleTaskTCB                             0x200004d0   Data          76  bsp.o(.bss)
+    uxIdleTaskStack                          0x2000051c   Data        1024  bsp.o(.bss)
+    .bss                                     0x2000091c   Section     7472  main.o(.bss)
+    tableQueueSto                            0x2000091c   Data          20  main.o(.bss)
+    philoQueueSto                            0x20000930   Data         100  main.o(.bss)
+    heartbeatQueueSto                        0x20000994   Data          40  main.o(.bss)
+    subscrSto                                0x200009bc   Data          64  main.o(.bss)
+    smlPoolSto                               0x200009fc   Data          80  main.o(.bss)
+    philoStack                               0x20000a4c   Data        5120  main.o(.bss)
+    tableStack                               0x20001e4c   Data        1024  main.o(.bss)
+    heartbeatStack                           0x2000224c   Data        1024  main.o(.bss)
+    .bss                                     0x2000264c   Section      620  philo.o(.bss)
+    l_philo                                  0x2000264c   Data         620  philo.o(.bss)
+    .bss                                     0x200028b8   Section      120  table.o(.bss)
+    l_table                                  0x200028b8   Data         120  table.o(.bss)
+    .bss                                     0x20002930   Section       12  bsp_bp.o(.bss)
+    .bss                                     0x2000293c   Section       96  libspace.o(.bss)
+    HEAP                                     0x200029a0   Section       16  startup_tm4c123gh6pm.o(HEAP)
+    __heap_base                              0x200029a0   Data           0  startup_tm4c123gh6pm.o(HEAP)
+    STACK                                    0x200029b0   Section     1024  startup_tm4c123gh6pm.o(STACK)
+    __heap_limit                             0x200029b0   Data           0  startup_tm4c123gh6pm.o(HEAP)
+    __stack_base                             0x200029b0   Data           0  startup_tm4c123gh6pm.o(STACK)
+    __initial_sp                             0x20002db0   Data           0  startup_tm4c123gh6pm.o(STACK)
+    __stack_limit                            0x20002db0   Data           0  startup_tm4c123gh6pm.o(STACK)
 
     Global Symbols
 
@@ -1462,7 +1507,6 @@ Image Symbol Table
     ADCSeq0_IRQHandler                       0x00000419   Thumb Code     0  startup_tm4c123gh6pm.o(.text)
     ADCSeq1_IRQHandler                       0x00000419   Thumb Code     0  startup_tm4c123gh6pm.o(.text)
     ADCSeq2_IRQHandler                       0x00000419   Thumb Code     0  startup_tm4c123gh6pm.o(.text)
-    ADCSeq3_IRQHandler                       0x00000419   Thumb Code     0  startup_tm4c123gh6pm.o(.text)
     CAN0_IRQHandler                          0x00000419   Thumb Code     0  startup_tm4c123gh6pm.o(.text)
     CAN1_IRQHandler                          0x00000419   Thumb Code     0  startup_tm4c123gh6pm.o(.text)
     CAN2_IRQHandler                          0x00000419   Thumb Code     0  startup_tm4c123gh6pm.o(.text)
@@ -1584,130 +1628,141 @@ Image Symbol Table
     __I$use$semihosting                      0x00000569   Thumb Code     0  use_no_semi.o(.text)
     __use_no_semihosting_swi                 0x00000569   Thumb Code     2  use_no_semi.o(.text)
     __semihosting_library_function           0x0000056b   Thumb Code     0  indicate_semi.o(.text)
-    BSP_BP_BuzzerIO_Init                     0x0000056d   Thumb Code   238  bsp.o(i.BSP_BP_BuzzerIO_Init)
-    BSP_BP_Buzzer_Freq                       0x00000681   Thumb Code    52  bsp.o(i.BSP_BP_Buzzer_Freq)
-    BSP_BP_LedBlueDuty                       0x000006c1   Thumb Code    30  bsp.o(i.BSP_BP_LedBlueDuty)
-    BSP_BP_RGB_ledsInit                      0x000006e9   Thumb Code   508  bsp.o(i.BSP_BP_RGB_ledsInit)
-    BSP_BP_SPI_TFT_Init                      0x00000915   Thumb Code   396  bsp.o(i.BSP_BP_SPI_TFT_Init)
-    BSP_BP_SPIwritecommand                   0x00000ad5   Thumb Code    56  bsp.o(i.BSP_BP_SPIwritecommand)
-    BSP_BP_SPIwritedata                      0x00000b11   Thumb Code    56  bsp.o(i.BSP_BP_SPIwritedata)
-    BSP_BP_TFT_CS_HIGH                       0x00000b4d   Thumb Code    10  bsp.o(i.BSP_BP_TFT_CS_HIGH)
-    BSP_BP_TFT_CS_LOW                        0x00000b57   Thumb Code    10  bsp.o(i.BSP_BP_TFT_CS_LOW)
-    BSP_BP_TFT_DC_COMMAND                    0x00000b61   Thumb Code     8  bsp.o(i.BSP_BP_TFT_DC_COMMAND)
-    BSP_BP_TFT_DC_DATA                       0x00000b6d   Thumb Code     8  bsp.o(i.BSP_BP_TFT_DC_DATA)
-    BSP_BP_TFT_RESET_HIGH                    0x00000b79   Thumb Code     8  bsp.o(i.BSP_BP_TFT_RESET_HIGH)
-    BSP_BP_TFT_RESET_LOW                     0x00000b85   Thumb Code     8  bsp.o(i.BSP_BP_TFT_RESET_LOW)
-    BSP_Delay1ms                             0x00000b91   Thumb Code    22  bsp.o(i.BSP_Delay1ms)
-    BSP_LCD_DrawChar                         0x00000ba9   Thumb Code   260  bsp_bp.o(i.BSP_LCD_DrawChar)
-    BSP_LCD_DrawString                       0x00000cb9   Thumb Code    84  bsp_bp.o(i.BSP_LCD_DrawString)
-    BSP_LCD_FillRect                         0x00000d0d   Thumb Code   164  bsp_bp.o(i.BSP_LCD_FillRect)
-    BSP_LCD_FillScreen                       0x00000db9   Thumb Code    28  bsp_bp.o(i.BSP_LCD_FillScreen)
-    BSP_LCD_Init                             0x00000ddd   Thumb Code    10  bsp_bp.o(i.BSP_LCD_Init)
-    BSP_LCD_SetCursor                        0x00000de9   Thumb Code    22  bsp_bp.o(i.BSP_LCD_SetCursor)
-    BSP_displayPaused                        0x00000e09   Thumb Code    14  bsp.o(i.BSP_displayPaused)
-    BSP_displayPhilStat                      0x00000e1d   Thumb Code    18  bsp.o(i.BSP_displayPhilStat)
-    BSP_init                                 0x00000e35   Thumb Code   144  bsp.o(i.BSP_init)
-    BSP_ledRedOff                            0x00000ee5   Thumb Code     8  bsp.o(i.BSP_ledRedOff)
-    BSP_random                               0x00000ef1   Thumb Code    52  bsp.o(i.BSP_random)
-    BSP_randomSeed                           0x00000f35   Thumb Code     6  bsp.o(i.BSP_randomSeed)
-    GPIOPortA_IRQHandler                     0x00000f41   Thumb Code    58  bsp.o(i.GPIOPortA_IRQHandler)
-    Heartbeat_ctor                           0x00000f85   Thumb Code    30  blinky.o(i.Heartbeat_ctor)
-    Philo_ctor                               0x00001129   Thumb Code    48  philo.o(i.Philo_ctor)
-    QActive_ctor                             0x000013a1   Thumb Code    28  qf_qact.o(i.QActive_ctor)
-    QActive_get_                             0x000013c1   Thumb Code   114  qf_actq.o(i.QActive_get_)
-    QActive_postFromISR_                     0x00001439   Thumb Code   212  qf_port.o(i.QActive_postFromISR_)
-    QActive_postLIFO_                        0x00001511   Thumb Code   122  qf_actq.o(i.QActive_postLIFO_)
-    QActive_post_                            0x00001591   Thumb Code   178  qf_actq.o(i.QActive_post_)
-    QActive_setAttr                          0x00001649   Thumb Code    34  qf_port.o(i.QActive_setAttr)
-    QActive_start_                           0x00001671   Thumb Code   162  qf_port.o(i.QActive_start_)
-    QActive_subscribe                        0x00001721   Thumb Code    86  qf_ps.o(i.QActive_subscribe)
-    QEQueue_init                             0x00001789   Thumb Code    24  qf_qeq.o(i.QEQueue_init)
-    QF_LOG2                                  0x000017a1   Thumb Code    36  qf_act.o(i.QF_LOG2)
-    QF_add_                                  0x000017c9   Thumb Code    50  qf_act.o(i.QF_add_)
-    QF_bzero                                 0x00001805   Thumb Code    18  qf_act.o(i.QF_bzero)
-    QF_gc                                    0x00001819   Thumb Code    78  qf_dyn.o(i.QF_gc)
-    QF_gcFromISR                             0x00001875   Thumb Code   108  qf_port.o(i.QF_gcFromISR)
-    QF_init                                  0x000018ed   Thumb Code     2  qf_port.o(i.QF_init)
-    QF_newXFromISR_                          0x000018f1   Thumb Code   138  qf_port.o(i.QF_newXFromISR_)
-    QF_newX_                                 0x00001989   Thumb Code   138  qf_dyn.o(i.QF_newX_)
-    QF_onStartup                             0x00001a21   Thumb Code   138  bsp.o(i.QF_onStartup)
-    QF_poolInit                              0x00001ab9   Thumb Code   100  qf_dyn.o(i.QF_poolInit)
-    QF_psInit                                0x00001b29   Thumb Code    24  qf_ps.o(i.QF_psInit)
-    QF_publishFromISR_                       0x00001b49   Thumb Code   178  qf_port.o(i.QF_publishFromISR_)
-    QF_publish_                              0x00001c0d   Thumb Code   160  qf_ps.o(i.QF_publish_)
-    QF_run                                   0x00001cbd   Thumb Code    22  qf_port.o(i.QF_run)
-    QF_tickXFromISR_                         0x00001cd9   Thumb Code   234  qf_port.o(i.QF_tickXFromISR_)
-    QF_tickX_                                0x00001dcd   Thumb Code   178  qf_time.o(i.QF_tickX_)
-    QHsm_ctor                                0x00001e89   Thumb Code    12  qep_hsm.o(i.QHsm_ctor)
-    QHsm_dispatch_                           0x00001e9d   Thumb Code   258  qep_hsm.o(i.QHsm_dispatch_)
-    QHsm_init_                               0x00001fa9   Thumb Code   168  qep_hsm.o(i.QHsm_init_)
-    QHsm_top                                 0x0000205d   Thumb Code     6  qep_hsm.o(i.QHsm_top)
-    QMPool_get                               0x000021c1   Thumb Code   138  qf_mem.o(i.QMPool_get)
-    QMPool_getFromISR                        0x00002251   Thumb Code   146  qf_port.o(i.QMPool_getFromISR)
-    QMPool_init                              0x000022e9   Thumb Code   138  qf_mem.o(i.QMPool_init)
-    QMPool_put                               0x00002379   Thumb Code    58  qf_mem.o(i.QMPool_put)
-    QMPool_putFromISR                        0x000023b9   Thumb Code    84  qf_port.o(i.QMPool_putFromISR)
-    QTimeEvt_armX                            0x0000249d   Thumb Code   102  qf_time.o(i.QTimeEvt_armX)
-    QTimeEvt_ctorX                           0x0000250d   Thumb Code    50  qf_time.o(i.QTimeEvt_ctorX)
-    QTimeEvt_disarm                          0x00002545   Thumb Code    46  qf_time.o(i.QTimeEvt_disarm)
-    Q_onAssert                               0x00002575   Thumb Code    90  bsp.o(i.Q_onAssert)
-    SysTick_Handler                          0x00002659   Thumb Code    46  port.o(i.SysTick_Handler)
-    SystemCoreClockUpdate                    0x0000268d   Thumb Code   184  system_tm4c123gh6pm.o(i.SystemCoreClockUpdate)
-    SystemInit                               0x00002751   Thumb Code   138  system_tm4c123gh6pm.o(i.SystemInit)
-    Table_ctor                               0x0000283d   Thumb Code    38  table.o(i.Table_ctor)
-    main                                     0x00002db1   Thumb Code   280  main.o(i.main)
-    pxPortInitialiseStack                    0x00003235   Thumb Code    38  port.o(i.pxPortInitialiseStack)
-    ulTaskNotifyTake                         0x000032f5   Thumb Code   108  tasks.o(i.ulTaskNotifyTake)
-    uxListRemove                             0x00003369   Thumb Code    40  list.o(i.uxListRemove)
-    vApplicationGetIdleTaskMemory            0x00003391   Thumb Code    16  bsp.o(i.vApplicationGetIdleTaskMemory)
-    vApplicationIdleHook                     0x000033a9   Thumb Code    64  bsp.o(i.vApplicationIdleHook)
-    vApplicationStackOverflowHook            0x000033f1   Thumb Code    10  bsp.o(i.vApplicationStackOverflowHook)
-    vApplicationTickHook                     0x00003401   Thumb Code   300  bsp.o(i.vApplicationTickHook)
-    vListInitialise                          0x00003551   Thumb Code    26  list.o(i.vListInitialise)
-    vListInitialiseItem                      0x0000356b   Thumb Code     6  list.o(i.vListInitialiseItem)
-    vListInsert                              0x00003571   Thumb Code    52  list.o(i.vListInsert)
-    vListInsertEnd                           0x000035a5   Thumb Code    24  list.o(i.vListInsertEnd)
-    vPortEnterCritical                       0x000035bd   Thumb Code    66  port.o(i.vPortEnterCritical)
-    vPortExitCritical                        0x0000360d   Thumb Code    46  port.o(i.vPortExitCritical)
-    vPortSetupTimerInterrupt                 0x00003645   Thumb Code    36  port.o(i.vPortSetupTimerInterrupt)
-    vPortValidateInterruptPriority           0x0000366d   Thumb Code    82  port.o(i.vPortValidateInterruptPriority)
-    vTaskNotifyGiveFromISR                   0x000036d1   Thumb Code   190  tasks.o(i.vTaskNotifyGiveFromISR)
-    vTaskStartScheduler                      0x000037ad   Thumb Code   134  tasks.o(i.vTaskStartScheduler)
-    vTaskSuspendAll                          0x00003855   Thumb Code    12  tasks.o(i.vTaskSuspendAll)
-    vTaskSwitchContext                       0x00003865   Thumb Code   162  tasks.o(i.vTaskSwitchContext)
-    xPortStartScheduler                      0x00003921   Thumb Code   252  port.o(i.xPortStartScheduler)
-    xTaskCreateStatic                        0x00003a3d   Thumb Code   142  tasks.o(i.xTaskCreateStatic)
-    xTaskGenericNotify                       0x00003ad1   Thumb Code   244  tasks.o(i.xTaskGenericNotify)
-    xTaskIncrementTick                       0x00003bd9   Thumb Code   284  tasks.o(i.xTaskIncrementTick)
-    xTaskResumeAll                           0x00003d25   Thumb Code   212  tasks.o(i.xTaskResumeAll)
-    _fp_init                                 0x00003e21   Thumb Code    10  fpinit.o(x$fpl$fpinit)
-    __fplib_config_fpu_vfp                   0x00003e29   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    __fplib_config_pureend_doubles           0x00003e29   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    QP_versionStr                            0x00003e34   Data           7  qep_hsm.o(.constdata)
-    AO_Heartbeat                             0x00003ec4   Data           4  blinky.o(.constdata)
-    AO_Philo                                 0x00003ef0   Data          20  philo.o(.constdata)
-    AO_Table                                 0x00003f10   Data           4  table.o(.constdata)
-    Region$$Table$$Base                      0x00004564   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x00004584   Number         0  anon$$obj.o(Region$$Table)
+    ADCSeq3_IRQHandler                       0x0000056d   Thumb Code    92  bsp.o(i.ADCSeq3_IRQHandler)
+    BSP_BP_BuzzerIO_Init                     0x000005d5   Thumb Code   238  bsp.o(i.BSP_BP_BuzzerIO_Init)
+    BSP_BP_Buzzer_Freq                       0x000006e9   Thumb Code    52  bsp.o(i.BSP_BP_Buzzer_Freq)
+    BSP_BP_Joystick_Init                     0x00000729   Thumb Code   212  bsp.o(i.BSP_BP_Joystick_Init)
+    BSP_BP_LedBlueDuty                       0x0000081d   Thumb Code    30  bsp.o(i.BSP_BP_LedBlueDuty)
+    BSP_BP_RGB_ledsInit                      0x00000845   Thumb Code   508  bsp.o(i.BSP_BP_RGB_ledsInit)
+    BSP_BP_SPI_TFT_Init                      0x00000a71   Thumb Code   412  bsp.o(i.BSP_BP_SPI_TFT_Init)
+    BSP_BP_SPIwritecommand                   0x00000c41   Thumb Code    56  bsp.o(i.BSP_BP_SPIwritecommand)
+    BSP_BP_SPIwritedata                      0x00000c7d   Thumb Code    56  bsp.o(i.BSP_BP_SPIwritedata)
+    BSP_BP_TFT_CS_HIGH                       0x00000cb9   Thumb Code    10  bsp.o(i.BSP_BP_TFT_CS_HIGH)
+    BSP_BP_TFT_CS_LOW                        0x00000cc3   Thumb Code    10  bsp.o(i.BSP_BP_TFT_CS_LOW)
+    BSP_BP_TFT_DC_COMMAND                    0x00000ccd   Thumb Code     8  bsp.o(i.BSP_BP_TFT_DC_COMMAND)
+    BSP_BP_TFT_DC_DATA                       0x00000cd9   Thumb Code     8  bsp.o(i.BSP_BP_TFT_DC_DATA)
+    BSP_BP_TFT_RESET_HIGH                    0x00000ce5   Thumb Code     8  bsp.o(i.BSP_BP_TFT_RESET_HIGH)
+    BSP_BP_TFT_RESET_LOW                     0x00000cf1   Thumb Code     8  bsp.o(i.BSP_BP_TFT_RESET_LOW)
+    BSP_Delay1ms                             0x00000cfd   Thumb Code    22  bsp.o(i.BSP_Delay1ms)
+    BSP_Joystick_Input                       0x00000d15   Thumb Code    28  bsp.o(i.BSP_Joystick_Input)
+    BSP_Joystick_Trigger                     0x00000d35   Thumb Code    14  bsp.o(i.BSP_Joystick_Trigger)
+    BSP_LCD_DrawChar                         0x00000d49   Thumb Code   260  bsp_bp.o(i.BSP_LCD_DrawChar)
+    BSP_LCD_DrawString                       0x00000e59   Thumb Code    84  bsp_bp.o(i.BSP_LCD_DrawString)
+    BSP_LCD_FillRect                         0x00000ead   Thumb Code   164  bsp_bp.o(i.BSP_LCD_FillRect)
+    BSP_LCD_FillScreen                       0x00000f59   Thumb Code    28  bsp_bp.o(i.BSP_LCD_FillScreen)
+    BSP_LCD_Init                             0x00000f7d   Thumb Code    10  bsp_bp.o(i.BSP_LCD_Init)
+    BSP_LCD_OutUDec                          0x00000f89   Thumb Code   120  bsp_bp.o(i.BSP_LCD_OutUDec)
+    BSP_LCD_OutUDec4                         0x00001019   Thumb Code   116  bsp_bp.o(i.BSP_LCD_OutUDec4)
+    BSP_LCD_SetCursor                        0x000010a1   Thumb Code    22  bsp_bp.o(i.BSP_LCD_SetCursor)
+    BSP_Microphone_Get                       0x000010c1   Thumb Code     8  bsp.o(i.BSP_Microphone_Get)
+    BSP_Microphone_Init                      0x000010cd   Thumb Code   152  bsp.o(i.BSP_Microphone_Init)
+    BSP_Microphone_Input                     0x00001179   Thumb Code    20  bsp.o(i.BSP_Microphone_Input)
+    BSP_SystemTempGet                        0x00001191   Thumb Code    14  bsp.o(i.BSP_SystemTempGet)
+    BSP_displayPaused                        0x000011a5   Thumb Code    14  bsp.o(i.BSP_displayPaused)
+    BSP_displayPhilStat                      0x000011b9   Thumb Code    18  bsp.o(i.BSP_displayPhilStat)
+    BSP_init                                 0x000011d1   Thumb Code   160  bsp.o(i.BSP_init)
+    BSP_ledRedOff                            0x00001291   Thumb Code     8  bsp.o(i.BSP_ledRedOff)
+    BSP_random                               0x0000129d   Thumb Code    52  bsp.o(i.BSP_random)
+    BSP_randomSeed                           0x000012e1   Thumb Code     6  bsp.o(i.BSP_randomSeed)
+    GPIOPortA_IRQHandler                     0x000012ed   Thumb Code    58  bsp.o(i.GPIOPortA_IRQHandler)
+    Heartbeat_ctor                           0x00001331   Thumb Code    30  blinky.o(i.Heartbeat_ctor)
+    Philo_ctor                               0x000015a9   Thumb Code    48  philo.o(i.Philo_ctor)
+    QActive_ctor                             0x00001821   Thumb Code    28  qf_qact.o(i.QActive_ctor)
+    QActive_get_                             0x00001841   Thumb Code   114  qf_actq.o(i.QActive_get_)
+    QActive_postFromISR_                     0x000018b9   Thumb Code   212  qf_port.o(i.QActive_postFromISR_)
+    QActive_postLIFO_                        0x00001991   Thumb Code   122  qf_actq.o(i.QActive_postLIFO_)
+    QActive_post_                            0x00001a11   Thumb Code   178  qf_actq.o(i.QActive_post_)
+    QActive_setAttr                          0x00001ac9   Thumb Code    34  qf_port.o(i.QActive_setAttr)
+    QActive_start_                           0x00001af1   Thumb Code   162  qf_port.o(i.QActive_start_)
+    QActive_subscribe                        0x00001ba1   Thumb Code    86  qf_ps.o(i.QActive_subscribe)
+    QEQueue_init                             0x00001c09   Thumb Code    24  qf_qeq.o(i.QEQueue_init)
+    QF_LOG2                                  0x00001c21   Thumb Code    36  qf_act.o(i.QF_LOG2)
+    QF_add_                                  0x00001c49   Thumb Code    50  qf_act.o(i.QF_add_)
+    QF_bzero                                 0x00001c85   Thumb Code    18  qf_act.o(i.QF_bzero)
+    QF_gc                                    0x00001c99   Thumb Code    78  qf_dyn.o(i.QF_gc)
+    QF_gcFromISR                             0x00001cf5   Thumb Code   108  qf_port.o(i.QF_gcFromISR)
+    QF_init                                  0x00001d6d   Thumb Code     2  qf_port.o(i.QF_init)
+    QF_newXFromISR_                          0x00001d71   Thumb Code   138  qf_port.o(i.QF_newXFromISR_)
+    QF_newX_                                 0x00001e09   Thumb Code   138  qf_dyn.o(i.QF_newX_)
+    QF_onStartup                             0x00001ea1   Thumb Code   130  bsp.o(i.QF_onStartup)
+    QF_poolInit                              0x00001f31   Thumb Code   100  qf_dyn.o(i.QF_poolInit)
+    QF_psInit                                0x00001fa1   Thumb Code    24  qf_ps.o(i.QF_psInit)
+    QF_publishFromISR_                       0x00001fc1   Thumb Code   178  qf_port.o(i.QF_publishFromISR_)
+    QF_publish_                              0x00002085   Thumb Code   160  qf_ps.o(i.QF_publish_)
+    QF_run                                   0x00002135   Thumb Code    22  qf_port.o(i.QF_run)
+    QF_tickXFromISR_                         0x00002151   Thumb Code   234  qf_port.o(i.QF_tickXFromISR_)
+    QF_tickX_                                0x00002245   Thumb Code   178  qf_time.o(i.QF_tickX_)
+    QHsm_ctor                                0x00002301   Thumb Code    12  qep_hsm.o(i.QHsm_ctor)
+    QHsm_dispatch_                           0x00002315   Thumb Code   258  qep_hsm.o(i.QHsm_dispatch_)
+    QHsm_init_                               0x00002421   Thumb Code   168  qep_hsm.o(i.QHsm_init_)
+    QHsm_top                                 0x000024d5   Thumb Code     6  qep_hsm.o(i.QHsm_top)
+    QMPool_get                               0x00002639   Thumb Code   138  qf_mem.o(i.QMPool_get)
+    QMPool_getFromISR                        0x000026c9   Thumb Code   146  qf_port.o(i.QMPool_getFromISR)
+    QMPool_init                              0x00002761   Thumb Code   138  qf_mem.o(i.QMPool_init)
+    QMPool_put                               0x000027f1   Thumb Code    58  qf_mem.o(i.QMPool_put)
+    QMPool_putFromISR                        0x00002831   Thumb Code    84  qf_port.o(i.QMPool_putFromISR)
+    QTimeEvt_armX                            0x00002915   Thumb Code   102  qf_time.o(i.QTimeEvt_armX)
+    QTimeEvt_ctorX                           0x00002985   Thumb Code    50  qf_time.o(i.QTimeEvt_ctorX)
+    QTimeEvt_disarm                          0x000029bd   Thumb Code    46  qf_time.o(i.QTimeEvt_disarm)
+    Q_onAssert                               0x000029ed   Thumb Code    90  bsp.o(i.Q_onAssert)
+    SysTick_Handler                          0x00002ad1   Thumb Code    46  port.o(i.SysTick_Handler)
+    SystemCoreClockUpdate                    0x00002b05   Thumb Code   184  system_tm4c123gh6pm.o(i.SystemCoreClockUpdate)
+    SystemInit                               0x00002bc9   Thumb Code   138  system_tm4c123gh6pm.o(i.SystemInit)
+    Table_ctor                               0x00002cb5   Thumb Code    38  table.o(i.Table_ctor)
+    main                                     0x0000333d   Thumb Code   280  main.o(i.main)
+    pxPortInitialiseStack                    0x00003819   Thumb Code    38  port.o(i.pxPortInitialiseStack)
+    ulTaskNotifyTake                         0x000038d9   Thumb Code   108  tasks.o(i.ulTaskNotifyTake)
+    uxListRemove                             0x0000394d   Thumb Code    40  list.o(i.uxListRemove)
+    vApplicationGetIdleTaskMemory            0x00003975   Thumb Code    16  bsp.o(i.vApplicationGetIdleTaskMemory)
+    vApplicationIdleHook                     0x0000398d   Thumb Code    64  bsp.o(i.vApplicationIdleHook)
+    vApplicationStackOverflowHook            0x000039d5   Thumb Code    10  bsp.o(i.vApplicationStackOverflowHook)
+    vApplicationTickHook                     0x000039e5   Thumb Code   416  bsp.o(i.vApplicationTickHook)
+    vListInitialise                          0x00003bb1   Thumb Code    26  list.o(i.vListInitialise)
+    vListInitialiseItem                      0x00003bcb   Thumb Code     6  list.o(i.vListInitialiseItem)
+    vListInsert                              0x00003bd1   Thumb Code    52  list.o(i.vListInsert)
+    vListInsertEnd                           0x00003c05   Thumb Code    24  list.o(i.vListInsertEnd)
+    vPortEnterCritical                       0x00003c1d   Thumb Code    66  port.o(i.vPortEnterCritical)
+    vPortExitCritical                        0x00003c6d   Thumb Code    46  port.o(i.vPortExitCritical)
+    vPortSetupTimerInterrupt                 0x00003ca5   Thumb Code    36  port.o(i.vPortSetupTimerInterrupt)
+    vPortValidateInterruptPriority           0x00003ccd   Thumb Code    82  port.o(i.vPortValidateInterruptPriority)
+    vTaskNotifyGiveFromISR                   0x00003d31   Thumb Code   190  tasks.o(i.vTaskNotifyGiveFromISR)
+    vTaskStartScheduler                      0x00003e0d   Thumb Code   134  tasks.o(i.vTaskStartScheduler)
+    vTaskSuspendAll                          0x00003eb5   Thumb Code    12  tasks.o(i.vTaskSuspendAll)
+    vTaskSwitchContext                       0x00003ec5   Thumb Code   162  tasks.o(i.vTaskSwitchContext)
+    xPortStartScheduler                      0x00003f81   Thumb Code   252  port.o(i.xPortStartScheduler)
+    xTaskCreateStatic                        0x0000409d   Thumb Code   142  tasks.o(i.xTaskCreateStatic)
+    xTaskGenericNotify                       0x00004131   Thumb Code   244  tasks.o(i.xTaskGenericNotify)
+    xTaskIncrementTick                       0x00004239   Thumb Code   284  tasks.o(i.xTaskIncrementTick)
+    xTaskResumeAll                           0x00004385   Thumb Code   212  tasks.o(i.xTaskResumeAll)
+    _fp_init                                 0x00004481   Thumb Code    10  fpinit.o(x$fpl$fpinit)
+    __fplib_config_fpu_vfp                   0x00004489   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    __fplib_config_pureend_doubles           0x00004489   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    QP_versionStr                            0x00004494   Data           7  qep_hsm.o(.constdata)
+    AO_Heartbeat                             0x00004524   Data           4  blinky.o(.constdata)
+    AO_Philo                                 0x00004550   Data          20  philo.o(.constdata)
+    AO_Table                                 0x00004570   Data           4  table.o(.constdata)
+    Region$$Table$$Base                      0x00004bc4   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x00004be4   Number         0  anon$$obj.o(Region$$Table)
     SystemCoreClock                          0x20000000   Data           4  system_tm4c123gh6pm.o(.data)
     QF_maxPool_                              0x20000004   Data           4  qf_dyn.o(.data)
     QF_subscrList_                           0x20000008   Data           4  qf_ps.o(.data)
     QF_maxPubSignal_                         0x2000000c   Data           4  qf_ps.o(.data)
     pxCurrentTCB                             0x20000010   Data           4  tasks.o(.data)
-    StX                                      0x20000074   Data           4  bsp_bp.o(.data)
-    StY                                      0x20000078   Data           4  bsp_bp.o(.data)
-    StTextColor                              0x2000007c   Data           2  bsp_bp.o(.data)
-    Messageindex                             0x20000084   Data           4  bsp_bp.o(.data)
-    TimeIndex                                0x20000088   Data           4  bsp_bp.o(.data)
-    Ymax                                     0x2000008c   Data           4  bsp_bp.o(.data)
-    Ymin                                     0x20000090   Data           4  bsp_bp.o(.data)
-    Yrange                                   0x20000094   Data           4  bsp_bp.o(.data)
-    PlotBGColor                              0x20000098   Data           2  bsp_bp.o(.data)
-    QF_active_                               0x2000009c   Data         132  qf_act.o(.bss)
-    QF_timeEvtHead_                          0x20000120   Data          16  qf_time.o(.bss)
-    QF_pool_                                 0x20000130   Data          60  qf_dyn.o(.bss)
-    __libspace_start                         0x20002910   Data          96  libspace.o(.bss)
-    __temporary_stack_top$libspace           0x20002970   Data           0  libspace.o(.bss)
+    StX                                      0x2000007c   Data           4  bsp_bp.o(.data)
+    StY                                      0x20000080   Data           4  bsp_bp.o(.data)
+    StTextColor                              0x20000084   Data           2  bsp_bp.o(.data)
+    Messageindex                             0x2000008c   Data           4  bsp_bp.o(.data)
+    TimeIndex                                0x20000090   Data           4  bsp_bp.o(.data)
+    Ymax                                     0x20000094   Data           4  bsp_bp.o(.data)
+    Ymin                                     0x20000098   Data           4  bsp_bp.o(.data)
+    Yrange                                   0x2000009c   Data           4  bsp_bp.o(.data)
+    PlotBGColor                              0x200000a0   Data           2  bsp_bp.o(.data)
+    QF_active_                               0x200000a4   Data         132  qf_act.o(.bss)
+    QF_timeEvtHead_                          0x20000128   Data          16  qf_time.o(.bss)
+    QF_pool_                                 0x20000138   Data          60  qf_dyn.o(.bss)
+    Message                                  0x20002930   Data          12  bsp_bp.o(.bss)
+    __libspace_start                         0x2000293c   Data          96  libspace.o(.bss)
+    __temporary_stack_top$libspace           0x2000299c   Data           0  libspace.o(.bss)
 
 
 
@@ -1717,267 +1772,285 @@ Memory Map of the image
 
   Image Entry point : 0x000003d5
 
-  Load Region LR_IROM1 (Base: 0x00000000, Size: 0x00004620, Max: 0x00040000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x00000000, Size: 0x00004c88, Max: 0x00040000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00004584, Max: 0x00040000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00004be4, Max: 0x00040000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x00000000   0x00000000   0x0000026c   Data   RO           69    RESET               startup_tm4c123gh6pm.o
-    0x0000026c   0x0000026c   0x00000008   Code   RO         1881  * !!!main             c_w.l(__main.o)
-    0x00000274   0x00000274   0x00000034   Code   RO         2044    !!!scatter          c_w.l(__scatter.o)
-    0x000002a8   0x000002a8   0x0000001a   Code   RO         2046    !!handler_copy      c_w.l(__scatter_copy.o)
+    0x0000026c   0x0000026c   0x00000008   Code   RO         1962  * !!!main             c_w.l(__main.o)
+    0x00000274   0x00000274   0x00000034   Code   RO         2125    !!!scatter          c_w.l(__scatter.o)
+    0x000002a8   0x000002a8   0x0000001a   Code   RO         2127    !!handler_copy      c_w.l(__scatter_copy.o)
     0x000002c2   0x000002c2   0x00000002   PAD
-    0x000002c4   0x000002c4   0x0000001c   Code   RO         2048    !!handler_zi        c_w.l(__scatter_zi.o)
-    0x000002e0   0x000002e0   0x00000002   Code   RO         1912    .ARM.Collect$$libinit$$00000000  c_w.l(libinit.o)
-    0x000002e2   0x000002e2   0x00000004   Code   RO         1918    .ARM.Collect$$libinit$$00000001  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1921    .ARM.Collect$$libinit$$00000004  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1924    .ARM.Collect$$libinit$$0000000A  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1926    .ARM.Collect$$libinit$$0000000C  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1928    .ARM.Collect$$libinit$$0000000E  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1931    .ARM.Collect$$libinit$$00000011  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1933    .ARM.Collect$$libinit$$00000013  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1935    .ARM.Collect$$libinit$$00000015  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1937    .ARM.Collect$$libinit$$00000017  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1939    .ARM.Collect$$libinit$$00000019  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1941    .ARM.Collect$$libinit$$0000001B  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1943    .ARM.Collect$$libinit$$0000001D  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1945    .ARM.Collect$$libinit$$0000001F  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1947    .ARM.Collect$$libinit$$00000021  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1949    .ARM.Collect$$libinit$$00000023  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1951    .ARM.Collect$$libinit$$00000025  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1955    .ARM.Collect$$libinit$$0000002C  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1957    .ARM.Collect$$libinit$$0000002E  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1959    .ARM.Collect$$libinit$$00000030  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000000   Code   RO         1961    .ARM.Collect$$libinit$$00000032  c_w.l(libinit2.o)
-    0x000002e6   0x000002e6   0x00000002   Code   RO         1962    .ARM.Collect$$libinit$$00000033  c_w.l(libinit2.o)
-    0x000002e8   0x000002e8   0x00000002   Code   RO         1982    .ARM.Collect$$libshutdown$$00000000  c_w.l(libshutdown.o)
-    0x000002ea   0x000002ea   0x00000000   Code   RO         1995    .ARM.Collect$$libshutdown$$00000002  c_w.l(libshutdown2.o)
-    0x000002ea   0x000002ea   0x00000000   Code   RO         1997    .ARM.Collect$$libshutdown$$00000004  c_w.l(libshutdown2.o)
-    0x000002ea   0x000002ea   0x00000000   Code   RO         1999    .ARM.Collect$$libshutdown$$00000006  c_w.l(libshutdown2.o)
-    0x000002ea   0x000002ea   0x00000000   Code   RO         2002    .ARM.Collect$$libshutdown$$00000009  c_w.l(libshutdown2.o)
-    0x000002ea   0x000002ea   0x00000000   Code   RO         2005    .ARM.Collect$$libshutdown$$0000000C  c_w.l(libshutdown2.o)
-    0x000002ea   0x000002ea   0x00000000   Code   RO         2007    .ARM.Collect$$libshutdown$$0000000E  c_w.l(libshutdown2.o)
-    0x000002ea   0x000002ea   0x00000000   Code   RO         2010    .ARM.Collect$$libshutdown$$00000011  c_w.l(libshutdown2.o)
-    0x000002ea   0x000002ea   0x00000002   Code   RO         2011    .ARM.Collect$$libshutdown$$00000012  c_w.l(libshutdown2.o)
-    0x000002ec   0x000002ec   0x00000000   Code   RO         1883    .ARM.Collect$$rtentry$$00000000  c_w.l(__rtentry.o)
-    0x000002ec   0x000002ec   0x00000000   Code   RO         1887    .ARM.Collect$$rtentry$$00000002  c_w.l(__rtentry2.o)
-    0x000002ec   0x000002ec   0x00000006   Code   RO         1899    .ARM.Collect$$rtentry$$00000004  c_w.l(__rtentry4.o)
-    0x000002f2   0x000002f2   0x00000000   Code   RO         1889    .ARM.Collect$$rtentry$$00000009  c_w.l(__rtentry2.o)
-    0x000002f2   0x000002f2   0x00000004   Code   RO         1890    .ARM.Collect$$rtentry$$0000000A  c_w.l(__rtentry2.o)
-    0x000002f6   0x000002f6   0x00000000   Code   RO         1892    .ARM.Collect$$rtentry$$0000000C  c_w.l(__rtentry2.o)
-    0x000002f6   0x000002f6   0x00000008   Code   RO         1893    .ARM.Collect$$rtentry$$0000000D  c_w.l(__rtentry2.o)
-    0x000002fe   0x000002fe   0x00000002   Code   RO         1916    .ARM.Collect$$rtexit$$00000000  c_w.l(rtexit.o)
-    0x00000300   0x00000300   0x00000000   Code   RO         1964    .ARM.Collect$$rtexit$$00000002  c_w.l(rtexit2.o)
-    0x00000300   0x00000300   0x00000004   Code   RO         1965    .ARM.Collect$$rtexit$$00000003  c_w.l(rtexit2.o)
-    0x00000304   0x00000304   0x00000006   Code   RO         1966    .ARM.Collect$$rtexit$$00000004  c_w.l(rtexit2.o)
+    0x000002c4   0x000002c4   0x0000001c   Code   RO         2129    !!handler_zi        c_w.l(__scatter_zi.o)
+    0x000002e0   0x000002e0   0x00000002   Code   RO         1993    .ARM.Collect$$libinit$$00000000  c_w.l(libinit.o)
+    0x000002e2   0x000002e2   0x00000004   Code   RO         1999    .ARM.Collect$$libinit$$00000001  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2002    .ARM.Collect$$libinit$$00000004  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2005    .ARM.Collect$$libinit$$0000000A  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2007    .ARM.Collect$$libinit$$0000000C  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2009    .ARM.Collect$$libinit$$0000000E  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2012    .ARM.Collect$$libinit$$00000011  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2014    .ARM.Collect$$libinit$$00000013  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2016    .ARM.Collect$$libinit$$00000015  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2018    .ARM.Collect$$libinit$$00000017  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2020    .ARM.Collect$$libinit$$00000019  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2022    .ARM.Collect$$libinit$$0000001B  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2024    .ARM.Collect$$libinit$$0000001D  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2026    .ARM.Collect$$libinit$$0000001F  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2028    .ARM.Collect$$libinit$$00000021  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2030    .ARM.Collect$$libinit$$00000023  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2032    .ARM.Collect$$libinit$$00000025  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2036    .ARM.Collect$$libinit$$0000002C  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2038    .ARM.Collect$$libinit$$0000002E  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2040    .ARM.Collect$$libinit$$00000030  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000000   Code   RO         2042    .ARM.Collect$$libinit$$00000032  c_w.l(libinit2.o)
+    0x000002e6   0x000002e6   0x00000002   Code   RO         2043    .ARM.Collect$$libinit$$00000033  c_w.l(libinit2.o)
+    0x000002e8   0x000002e8   0x00000002   Code   RO         2063    .ARM.Collect$$libshutdown$$00000000  c_w.l(libshutdown.o)
+    0x000002ea   0x000002ea   0x00000000   Code   RO         2076    .ARM.Collect$$libshutdown$$00000002  c_w.l(libshutdown2.o)
+    0x000002ea   0x000002ea   0x00000000   Code   RO         2078    .ARM.Collect$$libshutdown$$00000004  c_w.l(libshutdown2.o)
+    0x000002ea   0x000002ea   0x00000000   Code   RO         2080    .ARM.Collect$$libshutdown$$00000006  c_w.l(libshutdown2.o)
+    0x000002ea   0x000002ea   0x00000000   Code   RO         2083    .ARM.Collect$$libshutdown$$00000009  c_w.l(libshutdown2.o)
+    0x000002ea   0x000002ea   0x00000000   Code   RO         2086    .ARM.Collect$$libshutdown$$0000000C  c_w.l(libshutdown2.o)
+    0x000002ea   0x000002ea   0x00000000   Code   RO         2088    .ARM.Collect$$libshutdown$$0000000E  c_w.l(libshutdown2.o)
+    0x000002ea   0x000002ea   0x00000000   Code   RO         2091    .ARM.Collect$$libshutdown$$00000011  c_w.l(libshutdown2.o)
+    0x000002ea   0x000002ea   0x00000002   Code   RO         2092    .ARM.Collect$$libshutdown$$00000012  c_w.l(libshutdown2.o)
+    0x000002ec   0x000002ec   0x00000000   Code   RO         1964    .ARM.Collect$$rtentry$$00000000  c_w.l(__rtentry.o)
+    0x000002ec   0x000002ec   0x00000000   Code   RO         1968    .ARM.Collect$$rtentry$$00000002  c_w.l(__rtentry2.o)
+    0x000002ec   0x000002ec   0x00000006   Code   RO         1980    .ARM.Collect$$rtentry$$00000004  c_w.l(__rtentry4.o)
+    0x000002f2   0x000002f2   0x00000000   Code   RO         1970    .ARM.Collect$$rtentry$$00000009  c_w.l(__rtentry2.o)
+    0x000002f2   0x000002f2   0x00000004   Code   RO         1971    .ARM.Collect$$rtentry$$0000000A  c_w.l(__rtentry2.o)
+    0x000002f6   0x000002f6   0x00000000   Code   RO         1973    .ARM.Collect$$rtentry$$0000000C  c_w.l(__rtentry2.o)
+    0x000002f6   0x000002f6   0x00000008   Code   RO         1974    .ARM.Collect$$rtentry$$0000000D  c_w.l(__rtentry2.o)
+    0x000002fe   0x000002fe   0x00000002   Code   RO         1997    .ARM.Collect$$rtexit$$00000000  c_w.l(rtexit.o)
+    0x00000300   0x00000300   0x00000000   Code   RO         2045    .ARM.Collect$$rtexit$$00000002  c_w.l(rtexit2.o)
+    0x00000300   0x00000300   0x00000004   Code   RO         2046    .ARM.Collect$$rtexit$$00000003  c_w.l(rtexit2.o)
+    0x00000304   0x00000304   0x00000006   Code   RO         2047    .ARM.Collect$$rtexit$$00000004  c_w.l(rtexit2.o)
     0x0000030a   0x0000030a   0x00000002   PAD
     0x0000030c   0x0000030c   0x000000be   Code   RO         1071    .emb_text           port.o
     0x000003ca   0x000003ca   0x00000002   PAD
     0x000003cc   0x000003cc   0x00000006   Code   RO         1248    .emb_text           bsp.o
     0x000003d2   0x000003d2   0x00000002   PAD
     0x000003d4   0x000003d4   0x0000007c   Code   RO           70  * .text               startup_tm4c123gh6pm.o
-    0x00000450   0x00000450   0x00000010   Code   RO         1877    .text               c_w.l(aeabi_memset.o)
-    0x00000460   0x00000460   0x00000006   Code   RO         1879    .text               c_w.l(heapauxi.o)
-    0x00000466   0x00000466   0x00000044   Code   RO         1884    .text               c_w.l(rt_memclr.o)
-    0x000004aa   0x000004aa   0x0000004e   Code   RO         1901    .text               c_w.l(rt_memclr_w.o)
-    0x000004f8   0x000004f8   0x0000004a   Code   RO         1903    .text               c_w.l(sys_stackheap_outer.o)
-    0x00000542   0x00000542   0x00000012   Code   RO         1905    .text               c_w.l(exit.o)
-    0x00000554   0x00000554   0x00000008   Code   RO         1913    .text               c_w.l(libspace.o)
-    0x0000055c   0x0000055c   0x0000000c   Code   RO         1974    .text               c_w.l(sys_exit.o)
-    0x00000568   0x00000568   0x00000002   Code   RO         1985    .text               c_w.l(use_no_semi.o)
-    0x0000056a   0x0000056a   0x00000000   Code   RO         1987    .text               c_w.l(indicate_semi.o)
+    0x00000450   0x00000450   0x00000010   Code   RO         1958    .text               c_w.l(aeabi_memset.o)
+    0x00000460   0x00000460   0x00000006   Code   RO         1960    .text               c_w.l(heapauxi.o)
+    0x00000466   0x00000466   0x00000044   Code   RO         1965    .text               c_w.l(rt_memclr.o)
+    0x000004aa   0x000004aa   0x0000004e   Code   RO         1982    .text               c_w.l(rt_memclr_w.o)
+    0x000004f8   0x000004f8   0x0000004a   Code   RO         1984    .text               c_w.l(sys_stackheap_outer.o)
+    0x00000542   0x00000542   0x00000012   Code   RO         1986    .text               c_w.l(exit.o)
+    0x00000554   0x00000554   0x00000008   Code   RO         1994    .text               c_w.l(libspace.o)
+    0x0000055c   0x0000055c   0x0000000c   Code   RO         2055    .text               c_w.l(sys_exit.o)
+    0x00000568   0x00000568   0x00000002   Code   RO         2066    .text               c_w.l(use_no_semi.o)
+    0x0000056a   0x0000056a   0x00000000   Code   RO         2068    .text               c_w.l(indicate_semi.o)
     0x0000056a   0x0000056a   0x00000002   PAD
-    0x0000056c   0x0000056c   0x00000114   Code   RO         1249    i.BSP_BP_BuzzerIO_Init  bsp.o
-    0x00000680   0x00000680   0x00000040   Code   RO         1250    i.BSP_BP_Buzzer_Freq  bsp.o
-    0x000006c0   0x000006c0   0x00000028   Code   RO         1253    i.BSP_BP_LedBlueDuty  bsp.o
-    0x000006e8   0x000006e8   0x0000022c   Code   RO         1262    i.BSP_BP_RGB_ledsInit  bsp.o
-    0x00000914   0x00000914   0x000001c0   Code   RO         1263    i.BSP_BP_SPI_TFT_Init  bsp.o
-    0x00000ad4   0x00000ad4   0x0000003c   Code   RO         1264    i.BSP_BP_SPIwritecommand  bsp.o
-    0x00000b10   0x00000b10   0x0000003c   Code   RO         1265    i.BSP_BP_SPIwritedata  bsp.o
-    0x00000b4c   0x00000b4c   0x0000000a   Code   RO         1266    i.BSP_BP_TFT_CS_HIGH  bsp.o
-    0x00000b56   0x00000b56   0x0000000a   Code   RO         1267    i.BSP_BP_TFT_CS_LOW  bsp.o
-    0x00000b60   0x00000b60   0x0000000c   Code   RO         1268    i.BSP_BP_TFT_DC_COMMAND  bsp.o
-    0x00000b6c   0x00000b6c   0x0000000c   Code   RO         1269    i.BSP_BP_TFT_DC_DATA  bsp.o
-    0x00000b78   0x00000b78   0x0000000c   Code   RO         1270    i.BSP_BP_TFT_RESET_HIGH  bsp.o
-    0x00000b84   0x00000b84   0x0000000c   Code   RO         1271    i.BSP_BP_TFT_RESET_LOW  bsp.o
-    0x00000b90   0x00000b90   0x00000016   Code   RO         1272    i.BSP_Delay1ms      bsp.o
-    0x00000ba6   0x00000ba6   0x00000002   PAD
-    0x00000ba8   0x00000ba8   0x00000110   Code   RO         1685    i.BSP_LCD_DrawChar  bsp_bp.o
-    0x00000cb8   0x00000cb8   0x00000054   Code   RO         1690    i.BSP_LCD_DrawString  bsp_bp.o
-    0x00000d0c   0x00000d0c   0x000000ac   Code   RO         1692    i.BSP_LCD_FillRect  bsp_bp.o
-    0x00000db8   0x00000db8   0x00000024   Code   RO         1693    i.BSP_LCD_FillScreen  bsp_bp.o
-    0x00000ddc   0x00000ddc   0x0000000a   Code   RO         1694    i.BSP_LCD_Init      bsp_bp.o
-    0x00000de6   0x00000de6   0x00000002   PAD
-    0x00000de8   0x00000de8   0x00000020   Code   RO         1702    i.BSP_LCD_SetCursor  bsp_bp.o
-    0x00000e08   0x00000e08   0x00000014   Code   RO         1273    i.BSP_displayPaused  bsp.o
-    0x00000e1c   0x00000e1c   0x00000018   Code   RO         1274    i.BSP_displayPhilStat  bsp.o
-    0x00000e34   0x00000e34   0x000000b0   Code   RO         1275    i.BSP_init          bsp.o
-    0x00000ee4   0x00000ee4   0x0000000c   Code   RO         1280    i.BSP_ledRedOff     bsp.o
-    0x00000ef0   0x00000ef0   0x00000044   Code   RO         1282    i.BSP_random        bsp.o
-    0x00000f34   0x00000f34   0x0000000c   Code   RO         1283    i.BSP_randomSeed    bsp.o
-    0x00000f40   0x00000f40   0x00000044   Code   RO         1285    i.GPIOPortA_IRQHandler  bsp.o
-    0x00000f84   0x00000f84   0x00000028   Code   RO         1149    i.Heartbeat_ctor    blinky.o
-    0x00000fac   0x00000fac   0x00000030   Code   RO         1150    i.Heartbeat_initial  blinky.o
-    0x00000fdc   0x00000fdc   0x00000024   Code   RO         1151    i.Heartbeat_off     blinky.o
-    0x00001000   0x00001000   0x00000064   Code   RO         1152    i.Heartbeat_on      blinky.o
-    0x00001064   0x00001064   0x00000074   Code   RO         1153    i.Heartbeat_start   blinky.o
-    0x000010d8   0x000010d8   0x00000050   Code   RO         1154    i.Heartbeat_stop    blinky.o
-    0x00001128   0x00001128   0x00000038   Code   RO         1602    i.Philo_ctor        philo.o
-    0x00001160   0x00001160   0x000000b8   Code   RO         1603    i.Philo_eating      philo.o
-    0x00001218   0x00001218   0x000000ac   Code   RO         1604    i.Philo_hungry      philo.o
-    0x000012c4   0x000012c4   0x00000034   Code   RO         1605    i.Philo_initial     philo.o
-    0x000012f8   0x000012f8   0x000000a8   Code   RO         1606    i.Philo_thinking    philo.o
-    0x000013a0   0x000013a0   0x00000020   Code   RO          561    i.QActive_ctor      qf_qact.o
-    0x000013c0   0x000013c0   0x00000078   Code   RO          280    i.QActive_get_      qf_actq.o
-    0x00001438   0x00001438   0x000000d8   Code   RO          619    i.QActive_postFromISR_  qf_port.o
-    0x00001510   0x00001510   0x00000080   Code   RO          281    i.QActive_postLIFO_  qf_actq.o
-    0x00001590   0x00001590   0x000000b8   Code   RO          282    i.QActive_post_     qf_actq.o
-    0x00001648   0x00001648   0x00000028   Code   RO          620    i.QActive_setAttr   qf_port.o
-    0x00001670   0x00001670   0x000000b0   Code   RO          621    i.QActive_start_    qf_port.o
-    0x00001720   0x00001720   0x00000068   Code   RO          517    i.QActive_subscribe  qf_ps.o
-    0x00001788   0x00001788   0x00000018   Code   RO          575    i.QEQueue_init      qf_qeq.o
-    0x000017a0   0x000017a0   0x00000028   Code   RO          196    i.QF_LOG2           qf_act.o
-    0x000017c8   0x000017c8   0x0000003c   Code   RO          197    i.QF_add_           qf_act.o
-    0x00001804   0x00001804   0x00000012   Code   RO          198    i.QF_bzero          qf_act.o
-    0x00001816   0x00001816   0x00000002   PAD
-    0x00001818   0x00001818   0x0000005c   Code   RO          435    i.QF_gc             qf_dyn.o
-    0x00001874   0x00001874   0x00000078   Code   RO          622    i.QF_gcFromISR      qf_port.o
-    0x000018ec   0x000018ec   0x00000002   Code   RO          623    i.QF_init           qf_port.o
-    0x000018ee   0x000018ee   0x00000002   PAD
-    0x000018f0   0x000018f0   0x00000098   Code   RO          624    i.QF_newXFromISR_   qf_port.o
-    0x00001988   0x00001988   0x00000098   Code   RO          437    i.QF_newX_          qf_dyn.o
-    0x00001a20   0x00001a20   0x00000098   Code   RO         1287    i.QF_onStartup      bsp.o
-    0x00001ab8   0x00001ab8   0x00000070   Code   RO          439    i.QF_poolInit       qf_dyn.o
-    0x00001b28   0x00001b28   0x00000020   Code   RO          520    i.QF_psInit         qf_ps.o
-    0x00001b48   0x00001b48   0x000000c4   Code   RO          625    i.QF_publishFromISR_  qf_port.o
-    0x00001c0c   0x00001c0c   0x000000b0   Code   RO          521    i.QF_publish_       qf_ps.o
-    0x00001cbc   0x00001cbc   0x0000001c   Code   RO          626    i.QF_run            qf_port.o
-    0x00001cd8   0x00001cd8   0x000000f4   Code   RO          628    i.QF_tickXFromISR_  qf_port.o
-    0x00001dcc   0x00001dcc   0x000000bc   Code   RO          373    i.QF_tickX_         qf_time.o
-    0x00001e88   0x00001e88   0x00000014   Code   RO           75    i.QHsm_ctor         qep_hsm.o
-    0x00001e9c   0x00001e9c   0x0000010c   Code   RO           76    i.QHsm_dispatch_    qep_hsm.o
-    0x00001fa8   0x00001fa8   0x000000b4   Code   RO           77    i.QHsm_init_        qep_hsm.o
-    0x0000205c   0x0000205c   0x00000006   Code   RO           79    i.QHsm_top          qep_hsm.o
-    0x00002062   0x00002062   0x00000002   PAD
-    0x00002064   0x00002064   0x0000015c   Code   RO           80    i.QHsm_tran_        qep_hsm.o
-    0x000021c0   0x000021c0   0x00000090   Code   RO          486    i.QMPool_get        qf_mem.o
-    0x00002250   0x00002250   0x00000098   Code   RO          629    i.QMPool_getFromISR  qf_port.o
-    0x000022e8   0x000022e8   0x00000090   Code   RO          487    i.QMPool_init       qf_mem.o
-    0x00002378   0x00002378   0x00000040   Code   RO          488    i.QMPool_put        qf_mem.o
-    0x000023b8   0x000023b8   0x00000058   Code   RO          630    i.QMPool_putFromISR  qf_port.o
-    0x00002410   0x00002410   0x00000026   Code   RO          285    i.QTicker_dispatch_  qf_actq.o
-    0x00002436   0x00002436   0x00000006   Code   RO          286    i.QTicker_init_     qf_actq.o
-    0x0000243c   0x0000243c   0x00000018   Code   RO          287    i.QTicker_postLIFO_  qf_actq.o
-    0x00002454   0x00002454   0x00000048   Code   RO          288    i.QTicker_post_     qf_actq.o
-    0x0000249c   0x0000249c   0x00000070   Code   RO          374    i.QTimeEvt_armX     qf_time.o
-    0x0000250c   0x0000250c   0x00000038   Code   RO          375    i.QTimeEvt_ctorX    qf_time.o
-    0x00002544   0x00002544   0x0000002e   Code   RO          377    i.QTimeEvt_disarm   qf_time.o
-    0x00002572   0x00002572   0x00000002   PAD
-    0x00002574   0x00002574   0x0000006c   Code   RO         1288    i.Q_onAssert        bsp.o
-    0x000025e0   0x000025e0   0x00000078   Code   RO         1704    i.ST7735_InitR      bsp_bp.o
-    0x00002658   0x00002658   0x00000034   Code   RO         1072    i.SysTick_Handler   port.o
-    0x0000268c   0x0000268c   0x000000c4   Code   RO            4    i.SystemCoreClockUpdate  system_tm4c123gh6pm.o
-    0x00002750   0x00002750   0x000000b4   Code   RO            5    i.SystemInit        system_tm4c123gh6pm.o
-    0x00002804   0x00002804   0x00000038   Code   RO         1643    i.Table_active      table.o
-    0x0000283c   0x0000283c   0x00000030   Code   RO         1644    i.Table_ctor        table.o
-    0x0000286c   0x0000286c   0x00000060   Code   RO         1645    i.Table_initial     table.o
-    0x000028cc   0x000028cc   0x00000104   Code   RO         1646    i.Table_paused      table.o
-    0x000029d0   0x000029d0   0x00000268   Code   RO         1647    i.Table_serving     table.o
-    0x00002c38   0x00002c38   0x00000028   Code   RO         1289    i.__NVIC_SetPriority  bsp.o
-    0x00002c60   0x00002c60   0x00000056   Code   RO         1705    i.commandList       bsp_bp.o
-    0x00002cb6   0x00002cb6   0x00000002   PAD
-    0x00002cb8   0x00002cb8   0x000000f8   Code   RO            6    i.getOscClk         system_tm4c123gh6pm.o
-    0x00002db0   0x00002db0   0x00000164   Code   RO         1583    i.main              main.o
-    0x00002f14   0x00002f14   0x00000080   Code   RO          780    i.prvAddCurrentTaskToDelayedList  tasks.o
-    0x00002f94   0x00002f94   0x000000b4   Code   RO          781    i.prvAddNewTaskToReadyList  tasks.o
-    0x00003048   0x00003048   0x00000048   Code   RO          782    i.prvCheckTasksWaitingTermination  tasks.o
-    0x00003090   0x00003090   0x00000002   Code   RO          783    i.prvDeleteTCB      tasks.o
-    0x00003092   0x00003092   0x0000000c   Code   RO          784    i.prvIdleTask       tasks.o
-    0x0000309e   0x0000309e   0x00000002   PAD
-    0x000030a0   0x000030a0   0x000000b8   Code   RO          785    i.prvInitialiseNewTask  tasks.o
-    0x00003158   0x00003158   0x0000005c   Code   RO          786    i.prvInitialiseTaskLists  tasks.o
-    0x000031b4   0x000031b4   0x00000034   Code   RO          787    i.prvResetNextTaskUnblockTime  tasks.o
-    0x000031e8   0x000031e8   0x00000038   Code   RO         1073    i.prvTaskExitError  port.o
-    0x00003220   0x00003220   0x00000012   Code   RO         1711    i.pushColor         bsp_bp.o
-    0x00003232   0x00003232   0x00000002   PAD
-    0x00003234   0x00003234   0x0000002c   Code   RO         1074    i.pxPortInitialiseStack  port.o
-    0x00003260   0x00003260   0x00000074   Code   RO         1712    i.setAddrWindow     bsp_bp.o
-    0x000032d4   0x000032d4   0x00000020   Code   RO          631    i.task_function     qf_port.o
-    0x000032f4   0x000032f4   0x00000074   Code   RO          790    i.ulTaskNotifyTake  tasks.o
-    0x00003368   0x00003368   0x00000028   Code   RO          730    i.uxListRemove      list.o
-    0x00003390   0x00003390   0x00000018   Code   RO         1290    i.vApplicationGetIdleTaskMemory  bsp.o
-    0x000033a8   0x000033a8   0x00000048   Code   RO         1291    i.vApplicationIdleHook  bsp.o
-    0x000033f0   0x000033f0   0x00000010   Code   RO         1292    i.vApplicationStackOverflowHook  bsp.o
-    0x00003400   0x00003400   0x00000150   Code   RO         1293    i.vApplicationTickHook  bsp.o
-    0x00003550   0x00003550   0x0000001a   Code   RO          731    i.vListInitialise   list.o
-    0x0000356a   0x0000356a   0x00000006   Code   RO          732    i.vListInitialiseItem  list.o
-    0x00003570   0x00003570   0x00000034   Code   RO          733    i.vListInsert       list.o
-    0x000035a4   0x000035a4   0x00000018   Code   RO          734    i.vListInsertEnd    list.o
-    0x000035bc   0x000035bc   0x00000050   Code   RO         1076    i.vPortEnterCritical  port.o
-    0x0000360c   0x0000360c   0x00000038   Code   RO         1077    i.vPortExitCritical  port.o
-    0x00003644   0x00003644   0x00000028   Code   RO         1078    i.vPortSetupTimerInterrupt  port.o
-    0x0000366c   0x0000366c   0x00000064   Code   RO         1079    i.vPortValidateInterruptPriority  port.o
-    0x000036d0   0x000036d0   0x000000dc   Code   RO          799    i.vTaskNotifyGiveFromISR  tasks.o
-    0x000037ac   0x000037ac   0x000000a8   Code   RO          805    i.vTaskStartScheduler  tasks.o
-    0x00003854   0x00003854   0x00000010   Code   RO          806    i.vTaskSuspendAll   tasks.o
-    0x00003864   0x00003864   0x000000bc   Code   RO          807    i.vTaskSwitchContext  tasks.o
-    0x00003920   0x00003920   0x0000011c   Code   RO         1080    i.xPortStartScheduler  port.o
-    0x00003a3c   0x00003a3c   0x00000094   Code   RO          809    i.xTaskCreateStatic  tasks.o
-    0x00003ad0   0x00003ad0   0x00000108   Code   RO          810    i.xTaskGenericNotify  tasks.o
-    0x00003bd8   0x00003bd8   0x0000014c   Code   RO          816    i.xTaskIncrementTick  tasks.o
-    0x00003d24   0x00003d24   0x000000fc   Code   RO          822    i.xTaskResumeAll    tasks.o
-    0x00003e20   0x00003e20   0x0000000a   Code   RO         1972    x$fpl$fpinit        fz_wm.l(fpinit.o)
-    0x00003e2a   0x00003e2a   0x00000002   PAD
-    0x00003e2c   0x00003e2c   0x00000028   Data   RO           81    .constdata          qep_hsm.o
-    0x00003e54   0x00003e54   0x00000017   Data   RO          201    .constdata          qf_act.o
-    0x00003e6b   0x00003e6b   0x00000001   PAD
-    0x00003e6c   0x00003e6c   0x00000020   Data   RO          289    .constdata          qf_actq.o
-    0x00003e8c   0x00003e8c   0x00000008   Data   RO          381    .constdata          qf_time.o
-    0x00003e94   0x00003e94   0x00000007   Data   RO          441    .constdata          qf_dyn.o
-    0x00003e9b   0x00003e9b   0x00000007   Data   RO          489    .constdata          qf_mem.o
-    0x00003ea2   0x00003ea2   0x00000006   Data   RO          522    .constdata          qf_ps.o
-    0x00003ea8   0x00003ea8   0x00000014   Data   RO          562    .constdata          qf_qact.o
-    0x00003ebc   0x00003ebc   0x00000008   Data   RO          632    .constdata          qf_port.o
-    0x00003ec4   0x00003ec4   0x00000004   Data   RO         1156    .constdata          blinky.o
-    0x00003ec8   0x00003ec8   0x00000012   Data   RO         1295    .constdata          bsp.o
-    0x00003eda   0x00003eda   0x0000000a   Data   RO         1585    .constdata          main.o
-    0x00003ee4   0x00003ee4   0x00000020   Data   RO         1608    .constdata          philo.o
-    0x00003f04   0x00003f04   0x00000010   Data   RO         1649    .constdata          table.o
-    0x00003f14   0x00003f14   0x0000057b   Data   RO         1714    .constdata          bsp_bp.o
-    0x0000448f   0x0000448f   0x00000001   PAD
-    0x00004490   0x00004490   0x0000005e   Data   RO          824    .conststring        tasks.o
-    0x000044ee   0x000044ee   0x00000002   PAD
-    0x000044f0   0x000044f0   0x00000074   Data   RO         1081    .conststring        port.o
-    0x00004564   0x00004564   0x00000020   Data   RO         2042    Region$$Table       anon$$obj.o
+    0x0000056c   0x0000056c   0x00000068   Code   RO         1249    i.ADCSeq3_IRQHandler  bsp.o
+    0x000005d4   0x000005d4   0x00000114   Code   RO         1253    i.BSP_BP_BuzzerIO_Init  bsp.o
+    0x000006e8   0x000006e8   0x00000040   Code   RO         1254    i.BSP_BP_Buzzer_Freq  bsp.o
+    0x00000728   0x00000728   0x000000f4   Code   RO         1257    i.BSP_BP_Joystick_Init  bsp.o
+    0x0000081c   0x0000081c   0x00000028   Code   RO         1258    i.BSP_BP_LedBlueDuty  bsp.o
+    0x00000844   0x00000844   0x0000022c   Code   RO         1267    i.BSP_BP_RGB_ledsInit  bsp.o
+    0x00000a70   0x00000a70   0x000001d0   Code   RO         1268    i.BSP_BP_SPI_TFT_Init  bsp.o
+    0x00000c40   0x00000c40   0x0000003c   Code   RO         1269    i.BSP_BP_SPIwritecommand  bsp.o
+    0x00000c7c   0x00000c7c   0x0000003c   Code   RO         1270    i.BSP_BP_SPIwritedata  bsp.o
+    0x00000cb8   0x00000cb8   0x0000000a   Code   RO         1271    i.BSP_BP_TFT_CS_HIGH  bsp.o
+    0x00000cc2   0x00000cc2   0x0000000a   Code   RO         1272    i.BSP_BP_TFT_CS_LOW  bsp.o
+    0x00000ccc   0x00000ccc   0x0000000c   Code   RO         1273    i.BSP_BP_TFT_DC_COMMAND  bsp.o
+    0x00000cd8   0x00000cd8   0x0000000c   Code   RO         1274    i.BSP_BP_TFT_DC_DATA  bsp.o
+    0x00000ce4   0x00000ce4   0x0000000c   Code   RO         1275    i.BSP_BP_TFT_RESET_HIGH  bsp.o
+    0x00000cf0   0x00000cf0   0x0000000c   Code   RO         1276    i.BSP_BP_TFT_RESET_LOW  bsp.o
+    0x00000cfc   0x00000cfc   0x00000016   Code   RO         1277    i.BSP_Delay1ms      bsp.o
+    0x00000d12   0x00000d12   0x00000002   PAD
+    0x00000d14   0x00000d14   0x00000020   Code   RO         1278    i.BSP_Joystick_Input  bsp.o
+    0x00000d34   0x00000d34   0x00000014   Code   RO         1279    i.BSP_Joystick_Trigger  bsp.o
+    0x00000d48   0x00000d48   0x00000110   Code   RO         1766    i.BSP_LCD_DrawChar  bsp_bp.o
+    0x00000e58   0x00000e58   0x00000054   Code   RO         1771    i.BSP_LCD_DrawString  bsp_bp.o
+    0x00000eac   0x00000eac   0x000000ac   Code   RO         1773    i.BSP_LCD_FillRect  bsp_bp.o
+    0x00000f58   0x00000f58   0x00000024   Code   RO         1774    i.BSP_LCD_FillScreen  bsp_bp.o
+    0x00000f7c   0x00000f7c   0x0000000a   Code   RO         1775    i.BSP_LCD_Init      bsp_bp.o
+    0x00000f86   0x00000f86   0x00000002   PAD
+    0x00000f88   0x00000f88   0x00000090   Code   RO         1776    i.BSP_LCD_OutUDec   bsp_bp.o
+    0x00001018   0x00001018   0x00000088   Code   RO         1777    i.BSP_LCD_OutUDec4  bsp_bp.o
+    0x000010a0   0x000010a0   0x00000020   Code   RO         1783    i.BSP_LCD_SetCursor  bsp_bp.o
+    0x000010c0   0x000010c0   0x0000000c   Code   RO         1280    i.BSP_Microphone_Get  bsp.o
+    0x000010cc   0x000010cc   0x000000ac   Code   RO         1281    i.BSP_Microphone_Init  bsp.o
+    0x00001178   0x00001178   0x00000018   Code   RO         1282    i.BSP_Microphone_Input  bsp.o
+    0x00001190   0x00001190   0x00000014   Code   RO         1283    i.BSP_SystemTempGet  bsp.o
+    0x000011a4   0x000011a4   0x00000014   Code   RO         1284    i.BSP_displayPaused  bsp.o
+    0x000011b8   0x000011b8   0x00000018   Code   RO         1285    i.BSP_displayPhilStat  bsp.o
+    0x000011d0   0x000011d0   0x000000c0   Code   RO         1286    i.BSP_init          bsp.o
+    0x00001290   0x00001290   0x0000000c   Code   RO         1291    i.BSP_ledRedOff     bsp.o
+    0x0000129c   0x0000129c   0x00000044   Code   RO         1293    i.BSP_random        bsp.o
+    0x000012e0   0x000012e0   0x0000000c   Code   RO         1294    i.BSP_randomSeed    bsp.o
+    0x000012ec   0x000012ec   0x00000044   Code   RO         1296    i.GPIOPortA_IRQHandler  bsp.o
+    0x00001330   0x00001330   0x00000028   Code   RO         1149    i.Heartbeat_ctor    blinky.o
+    0x00001358   0x00001358   0x00000058   Code   RO         1150    i.Heartbeat_initial  blinky.o
+    0x000013b0   0x000013b0   0x0000007c   Code   RO         1151    i.Heartbeat_off     blinky.o
+    0x0000142c   0x0000142c   0x000000cc   Code   RO         1152    i.Heartbeat_on      blinky.o
+    0x000014f8   0x000014f8   0x00000074   Code   RO         1153    i.Heartbeat_start   blinky.o
+    0x0000156c   0x0000156c   0x0000003c   Code   RO         1154    i.Heartbeat_stop    blinky.o
+    0x000015a8   0x000015a8   0x00000038   Code   RO         1683    i.Philo_ctor        philo.o
+    0x000015e0   0x000015e0   0x000000b8   Code   RO         1684    i.Philo_eating      philo.o
+    0x00001698   0x00001698   0x000000ac   Code   RO         1685    i.Philo_hungry      philo.o
+    0x00001744   0x00001744   0x00000034   Code   RO         1686    i.Philo_initial     philo.o
+    0x00001778   0x00001778   0x000000a8   Code   RO         1687    i.Philo_thinking    philo.o
+    0x00001820   0x00001820   0x00000020   Code   RO          561    i.QActive_ctor      qf_qact.o
+    0x00001840   0x00001840   0x00000078   Code   RO          280    i.QActive_get_      qf_actq.o
+    0x000018b8   0x000018b8   0x000000d8   Code   RO          619    i.QActive_postFromISR_  qf_port.o
+    0x00001990   0x00001990   0x00000080   Code   RO          281    i.QActive_postLIFO_  qf_actq.o
+    0x00001a10   0x00001a10   0x000000b8   Code   RO          282    i.QActive_post_     qf_actq.o
+    0x00001ac8   0x00001ac8   0x00000028   Code   RO          620    i.QActive_setAttr   qf_port.o
+    0x00001af0   0x00001af0   0x000000b0   Code   RO          621    i.QActive_start_    qf_port.o
+    0x00001ba0   0x00001ba0   0x00000068   Code   RO          517    i.QActive_subscribe  qf_ps.o
+    0x00001c08   0x00001c08   0x00000018   Code   RO          575    i.QEQueue_init      qf_qeq.o
+    0x00001c20   0x00001c20   0x00000028   Code   RO          196    i.QF_LOG2           qf_act.o
+    0x00001c48   0x00001c48   0x0000003c   Code   RO          197    i.QF_add_           qf_act.o
+    0x00001c84   0x00001c84   0x00000012   Code   RO          198    i.QF_bzero          qf_act.o
+    0x00001c96   0x00001c96   0x00000002   PAD
+    0x00001c98   0x00001c98   0x0000005c   Code   RO          435    i.QF_gc             qf_dyn.o
+    0x00001cf4   0x00001cf4   0x00000078   Code   RO          622    i.QF_gcFromISR      qf_port.o
+    0x00001d6c   0x00001d6c   0x00000002   Code   RO          623    i.QF_init           qf_port.o
+    0x00001d6e   0x00001d6e   0x00000002   PAD
+    0x00001d70   0x00001d70   0x00000098   Code   RO          624    i.QF_newXFromISR_   qf_port.o
+    0x00001e08   0x00001e08   0x00000098   Code   RO          437    i.QF_newX_          qf_dyn.o
+    0x00001ea0   0x00001ea0   0x00000090   Code   RO         1298    i.QF_onStartup      bsp.o
+    0x00001f30   0x00001f30   0x00000070   Code   RO          439    i.QF_poolInit       qf_dyn.o
+    0x00001fa0   0x00001fa0   0x00000020   Code   RO          520    i.QF_psInit         qf_ps.o
+    0x00001fc0   0x00001fc0   0x000000c4   Code   RO          625    i.QF_publishFromISR_  qf_port.o
+    0x00002084   0x00002084   0x000000b0   Code   RO          521    i.QF_publish_       qf_ps.o
+    0x00002134   0x00002134   0x0000001c   Code   RO          626    i.QF_run            qf_port.o
+    0x00002150   0x00002150   0x000000f4   Code   RO          628    i.QF_tickXFromISR_  qf_port.o
+    0x00002244   0x00002244   0x000000bc   Code   RO          373    i.QF_tickX_         qf_time.o
+    0x00002300   0x00002300   0x00000014   Code   RO           75    i.QHsm_ctor         qep_hsm.o
+    0x00002314   0x00002314   0x0000010c   Code   RO           76    i.QHsm_dispatch_    qep_hsm.o
+    0x00002420   0x00002420   0x000000b4   Code   RO           77    i.QHsm_init_        qep_hsm.o
+    0x000024d4   0x000024d4   0x00000006   Code   RO           79    i.QHsm_top          qep_hsm.o
+    0x000024da   0x000024da   0x00000002   PAD
+    0x000024dc   0x000024dc   0x0000015c   Code   RO           80    i.QHsm_tran_        qep_hsm.o
+    0x00002638   0x00002638   0x00000090   Code   RO          486    i.QMPool_get        qf_mem.o
+    0x000026c8   0x000026c8   0x00000098   Code   RO          629    i.QMPool_getFromISR  qf_port.o
+    0x00002760   0x00002760   0x00000090   Code   RO          487    i.QMPool_init       qf_mem.o
+    0x000027f0   0x000027f0   0x00000040   Code   RO          488    i.QMPool_put        qf_mem.o
+    0x00002830   0x00002830   0x00000058   Code   RO          630    i.QMPool_putFromISR  qf_port.o
+    0x00002888   0x00002888   0x00000026   Code   RO          285    i.QTicker_dispatch_  qf_actq.o
+    0x000028ae   0x000028ae   0x00000006   Code   RO          286    i.QTicker_init_     qf_actq.o
+    0x000028b4   0x000028b4   0x00000018   Code   RO          287    i.QTicker_postLIFO_  qf_actq.o
+    0x000028cc   0x000028cc   0x00000048   Code   RO          288    i.QTicker_post_     qf_actq.o
+    0x00002914   0x00002914   0x00000070   Code   RO          374    i.QTimeEvt_armX     qf_time.o
+    0x00002984   0x00002984   0x00000038   Code   RO          375    i.QTimeEvt_ctorX    qf_time.o
+    0x000029bc   0x000029bc   0x0000002e   Code   RO          377    i.QTimeEvt_disarm   qf_time.o
+    0x000029ea   0x000029ea   0x00000002   PAD
+    0x000029ec   0x000029ec   0x0000006c   Code   RO         1299    i.Q_onAssert        bsp.o
+    0x00002a58   0x00002a58   0x00000078   Code   RO         1785    i.ST7735_InitR      bsp_bp.o
+    0x00002ad0   0x00002ad0   0x00000034   Code   RO         1072    i.SysTick_Handler   port.o
+    0x00002b04   0x00002b04   0x000000c4   Code   RO            4    i.SystemCoreClockUpdate  system_tm4c123gh6pm.o
+    0x00002bc8   0x00002bc8   0x000000b4   Code   RO            5    i.SystemInit        system_tm4c123gh6pm.o
+    0x00002c7c   0x00002c7c   0x00000038   Code   RO         1724    i.Table_active      table.o
+    0x00002cb4   0x00002cb4   0x00000030   Code   RO         1725    i.Table_ctor        table.o
+    0x00002ce4   0x00002ce4   0x00000060   Code   RO         1726    i.Table_initial     table.o
+    0x00002d44   0x00002d44   0x00000104   Code   RO         1727    i.Table_paused      table.o
+    0x00002e48   0x00002e48   0x00000268   Code   RO         1728    i.Table_serving     table.o
+    0x000030b0   0x000030b0   0x0000001a   Code   RO         1300    i.__NVIC_EnableIRQ  bsp.o
+    0x000030ca   0x000030ca   0x00000002   PAD
+    0x000030cc   0x000030cc   0x00000028   Code   RO         1301    i.__NVIC_SetPriority  bsp.o
+    0x000030f4   0x000030f4   0x0000004c   Code   RO         1302    i.adcinit           bsp.o
+    0x00003140   0x00003140   0x00000056   Code   RO         1786    i.commandList       bsp_bp.o
+    0x00003196   0x00003196   0x00000002   PAD
+    0x00003198   0x00003198   0x00000048   Code   RO         1787    i.fillmessage       bsp_bp.o
+    0x000031e0   0x000031e0   0x00000064   Code   RO         1790    i.fillmessage4      bsp_bp.o
+    0x00003244   0x00003244   0x000000f8   Code   RO            6    i.getOscClk         system_tm4c123gh6pm.o
+    0x0000333c   0x0000333c   0x00000164   Code   RO         1664    i.main              main.o
+    0x000034a0   0x000034a0   0x00000058   Code   RO         1303    i.mcuTempSensorInit  bsp.o
+    0x000034f8   0x000034f8   0x00000080   Code   RO          780    i.prvAddCurrentTaskToDelayedList  tasks.o
+    0x00003578   0x00003578   0x000000b4   Code   RO          781    i.prvAddNewTaskToReadyList  tasks.o
+    0x0000362c   0x0000362c   0x00000048   Code   RO          782    i.prvCheckTasksWaitingTermination  tasks.o
+    0x00003674   0x00003674   0x00000002   Code   RO          783    i.prvDeleteTCB      tasks.o
+    0x00003676   0x00003676   0x0000000c   Code   RO          784    i.prvIdleTask       tasks.o
+    0x00003682   0x00003682   0x00000002   PAD
+    0x00003684   0x00003684   0x000000b8   Code   RO          785    i.prvInitialiseNewTask  tasks.o
+    0x0000373c   0x0000373c   0x0000005c   Code   RO          786    i.prvInitialiseTaskLists  tasks.o
+    0x00003798   0x00003798   0x00000034   Code   RO          787    i.prvResetNextTaskUnblockTime  tasks.o
+    0x000037cc   0x000037cc   0x00000038   Code   RO         1073    i.prvTaskExitError  port.o
+    0x00003804   0x00003804   0x00000012   Code   RO         1792    i.pushColor         bsp_bp.o
+    0x00003816   0x00003816   0x00000002   PAD
+    0x00003818   0x00003818   0x0000002c   Code   RO         1074    i.pxPortInitialiseStack  port.o
+    0x00003844   0x00003844   0x00000074   Code   RO         1793    i.setAddrWindow     bsp_bp.o
+    0x000038b8   0x000038b8   0x00000020   Code   RO          631    i.task_function     qf_port.o
+    0x000038d8   0x000038d8   0x00000074   Code   RO          790    i.ulTaskNotifyTake  tasks.o
+    0x0000394c   0x0000394c   0x00000028   Code   RO          730    i.uxListRemove      list.o
+    0x00003974   0x00003974   0x00000018   Code   RO         1304    i.vApplicationGetIdleTaskMemory  bsp.o
+    0x0000398c   0x0000398c   0x00000048   Code   RO         1305    i.vApplicationIdleHook  bsp.o
+    0x000039d4   0x000039d4   0x00000010   Code   RO         1306    i.vApplicationStackOverflowHook  bsp.o
+    0x000039e4   0x000039e4   0x000001cc   Code   RO         1307    i.vApplicationTickHook  bsp.o
+    0x00003bb0   0x00003bb0   0x0000001a   Code   RO          731    i.vListInitialise   list.o
+    0x00003bca   0x00003bca   0x00000006   Code   RO          732    i.vListInitialiseItem  list.o
+    0x00003bd0   0x00003bd0   0x00000034   Code   RO          733    i.vListInsert       list.o
+    0x00003c04   0x00003c04   0x00000018   Code   RO          734    i.vListInsertEnd    list.o
+    0x00003c1c   0x00003c1c   0x00000050   Code   RO         1076    i.vPortEnterCritical  port.o
+    0x00003c6c   0x00003c6c   0x00000038   Code   RO         1077    i.vPortExitCritical  port.o
+    0x00003ca4   0x00003ca4   0x00000028   Code   RO         1078    i.vPortSetupTimerInterrupt  port.o
+    0x00003ccc   0x00003ccc   0x00000064   Code   RO         1079    i.vPortValidateInterruptPriority  port.o
+    0x00003d30   0x00003d30   0x000000dc   Code   RO          799    i.vTaskNotifyGiveFromISR  tasks.o
+    0x00003e0c   0x00003e0c   0x000000a8   Code   RO          805    i.vTaskStartScheduler  tasks.o
+    0x00003eb4   0x00003eb4   0x00000010   Code   RO          806    i.vTaskSuspendAll   tasks.o
+    0x00003ec4   0x00003ec4   0x000000bc   Code   RO          807    i.vTaskSwitchContext  tasks.o
+    0x00003f80   0x00003f80   0x0000011c   Code   RO         1080    i.xPortStartScheduler  port.o
+    0x0000409c   0x0000409c   0x00000094   Code   RO          809    i.xTaskCreateStatic  tasks.o
+    0x00004130   0x00004130   0x00000108   Code   RO          810    i.xTaskGenericNotify  tasks.o
+    0x00004238   0x00004238   0x0000014c   Code   RO          816    i.xTaskIncrementTick  tasks.o
+    0x00004384   0x00004384   0x000000fc   Code   RO          822    i.xTaskResumeAll    tasks.o
+    0x00004480   0x00004480   0x0000000a   Code   RO         2053    x$fpl$fpinit        fz_wm.l(fpinit.o)
+    0x0000448a   0x0000448a   0x00000002   PAD
+    0x0000448c   0x0000448c   0x00000028   Data   RO           81    .constdata          qep_hsm.o
+    0x000044b4   0x000044b4   0x00000017   Data   RO          201    .constdata          qf_act.o
+    0x000044cb   0x000044cb   0x00000001   PAD
+    0x000044cc   0x000044cc   0x00000020   Data   RO          289    .constdata          qf_actq.o
+    0x000044ec   0x000044ec   0x00000008   Data   RO          381    .constdata          qf_time.o
+    0x000044f4   0x000044f4   0x00000007   Data   RO          441    .constdata          qf_dyn.o
+    0x000044fb   0x000044fb   0x00000007   Data   RO          489    .constdata          qf_mem.o
+    0x00004502   0x00004502   0x00000006   Data   RO          522    .constdata          qf_ps.o
+    0x00004508   0x00004508   0x00000014   Data   RO          562    .constdata          qf_qact.o
+    0x0000451c   0x0000451c   0x00000008   Data   RO          632    .constdata          qf_port.o
+    0x00004524   0x00004524   0x00000004   Data   RO         1156    .constdata          blinky.o
+    0x00004528   0x00004528   0x00000012   Data   RO         1309    .constdata          bsp.o
+    0x0000453a   0x0000453a   0x0000000a   Data   RO         1666    .constdata          main.o
+    0x00004544   0x00004544   0x00000020   Data   RO         1689    .constdata          philo.o
+    0x00004564   0x00004564   0x00000010   Data   RO         1730    .constdata          table.o
+    0x00004574   0x00004574   0x0000057b   Data   RO         1795    .constdata          bsp_bp.o
+    0x00004aef   0x00004aef   0x00000001   PAD
+    0x00004af0   0x00004af0   0x0000005e   Data   RO          824    .conststring        tasks.o
+    0x00004b4e   0x00004b4e   0x00000002   PAD
+    0x00004b50   0x00004b50   0x00000074   Data   RO         1081    .conststring        port.o
+    0x00004bc4   0x00004bc4   0x00000020   Data   RO         2123    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x00004584, Size: 0x00002d80, Max: 0x00008000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x00004be4, Size: 0x00002db0, Max: 0x00008000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x00004584   0x00000004   Data   RW            7    .data               system_tm4c123gh6pm.o
-    0x20000004   0x00004588   0x00000004   Data   RW          442    .data               qf_dyn.o
-    0x20000008   0x0000458c   0x00000008   Data   RW          523    .data               qf_ps.o
-    0x20000010   0x00004594   0x0000003c   Data   RW          825    .data               tasks.o
-    0x2000004c   0x000045d0   0x0000000c   Data   RW         1082    .data               port.o
-    0x20000058   0x000045dc   0x00000018   Data   RW         1296    .data               bsp.o
-    0x20000070   0x000045f4   0x00000001   Data   RW         1609    .data               philo.o
-    0x20000071   0x000045f5   0x00000003   PAD
-    0x20000074   0x000045f8   0x00000026   Data   RW         1715    .data               bsp_bp.o
-    0x2000009a   0x0000461e   0x00000002   PAD
-    0x2000009c        -       0x00000084   Zero   RW          200    .bss                qf_act.o
-    0x20000120        -       0x00000010   Zero   RW          380    .bss                qf_time.o
-    0x20000130        -       0x0000003c   Zero   RW          440    .bss                qf_dyn.o
-    0x2000016c        -       0x000002d0   Zero   RW          823    .bss                tasks.o
-    0x2000043c        -       0x00000080   Zero   RW         1155    .bss                blinky.o
-    0x200004bc        -       0x0000044c   Zero   RW         1294    .bss                bsp.o
-    0x20000908        -       0x00001d24   Zero   RW         1584    .bss                main.o
-    0x2000262c        -       0x0000026c   Zero   RW         1607    .bss                philo.o
-    0x20002898        -       0x00000078   Zero   RW         1648    .bss                table.o
-    0x20002910        -       0x00000060   Zero   RW         1914    .bss                c_w.l(libspace.o)
-    0x20002970        -       0x00000010   Zero   RW           68    HEAP                startup_tm4c123gh6pm.o
-    0x20002980        -       0x00000400   Zero   RW           67    STACK               startup_tm4c123gh6pm.o
+    0x20000000   0x00004be4   0x00000004   Data   RW            7    .data               system_tm4c123gh6pm.o
+    0x20000004   0x00004be8   0x00000004   Data   RW          442    .data               qf_dyn.o
+    0x20000008   0x00004bec   0x00000008   Data   RW          523    .data               qf_ps.o
+    0x20000010   0x00004bf4   0x0000003c   Data   RW          825    .data               tasks.o
+    0x2000004c   0x00004c30   0x0000000c   Data   RW         1082    .data               port.o
+    0x20000058   0x00004c3c   0x00000020   Data   RW         1310    .data               bsp.o
+    0x20000078   0x00004c5c   0x00000001   Data   RW         1690    .data               philo.o
+    0x20000079   0x00004c5d   0x00000003   PAD
+    0x2000007c   0x00004c60   0x00000026   Data   RW         1796    .data               bsp_bp.o
+    0x200000a2   0x00004c86   0x00000002   PAD
+    0x200000a4        -       0x00000084   Zero   RW          200    .bss                qf_act.o
+    0x20000128        -       0x00000010   Zero   RW          380    .bss                qf_time.o
+    0x20000138        -       0x0000003c   Zero   RW          440    .bss                qf_dyn.o
+    0x20000174        -       0x000002d0   Zero   RW          823    .bss                tasks.o
+    0x20000444        -       0x0000008c   Zero   RW         1155    .bss                blinky.o
+    0x200004d0        -       0x0000044c   Zero   RW         1308    .bss                bsp.o
+    0x2000091c        -       0x00001d30   Zero   RW         1665    .bss                main.o
+    0x2000264c        -       0x0000026c   Zero   RW         1688    .bss                philo.o
+    0x200028b8        -       0x00000078   Zero   RW         1729    .bss                table.o
+    0x20002930        -       0x0000000c   Zero   RW         1794    .bss                bsp_bp.o
+    0x2000293c        -       0x00000060   Zero   RW         1995    .bss                c_w.l(libspace.o)
+    0x2000299c   0x00004c86   0x00000004   PAD
+    0x200029a0        -       0x00000010   Zero   RW           68    HEAP                startup_tm4c123gh6pm.o
+    0x200029b0        -       0x00000400   Zero   RW           67    STACK               startup_tm4c123gh6pm.o
 
 
 ==============================================================================
@@ -1987,12 +2060,12 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       420         70          4          0        128      25417   blinky.o
-      2728        362         18         24       1100      84621   bsp.o
-       946         76       1403         38          0       9245   bsp_bp.o
+       632         78          4          0        140      25665   blinky.o
+      3694        484         18         32       1100      93281   bsp.o
+      1398        140       1403         38         12      11550   bsp_bp.o
        148          0          0          0          0       5258   list.o
-       356         76         10          0       7460       1471   main.o
-       632         72         32          1        620       4932   philo.o
+       356         76         10          0       7472       1471   main.o
+       632         72         32          1        620       5052   philo.o
        902        116        116         12          0      12089   port.o
        822         40         40          0          0       8937   qep_hsm.o
          0          0          0          0          0       3696   qep_msm.o
@@ -2007,13 +2080,13 @@ Image component sizes
        402         26          8          0         16       3821   qf_time.o
        124         28        620          0       1040       1148   startup_tm4c123gh6pm.o
        624        144          0          4          0       8579   system_tm4c123gh6pm.o
-      1076        124         16          0        120       5520   table.o
+      1076        124         16          0        120       5640   table.o
       2426        332         94         60        720      34819   tasks.o
 
     ----------------------------------------------------------------------
-     14840       1708       2500        156      11396     283519   Object Totals
+     16472       1902       2500        164      11432     294972   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-        22          0          4          5          0          0   (incl. Padding)
+        24          0          4          5          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -2045,8 +2118,8 @@ Image component sizes
         10          0          0          0          0        116   fpinit.o
 
     ----------------------------------------------------------------------
-       456         16          0          0         96        916   Library Totals
-         8          0          0          0          0          0   (incl. Padding)
+       456         16          0          0        100        916   Library Totals
+         8          0          0          0          4          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -2056,7 +2129,7 @@ Image component sizes
         10          0          0          0          0        116   fz_wm.l
 
     ----------------------------------------------------------------------
-       456         16          0          0         96        916   Library Totals
+       456         16          0          0        100        916   Library Totals
 
     ----------------------------------------------------------------------
 
@@ -2065,15 +2138,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     15296       1724       2500        156      11492     271723   Grand Totals
-     15296       1724       2500        156      11492     271723   ELF Image Totals
-     15296       1724       2500        156          0          0   ROM Totals
+     16928       1918       2500        164      11532     281676   Grand Totals
+     16928       1918       2500        164      11532     281676   ELF Image Totals
+     16928       1918       2500        164          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                17796 (  17.38kB)
-    Total RW  Size (RW Data + ZI Data)             11648 (  11.38kB)
-    Total ROM Size (Code + RO Data + RW Data)      17952 (  17.53kB)
+    Total RO  Size (Code + RO Data)                19428 (  18.97kB)
+    Total RW  Size (RW Data + ZI Data)             11696 (  11.42kB)
+    Total ROM Size (Code + RO Data + RW Data)      19592 (  19.13kB)
 
 ==============================================================================
 
