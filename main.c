@@ -35,6 +35,7 @@
 #include "dpp.h"
 #include "bsp.h"
 
+
 Q_DEFINE_THIS_FILE
 
 /*..........................................................................*/
@@ -42,18 +43,21 @@ int main() {
     static QEvt const *tableQueueSto[N_PHILO];
     static QEvt const *philoQueueSto[N_PHILO][N_PHILO];
     static QEvt const *heartbeatQueueSto[10]; //! heartbeat queue.
+    static QEvt const *sensorQueueSto[10]; //! sensor queue.
     static QSubscrList subscrSto[MAX_PUB_SIG];
     static QF_MPOOL_EL(TableEvt) smlPoolSto[2*N_PHILO]; /* small pool */
 
     static StackType_t philoStack[N_PHILO][configMINIMAL_STACK_SIZE];
     static StackType_t tableStack[configMINIMAL_STACK_SIZE];
     static StackType_t heartbeatStack[configMINIMAL_STACK_SIZE];//! heartbeat stack
+    static StackType_t sensorStack[configMINIMAL_STACK_SIZE];//! sensor stack
 
     uint8_t n;
 
     Philo_ctor(); /* instantiate all Philosopher active objects */
     Table_ctor(); /* instantiate the Table active object */
     Heartbeat_ctor();
+    Sensor_ctor();
     QF_init(); /* initialize the framework and the underlying RT kernel */
 
     /* initialize publish-subscribe... */
@@ -100,6 +104,15 @@ int main() {
         heartbeatStack,                  /* stack storage */
         sizeof(heartbeatStack),          /* stack size [bytes] */
         (QEvt *)0);                  /* initialization event (not used) */
+
+    QActive_setAttr(AO_Sensor, TASK_NAME_ATTR, "Heartbeat");
+    QACTIVE_START(AO_Sensor,                   /* AO to start */
+                  (uint_fast8_t)(N_PHILO + 3), /* QP priority of the AO */
+                  sensorQueueSto,           /* event queue storage */
+                  Q_DIM(sensorQueueSto),    /* queue length [events] */
+                  sensorStack,              /* stack storage */
+                  sizeof(sensorStack),      /* stack size [bytes] */
+                  (QEvt *)0);                  /* initialization event (not used) */
 
     return QF_run(); /* run the QF application */
 }

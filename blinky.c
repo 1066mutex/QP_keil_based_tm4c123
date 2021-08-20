@@ -1,3 +1,16 @@
+/**
+ * @file   blinky.c 
+ * @author Eddie Mhako (eddie.mhako@sky.com)
+ * @brief  Blinky active object is used for testing purposes, it manages the UI interface
+ *         LCD display, LEDs and buzzer.  
+ * @version 0.1
+ * @date   2021-08-17
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
+
 #include "qpc.h"
 #include "dpp.h"
 #include "bsp.h"
@@ -23,15 +36,16 @@ uint8_t tempAvgInx;
 
 /* protected: */
 static QState Heartbeat_initial(Heartbeat* const me, QEvt const* const e);
-static QState Heartbeat_on(Heartbeat* const me, QEvt const* const e);
-static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e);
-static QState Heartbeat_stop(Heartbeat* const me, QEvt const* const e);
-static QState Heartbeat_off(Heartbeat* const me, QEvt const* const e);
+static QState Heartbeat_on     (Heartbeat* const me, QEvt const* const e);
+static QState Heartbeat_start  (Heartbeat* const me, QEvt const* const e);
+static QState Heartbeat_stop   (Heartbeat* const me, QEvt const* const e);
+static QState Heartbeat_off    (Heartbeat* const me, QEvt const* const e);
 //============================================================
 
-// instance of Heartbeat object===============================
+// Local instance of Heartbeat object===============================
 //
 static Heartbeat l_Heartbeat;
+/* Global-scope objects ----------------------------------------------------*/
 QActive* const AO_Heartbeat = &l_Heartbeat.super;
 
 // AO_Heartbeat constructor==================================
@@ -51,6 +65,7 @@ static QState Heartbeat_initial(Heartbeat* const me, QEvt const* const e){
     // QS_FUN_DICTIONARY(&Heartbeat_initial); 
     // QS_FUN_DICTIONARY(&Heartbeat_off);
     // QS_FUN_DICTIONARY(&Heartbeat_on);
+    // Q spy dummy code. 
     QS_SIG_DICTIONARY(BUTTON3_DEPRESSED_SIG, (void*)0);
     QS_SIG_DICTIONARY(BUTTON3_PRESSED_SIG, (void*)0);
     QS_SIG_DICTIONARY(BUTTON4_DEPRESSED_SIG, (void*)0);
@@ -62,9 +77,10 @@ static QState Heartbeat_initial(Heartbeat* const me, QEvt const* const e){
     QActive_subscribe(&me->super, JOYSTICK_PRESSED_SIG);
 
     BSP_ledRedOff();
-    BSP_LCD_Init();
-    BSP_BP_Joystick_Init();
+    BSP_LCD_Init(); // TODO: move to bsp_init()
+    BSP_BP_Joystick_Init();  // TODO: move to bsp_init()
     BSP_LCD_DrawString(0, 4, "SysTemp:", LCD_YELLOW);
+    BSP_LCD_DrawString(0, 8, "light:", LCD_YELLOW);
     me->buzzer_freq = 10;
     return Q_TRAN(&Heartbeat_off);  //*go to off (1)
 }
@@ -89,6 +105,12 @@ static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
             QTimeEvt_disarm(&me->timeEvt);
             //BSP_BP_LedBlueOff();
             BSP_BP_LedBlueDuty(0);
+            status_ = Q_HANDLED();
+            break;
+        }
+        case NEW_LIGHT_DATA_SIG: {
+            BSP_LCD_SetCursor(8, 8);
+            BSP_LCD_OutUDec5(Q_EVT_CAST(OPT3001Evt)->lightData, LCD_CYAN);
             status_ = Q_HANDLED();
             break;
         }
@@ -215,3 +237,4 @@ static QState Heartbeat_stop(Heartbeat* const me, QEvt const* const e){
     return status_;
 }
 
+// TODO: handle the NEW_LIGHT_DATA_SIG signal with the

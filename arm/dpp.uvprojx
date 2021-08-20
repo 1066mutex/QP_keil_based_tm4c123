@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>0</interw>
-            <Optim>1</Optim>
+            <Optim>4</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -651,6 +651,21 @@
               <FileName>bsp_bp.h</FileName>
               <FileType>5</FileType>
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\arm\bsp_bp.h</FilePath>
+            </File>
+            <File>
+              <FileName>lightSensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lightSensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>Profile.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Profile.c</FilePath>
+            </File>
+            <File>
+              <FileName>Profile.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Profile.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1302,6 +1317,21 @@
               <FileType>5</FileType>
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\arm\bsp_bp.h</FilePath>
             </File>
+            <File>
+              <FileName>lightSensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lightSensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>Profile.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Profile.c</FilePath>
+            </File>
+            <File>
+              <FileName>Profile.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Profile.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -1882,6 +1912,21 @@
               <FileName>bsp_bp.h</FileName>
               <FileType>5</FileType>
               <FilePath>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\FreeRtos_proj\arm\bsp_bp.h</FilePath>
+            </File>
+            <File>
+              <FileName>lightSensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\lightSensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>Profile.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Profile.c</FilePath>
+            </File>
+            <File>
+              <FileName>Profile.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Profile.h</FilePath>
             </File>
           </Files>
         </Group>

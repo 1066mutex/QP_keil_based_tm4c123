@@ -208,6 +208,7 @@ then use if() to initialise the features.
 #define LCD_WHITE 0xFFFF       // 255, 255, 255
 #define LCD_GREY 0x8410        // 128, 128, 128
 
+//TODO: change all bsp_lcd to bsp_bp_lcd
 // ------------BSP_LCD_Init------------
 // Initialize the SPI and GPIO, which correspond with
 // BoosterPack pins J1.7 (SPI CLK), J2.13 (SPI CS), J2.15
@@ -462,5 +463,44 @@ void BSP_LCD_PlotPoint(int32_t data1, uint16_t color1);
 // Output: none
 // Assumes: BSP_LCD_Init() and BSP_LCD_Drawaxes() have been called
 void BSP_LCD_PlotIncrement(void);
+
+//-------------------------------------------------------------------------
+
+// OPT3001 light sensor I2C ===============================================
+
+// ------------BSP_BP_LightSensor_Init------------
+// Calls board specific initialization function for 
+// Initializing GPIO pin for input, which corresponds
+// with BoosterPack pins J1.8 (Light Sensor interrupt).
+// Initializing two I2C pins, which correspond with
+// BoosterPack pins J1.9 (SCL) and J1.10 (SDA).
+// Input: none
+// Output: none
+void BSP_BP_LightSensor_Init(void);
+
+// ------------BSP_BP_LightSensor_Start------------
+// Start a measurement using the OPT3001.
+// If a measurement is currently in progress, return
+// immediately.
+// Input: none
+// Output: none
+// Assumes: BSP_BP_LightSensor_Init() has been called
+void BSP_BP_LightSensor_Start(void);
+
+// ------------BSP_BP_LightSensor_End------------
+// Query the OPT3001 light sensor for a measurement.
+// If no measurement is currently in progress, start
+// one and return zero immediately.  If the measurement
+// is not yet complete, return zero immediately.  If
+// the measurement is complete, store the result in the
+// pointer provided and return one.
+// Input: light is pointer to store light intensity (units 100*lux)
+// Output: one if measurement is ready and pointer is valid
+//         zero if measurement is not ready and pointer unchanged
+// Assumes: BSP_BP_LightSensor_Init() has been called
+int BSP_BP_LightSensor_End(uint32_t *light);
+
+//-------------------------------------------------------------------------
+
 
 #endif /* BSP_BSTPACK_H */

@@ -19,6 +19,7 @@
 #ifndef dpp_h
 #define dpp_h
 
+//TODO: ensure that all signals are kept in appropriate location. see @brief 1
 enum DPPSignals {
   EAT_SIG = Q_USER_SIG, /* published by Table to let a philosopher eat */
   DONE_SIG,             /* published by Philosopher when done eating */
@@ -32,12 +33,16 @@ enum DPPSignals {
   JOYSTICK_PRESSED_SIG,
   JOYSTICK_DEPRESSED_SIG,
   NEW_TEMP_DATA_SIG,
-  MAX_PUB_SIG, /* the last published signal */
-
-  HUNGRY_SIG,   /* posted direclty to Table from hungry Philo */
-  TIMEOUT_SIG,  /* used by Philosophers for time events */
-  TIMEOUT1_SIG, /* used by Philosophers for time events */
-  MAX_SIG       /* the last signal */
+  MAX_PUB_SIG,            /* the last published signal see: @brief 1 */
+  POLLING_TIMEOUT_SIG,    /* the periodic timeout signal */
+  DATA_READY_SIG,         /* the invented reminder signal */
+  PROCESS_DATA_SIG,       /* the invented reminder signal */
+  TERMINATE_SIG,          /* terminate the application */
+  NEW_LIGHT_DATA_SIG,     /* posted direclty to blinky for display, dynamic */
+  HUNGRY_SIG,             /* posted direclty to Table from hungry Philo */
+  TIMEOUT_SIG,            /* used by Philosophers for time events */
+  TIMEOUT1_SIG,           /* used by Philosophers for time events */
+  MAX_SIG                 /* the last signal */
 };
 
 /*$declare${Events::TableEvt} ##############################################*/
@@ -50,6 +55,25 @@ typedef struct {
     uint8_t philoNum;
 } TableEvt;
 /*$enddecl${Events::TableEvt} ##############################################*/
+
+/* OPT3001Evt light sensor ......................................................*/
+typedef struct {
+/* protected: */
+    QEvt super;
+
+/* public: */
+    uint32_t lightData;
+} OPT3001Evt;
+
+/* Events TempEvt========================================================= */
+
+typedef struct{
+/* protected: */
+    QEvt super;
+
+/* public: */
+    uint32_t temp;
+} TempEvt;
 
 /* number of philosophers */
 #define N_PHILO ((uint8_t)5)
@@ -77,15 +101,12 @@ extern QActive * const AO_Heartbeat;
 
 /* AO_Heartbeat  ##########################################################*/
 
-/* Events TempEvt========================================================= */
+/* AO_Sensor  ##########################################################*/
+void Sensor_ctor(void);
 
-typedef struct{
-/* protected: */
-QEvt super;
-/* public: */
-uint32_t temp;
-} TempEvt;
+extern QActive *const AO_Sensor;
 
+/* AO_Sensor  ##########################################################*/
 
 
 #ifdef qxk_h
@@ -97,3 +118,12 @@ uint32_t temp;
 #endif /* qxk_h */
 
 #endif /* dpp_h */
+
+    /**
+     * @brief 1
+     * The constant MAX_PUB_SIG delimits the published signals from the rest.
+     * The publish-subscribe event delivery mechanism consumes some RAM, which is
+     * proportional to the number of published signals. I save some RAM by
+     * providing the lower limit of published signals to QP (MAX_PUB_SIG) rather
+     * than the maximum of all signals used in the application.
+     */

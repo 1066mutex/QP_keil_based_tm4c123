@@ -32,10 +32,11 @@
 * mailto:info@state-machine.com
 *****************************************************************************/
 #include "qpc.h"
+#include "bsp.h"
 #include "dpp.h"
 #include "bsp_bp.h"
-#include "bsp.h"
 #include "ports.h"
+#include "profile.h"
 
 #include "TM4C123GH6PM.h"        /* the device specific header (TI) */
 #include "rom.h"                 /* the built-in ROM functions (TI) */
@@ -169,6 +170,8 @@ void UART0_IRQHandler(void) {
 /* Application hooks used in this project ==================================*/
 /* NOTE: only the "FromISR" API variants are allowed in vApplicationTickHook */
 void vApplicationTickHook(void) { //! called by freeRtos tick() 
+    // TODO: check the tick rate with oscilloscope, toggle IO pin
+    
     /* state of the button debouncing, see below */
     static struct ButtonsDebouncing {
         uint32_t depressed;
@@ -405,6 +408,8 @@ BSP_BP_Joystick_Init();
 BSP_BP_SPI_TFT_Init();
 BSP_Microphone_Init();
 mcuTempSensorInit();
+//! use when profiling TODO: add ifdef guards 
+Profile_Init();
 BSP_randomSeed(1234U);
 
 /* initialize the QS software tracing... */
@@ -1381,6 +1386,7 @@ void BSP_Accelerometer_Init(void) {
 // Assumes: BSP_Accelerometer_Init() has been called
 void BSP_Accelerometer_Input(uint16_t *x, uint16_t *y, uint16_t *z) {
     ADC0->PSSI = 0x0004;  // 1) initiate SS2
+    // TODO: add while loop timeout
     while ((ADC0->RIS & 0x04) == 0) {};// 2) wait for conversion done
     *x = ADC0->SSFIFO2 >> 2;  // 3a) read first result
     *y = ADC0->SSFIFO2 >> 2;  // 3b) read second result
@@ -1456,9 +1462,9 @@ void BSP_Microphone_Get(void){
 void static i2cinit(void) {
     SYSCTL->RCGCI2C |= 0x0002;   // 1a) activate clock for I2C1
     SYSCTL->RCGCGPIO |= PORTA;   // 1b) activate clock for Port A
-    while ((SYSCTL->PRGPIO & 0x01) == 0) {
-    };                            // allow time for clock to stabilize
-                                  // 2) no need to unlock PA7-6
+    while ((SYSCTL->PRGPIO & 0x01) == 0) {  // TODO: add while loop timeout
+    };                                      // allow time for clock to stabilize
+                                            // 2) no need to unlock PA7-6
     GPIOA->AMSEL &= ~0xC0;        // 3) disable analog functionality on PA7-6
                                   // 4) configure PA7-6 as I2C1
     GPIOA->PCTL = (GPIOA->PCTL & 0x00FFFFFF) + 0x33000000;
@@ -1471,33 +1477,35 @@ void static i2cinit(void) {
 
 }
 
+static void L_waitTillReady(void) {
+    while (I2C1->MCS & I2C_MCS_BUSY) {  // TODO: add while loop timeout
+    };
+}
 // receives two bytes from specified slave
 // Note for HMC6352 compass only:
 // Used with 'A' commands
 // Note for TMP102 thermometer only:
 // Used to read the contents of the pointer register
-uint16_t static I2C_Recv2(int8_t slave) {
+uint16_t BSP_I2C_Recv2(int8_t slave){
     uint8_t data1, data2;
     int retryCounter = 1;
     do {
-        while (I2C1->MCS & I2C_MCS_BUSY) {
-        };                                 // wait for I2C ready
+        L_waitTillReady();            // wait for I2C ready
         I2C1->MSA = (slave << 1) & 0xFE;  // MSA[7:1] is slave address
         I2C1->MSA |= 0x01;                // MSA[0] is 1 for receive
-        I2C1->MCS = (0 | I2C_MCS_ACK      // positive data ack
-                                           //                         & ~I2C_MCS_STOP    // no stop
+       
+        I2C1->MCS = (I2C_MCS_ACK          // positive data ack
+                     //& ~I2C_MCS_STOP    // no stop
                       | I2C_MCS_START      // generate start/restart
                       | I2C_MCS_RUN);      // master enable
-        while (I2C1->MCS & I2C_MCS_BUSY) {
-        };                            // wait for transmission done
+        L_waitTillReady();           // wait for transmission done
         data1 = (I2C1->MDR & 0xFF);  // MSB data sent first
-        I2C1->MCS = (0
-                      //                         & ~I2C_MCS_ACK     // negative data ack (last byte)
-                      | I2C_MCS_STOP   // generate stop
-                                       //                         & ~I2C_MCS_START   // no start/restart
-                      | I2C_MCS_RUN);  // master enable
-        while (I2C1->MCS & I2C_MCS_BUSY) {
-        };                                // wait for transmission done
+
+        I2C1->MCS = (I2C_MCS_STOP    // generate stop
+                    //& ~I2C_MCS_ACK     // negative data ack (last byte)
+                    //& ~I2C_MCS_START   // no start/restart
+                    | I2C_MCS_RUN);  // master enable
+        L_waitTillReady();               // wait for transmission done
         data2 = (I2C1->MDR & 0xFF);      // LSB data sent last
         retryCounter = retryCounter + 1;  // increment retry counter
     }                                     // repeat if error
@@ -1512,7 +1520,7 @@ uint16_t static I2C_Recv2(int8_t slave) {
 // Note for TMP102 thermometer only:
 // Used to change the pointer register
 // Returns 0 if successful, nonzero if error
-uint16_t static I2C_Send1(int8_t slave, uint8_t data1) {
+uint16_t BSP_I2C_Send1(int8_t slave, uint8_t data1) {
     while (I2C1->MCS & I2C_MCS_BUSY) {
     };                                 // wait for I2C ready
     I2C1->MSA = (slave << 1) & 0xFE;  // MSA[7:1] is slave address
@@ -1523,69 +1531,63 @@ uint16_t static I2C_Send1(int8_t slave, uint8_t data1) {
                   | I2C_MCS_STOP   // generate stop
                   | I2C_MCS_START  // generate start/restart
                   | I2C_MCS_RUN);  // master enable
-    while (I2C1->MCS & I2C_MCS_BUSY) {
-    };  // wait for transmission done
+    while (I2C1->MCS & I2C_MCS_BUSY) {  // TODO: add while loop timeout
+    };                                  // wait for transmission done
         // return error bits
     return (I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR));
 }
 
-// sends three bytes to specified slave
-// Note for HMC6352 compass only:
-// Used with 'w' and 'G' commands
-// Note for TMP102 thermometer only:
-// Used to change the contents of the pointer register
-// Returns 0 if successful, nonzero if error
-uint16_t static I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2, uint8_t data3) {
-    while (I2C1->MCS & I2C_MCS_BUSY) {
-    };                                 // wait for I2C ready
+
+
+uint16_t BSP_I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2, uint8_t data3) {
+    L_waitTillReady();
     I2C1->MSA = (slave << 1) & 0xFE;  // MSA[7:1] is slave address
     I2C1->MSA &= ~0x01;               // MSA[0] is 0 for send
     I2C1->MDR = data1 & 0xFF;         // prepare first byte
-    I2C1->MCS = (0
-                  //                       & ~I2C_MCS_ACK     // no data ack (no data on send)
-                  //                       & ~I2C_MCS_STOP    // no stop
-                  | I2C_MCS_START  // generate start/restart
-                  | I2C_MCS_RUN);  // master enable
-    while (I2C1->MCS & I2C_MCS_BUSY) {
-    };  // wait for transmission done
+
+    I2C1->MCS = (I2C_MCS_START       // generate start/restart
+                 | I2C_MCS_RUN);     // master enable
+                                     // & ~I2C_MCS_ACK    // no data ack (no data on send)
+                                     // & ~I2C_MCS_STOP   // no stop
+    L_waitTillReady();               // wait for transmission done
         // check error bits
     if ((I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR)) != 0) {
-        I2C1->MCS = (0               // send stop if nonzero
-                                      //                       & ~I2C_MCS_ACK     // no data ack (no data on send)
-                      | I2C_MCS_STOP  // stop
-                                      //                       & ~I2C_MCS_START   // no start/restart
-                                      //                       & ~I2C_MCS_RUN     // master disable
-        );
+        // send stop if nonzero
+        I2C1->MCS = (I2C_MCS_STOP);  // stop
+                                     //  & ~I2C_MCS_ACK     // no data ack (no data on send)
+                                     //  & ~I2C_MCS_START   // no start/restart
+                                     //  & ~I2C_MCS_RUN     // master disable
+
         // return error bits if nonzero
         return (I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR));
     }
-    I2C1->MDR = data2 & 0xFF;  // prepare second byte
-    I2C1->MCS = (0
-                  //                       & ~I2C_MCS_ACK     // no data ack (no data on send)
-                  //                       & ~I2C_MCS_STOP    // no stop
-                  //                       & ~I2C_MCS_START   // no start/restart
-                  | I2C_MCS_RUN);  // master enable
-    while (I2C1->MCS & I2C_MCS_BUSY) {
-    };  // wait for transmission done
+    I2C1->MDR = data2 & 0xFF;       // prepare second byte
+
+    I2C1->MCS = (I2C_MCS_RUN);     // master enable
+
+                                   //& ~I2C_MCS_ACK     // no data ack (no data on send)
+                                   //& ~I2C_MCS_STOP    // no stop
+                                   //& ~I2C_MCS_START   // no start/restart
+    L_waitTillReady();             // wait for transmission done
         // check error bits
     if ((I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR)) != 0) {
-        I2C1->MCS = (0               // send stop if nonzero
-                                      //                       & ~I2C_MCS_ACK     // no data ack (no data on send)
-                      | I2C_MCS_STOP  // stop
-                                      //                       & ~I2C_MCS_START   // no start/restart
-                                      //                       & ~I2C_MCS_RUN   // master disable
-        );
+        // send stop if nonzero
+        I2C1->MCS = (0 | I2C_MCS_STOP);  // stop
+
+                                   // & ~I2C_MCS_ACK    // no data ack (no data on send)
+                                   // & ~I2C_MCS_START  // no start/restart
+                                   // & ~I2C_MCS_RUN   // master disable
+
         // return error bits if nonzero
         return (I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR));
     }
-    I2C1->MDR = data3 & 0xFF;  // prepare third byte
-    I2C1->MCS = (0
-                  //                       & ~I2C_MCS_ACK     // no data ack (no data on send)
-                  | I2C_MCS_STOP   // generate stop
-                                   //                       & ~I2C_MCS_START   // no start/restart
-                  | I2C_MCS_RUN);  // master enable
-    while (I2C1->MCS & I2C_MCS_BUSY) {
-    };  // wait for transmission done
+    I2C1->MDR = data3 & 0xFF;      // prepare third byte
+
+    I2C1->MCS = (I2C_MCS_STOP     // generate stop
+                 | I2C_MCS_RUN);  // master enable
+                                  // & ~I2C_MCS_ACK     // no data ack (no data on send)
+                                  //& ~I2C_MCS_START   // no start/restart
+    L_waitTillReady();  // wait for transmission done
         // return error bits
     return (I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR));
 }
@@ -1597,7 +1599,9 @@ uint16_t static I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2, uint8_t da
 // BoosterPack pins J1.9 (SCL) and J1.10 (SDA).
 // Input: none
 // Output: none
-void BSP_LightSensor_Init(void) {
+// TODO: make interrupt pin/ configure ISR and NVIC
+// TODO: use #defined IO definetions (port.h). 
+void BSP_LightSensor_Init(void) { // bsp light sensor IO inti
     i2cinit();
     // 1) activate clock for Port A (done in i2cinit())
     // allow time for clock to stabilize (done in i2cinit())
@@ -1610,231 +1614,9 @@ void BSP_LightSensor_Init(void) {
     GPIOA->DEN |= 0x20;     // 7) enable digital I/O on PA5
 }
 
-// Send the appropriate codes to initiate a
-// measurement with an OPT3001 light sensor at I2C
-// slave address 'slaveAddress'.
-// Assumes: BSP_LightSensor_Init() has been called
-void static lightsensorstart(uint8_t slaveAddress) {
-    // configure Low Limit Register (0x02) for:
-    // INT pin active after each conversion completes
-    I2C_Send3(slaveAddress, 0x02, 0xC0, 0x00);
-    // configure Configuration Register (0x01) for:
-    // 15-12 RN         range number         1100b = automatic full-scale setting mode
-    // 11    CT         conversion time         1b = 800 ms
-    // 10-9  M          mode of conversion     01b = single-shot
-    // 8     OVF        overflow flag field     0b (read only)
-    // 7     CRF        conversion ready field  0b (read only)
-    // 6     FH         flag high field         0b (read only)
-    // 5     FL         flag low field          0b (read only)
-    // 4     L          latch                   1b = latch interrupt if measurement exceeds programmed ranges
-    // 3     POL        polarity                0b = INT pin reports active low
-    // 2     ME         mask exponent           0b = do not mask exponent (more math later)
-    // 1-0   FC         fault count            00b = 1 fault triggers interrupt
-    I2C_Send3(slaveAddress, 0x01, 0xCA, 0x10);
-    I2C_Recv2(slaveAddress);  // read Configuration Register to reset conversion ready
-}
-
-// Send the appropriate codes to end a measurement
-// with an OPT3001 light sensor at I2C slave address
-// 'slaveAddress'.  Return results (units 100*lux).
-// Assumes: BSP_LightSensor_Init() has been called and measurement is ready
-int32_t static lightsensorend(uint8_t slaveAddress) {
-    uint16_t raw, config;
-    I2C_Send1(slaveAddress, 0x00);  // pointer register 0x00 = Result Register
-    raw = I2C_Recv2(slaveAddress);
-    // force the INT pin to clear by clearing and resetting the latch bit of the Configuration Register (0x01)
-    I2C_Send1(slaveAddress, 0x01);     // pointer register 0x01 = Configuration Register
-    config = I2C_Recv2(slaveAddress);  // current Configuration Register
-    I2C_Send3(slaveAddress, 0x01, (config & 0xFF00) >> 8, (config & 0x00FF) & ~0x0010);
-    I2C_Send3(slaveAddress, 0x01, (config & 0xFF00) >> 8, (config & 0x00FF) | 0x0010);
-    return (1 << (raw >> 12)) * (raw & 0x0FFF);
-}
-
-// ------------BSP_LightSensor_Input------------
-// Query the OPT3001 light sensor for a measurement.
-// Wait until the measurement is ready, which may
-// take 800 ms.
-// Input: none
-// Output: light intensity (units 100*lux)
-// Assumes: BSP_LightSensor_Init() has been called
-#define LIGHTINT (*((volatile uint32_t *)0x40004080)) /* PA5 */
-int LightBusy = 0;                                    // 0 = idle; 1 = measuring
-uint32_t BSP_LightSensor_Input(void) {
-    uint32_t light;
-    LightBusy = 1;
-    lightsensorstart(0x44);
-    while (LIGHTINT == 0x20) {
-    };  // wait for conversion to complete
-    light = lightsensorend(0x44);
-    LightBusy = 0;
-    return light;
-}
-
-// ------------BSP_LightSensor_Start------------
-// Start a measurement using the OPT3001.
-// If a measurement is currently in progress, return
-// immediately.
-// Input: none
-// Output: none
-// Assumes: BSP_LightSensor_Init() has been called
-void BSP_LightSensor_Start(void) {
-    if (LightBusy == 0) {
-        // no measurement is in progress, so start one
-        LightBusy = 1;
-        lightsensorstart(0x44);
-    }
-}
-
-// ------------BSP_LightSensor_End------------
-// Query the OPT3001 light sensor for a measurement.
-// If no measurement is currently in progress, start
-// one and return zero immediately.  If the measurement
-// is not yet complete, return zero immediately.  If
-// the measurement is complete, store the result in the
-// pointer provided and return one.
-// Input: light is pointer to store light intensity (units 100*lux)
-// Output: one if measurement is ready and pointer is valid
-//         zero if measurement is not ready and pointer unchanged
-// Assumes: BSP_LightSensor_Init() has been called
-int BSP_LightSensor_End(uint32_t *light) {
-    uint32_t lightLocal;
-    if (LightBusy == 0) {
-        // no measurement is in progress, so start one
-        LightBusy = 1;
-        lightsensorstart(0x44);
-        return 0;  // measurement needs more time to complete
-    } else {
-        // measurement is in progress
-        if (LIGHTINT == 0x20) {
-            return 0;  // measurement needs more time to complete
-        } else {
-            lightLocal = lightsensorend(0x44);
-            *light = lightLocal;
-            LightBusy = 0;
-            return 1;  // measurement is complete; pointer valid
-        }
-    }
-}
-
-
-// ------------BSP_TempSensor_Init------------
-// Initialize a GPIO pin for input, which corresponds
-// with BoosterPack pins J2.11 (Temperature Sensor
-// interrupt).  Initialize two I2C pins, which
-// correspond with BoosterPack pins J1.9 (SCL) and
-// J1.10 (SDA).
-// Input: none
-// Output: none
-void BSP_TempSensor_Init(void) {
-    i2cinit();
-    // 1) activate clock for Port A (done in i2cinit())
-    // allow time for clock to stabilize (done in i2cinit())
-    // 2) no need to unlock PA2
-    GPIOA->AMSEL &= ~0x04;  // 3) disable analog on PA2
-                                  // 4) configure PA2 as GPIO
-    GPIOA->PCTL = (GPIOA->PCTL & 0xFFFFF0FF) + 0x00000000;
-    GPIOA->DIR &= ~0x04;    // 5) make PA5 input
-    GPIOA->AFSEL &= ~0x04;  // 6) disable alt funct on PA2
-    GPIOA->DEN |= 0x04;     // 7) enable digital I/O on PA2
-}
-
-// Send the appropriate codes to initiate a
-// measurement with a TMP006 temperature sensor at
-// I2C slave address 'slaveAddress'.
-// Assumes: BSP_TempSensor_Init() has been called
-void static tempsensorstart(uint8_t slaveAddress) {
-    // configure Configuration Register (0x02) for:
-    // 15    RST        software reset bit      0b = normal operation
-    // 14-12 MOD        mode of operation     111b = sensor and die continuous conversion
-    // 11-9  CR         ADC conversion rate   010b = 1 sample/sec
-    // 8     EN         interrupt pin enable    1b = ~DRDY pin enabled (J2.11/P3.6)
-    // 7     ~DRDY      data ready bit          0b (read only, automatic clear)
-    // 6-0   reserved                      000000b (reserved)
-    I2C_Send3(slaveAddress, 0x02, 0x75, 0x00);
-}
-
-// Send the appropriate codes to end a measurement
-// with a TMP006 temperature sensor at I2C slave
-// address 'slaveAddress'.  Store the results at the
-// provided pointers.
-// Assumes: BSP_TempSensor_Init() has been called and measurement is ready
-void static tempsensorend(uint8_t slaveAddress, int32_t *sensorV, int32_t *localT) {
-    int16_t raw;
-    I2C_Send1(slaveAddress, 0x00);  // pointer register 0x00 = Sensor Voltage Register
-    raw = I2C_Recv2(slaveAddress);
-    *sensorV = raw * 15625;         // 156.25 nV per LSB
-    I2C_Send1(slaveAddress, 0x01);  // pointer register 0x01 = Local Temperature Register
-    raw = I2C_Recv2(slaveAddress);
-    *localT = (raw >> 2) * 3125;  // 0.03125 C per LSB
-}
-
-// ------------BSP_TempSensor_Input------------
-// Query the TMP006 temperature sensor for a
-// measurement.  Wait until the measurement is ready,
-// which may take 4 seconds.
-// Input: sensorV is signed pointer to store sensor voltage (units 100*nV)
-//        localT is signed pointer to store local temperature (units 100,000*C)
-// Output: none
-// Assumes: BSP_TempSensor_Init() has been called
-#define TEMPINT (*((volatile uint32_t *)0x40004010)) /* PA2 */
-int TempBusy = 0;                                    // 0 = idle; 1 = measuring
-void BSP_TempSensor_Input(int32_t *sensorV, int32_t *localT) {
-    int32_t volt, temp;
-    TempBusy = 1;
-    tempsensorstart(0x40);
-    while (TEMPINT == 0x04) {
-    };  // wait for conversion to complete
-    tempsensorend(0x40, &volt, &temp);
-    *sensorV = volt;
-    *localT = temp;
-    TempBusy = 0;
-}
-
-// ------------BSP_TempSensor_Start------------
-// Start a measurement using the TMP006.
-// If a measurement is currently in progress, return
-// immediately.
-// Input: none
-// Output: none
-// Assumes: BSP_TempSensor_Init() has been called
-void BSP_TempSensor_Start(void) {
-    if (TempBusy == 0) {
-        // no measurement is in progress, so start one
-        TempBusy = 1;
-        tempsensorstart(0x40);
-    }
-}
-
-// ------------BSP_TempSensor_End------------
-// Query the TMP006 temperature sensor for a
-// measurement.  If no measurement is currently in
-// progress, start one and return zero immediately.
-// If the measurement is not yet complete, return
-// zero immediately.  If the measurement is complete,
-// store the result in the pointers provided and
-// return one.
-// Input: sensorV is signed pointer to store sensor voltage (units 100*nV)
-//        localT is signed pointer to store local temperature (units 100,000*C)
-// Output: one if measurement is ready and pointers are valid
-//         zero if measurement is not ready and pointers unchanged
-// Assumes: BSP_TempSensor_Init() has been called
-int BSP_TempSensor_End(int32_t *sensorV, int32_t *localT) {
-    int32_t volt, temp;
-    if (TempBusy == 0) {
-        // no measurement is in progress, so start one
-        TempBusy = 1;
-        tempsensorstart(0x40);
-        return 0;  // measurement needs more time to complete
-    } else {
-        // measurement is in progress
-        if (TEMPINT == 0x04) {
-            return 0;  // measurement needs more time to complete
-        } else {
-            tempsensorend(0x40, &volt, &temp);
-            *sensorV = volt;
-            *localT = temp;
-            TempBusy = 0;
-            return 1;  // measurement is complete; pointers valid
-        }
-    }
+// light sensor data DATA_READY
+int BSP_LightSensor_INTstatus(void) {
+  
+    return (BSP_BP_OPT3001_IRQ_PORT->DATA_Bits[BSP_BP_OPT3001_IRQ_PIN] 
+            == BSP_BP_OPT3001_IRQ_PIN) ? 1U : 0U;
 }

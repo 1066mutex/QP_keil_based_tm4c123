@@ -12,8 +12,8 @@
  * git is not tracking this?
  */
 #include "qpc.h"
-#include "bsp_bp.h"
 #include "bsp.h"
+#include "bsp_bp.h"
 
 
 
@@ -1270,9 +1270,9 @@ void BSP_LCD_PlotIncrement(void) {
     }
     BSP_LCD_DrawFastVLine(TimeIndex + 11, 17, 100, PlotBGColor);
 }
-/* ********************** */
-/*   End of LCD Section   */
-/* ********************** */
+/* ******************************************************************* */
+/*   End of LCD Section                                                */
+/* ******************************************************************* */
 
 
 // TODO:
@@ -1281,5 +1281,128 @@ void BSP_LCD_PlotIncrement(void) {
 // initialise different mods. 
 // use separate .c file for leds, display, etc????
 
+/* OPT3001 light sensor  ******************************************************/
 
+// local functions ****************************************************************
+//
 
+// Send the appropriate codes to initiate a
+// measurement with an OPT3001 light sensor at I2C
+// slave address 'slaveAddress'.
+// Assumes: BSP_LightSensor_Init() has been called
+void static lightsensorstart(uint8_t slaveAddress) {
+    // configure Low Limit Register (0x02) for:
+    // INT pin active after each conversion completes
+    BSP_I2C_Send3(slaveAddress, 0x02, 0xC0, 0x00);
+    // configure Configuration Register (0x01) for:
+    // 15-12 RN         range number         1100b = automatic full-scale setting mode
+    // 11    CT         conversion time         1b = 800 ms / 0b = 100 ms
+    // 10-9  M          mode of conversion     01b = single-shot
+    // 8     OVF        overflow flag field     0b (read only)
+    // 7     CRF        conversion ready field  0b (read only)
+    // 6     FH         flag high field         0b (read only)
+    // 5     FL         flag low field          0b (read only)
+    // 4     L          latch                   1b = latch interrupt if measurement exceeds programmed ranges
+    // 3     POL        polarity                0b = INT pin reports active low
+    // 2     ME         mask exponent           0b = do not mask exponent (more math later)
+    // 1-0   FC         fault count            00b = 1 fault triggers interrupt
+    BSP_I2C_Send3(slaveAddress, 0x01, 0xC2, 0x10);
+    BSP_I2C_Recv2(slaveAddress);  // read Configuration Register to reset conversion ready
+}
+
+// Send the appropriate codes to end a measurement
+// with an OPT3001 light sensor at I2C slave address
+// 'slaveAddress'.  Return results (units 100*lux).
+// Assumes: BSP_LightSensor_Init() has been called and measurement is ready
+int32_t static lightsensorend(uint8_t slaveAddress) {
+    uint16_t raw, config;
+    BSP_I2C_Send1(slaveAddress, 0x00);  // pointer register 0x00 = Result Register
+    raw = BSP_I2C_Recv2(slaveAddress);
+    // force the INT pin to clear by clearing and resetting the latch bit of the Configuration Register (0x01)
+    BSP_I2C_Send1(slaveAddress, 0x01);     // pointer register 0x01 = Configuration Register
+    config = BSP_I2C_Recv2(slaveAddress);  // current Configuration Register
+    BSP_I2C_Send3(slaveAddress, 0x01, (config & 0xFF00) >> 8, (config & 0x00FF) & ~0x0010);
+    BSP_I2C_Send3(slaveAddress, 0x01, (config & 0xFF00) >> 8, (config & 0x00FF) | 0x0010);
+    return (1 << (raw >> 12)) * (raw & 0x0FFF);
+}
+// --------------------------------------------------------------------------------------
+
+// ------------BSP_BP_LightSensor_Init------------
+// Calls board specific initialization function for
+// Initializing GPIO pin for input, which corresponds
+// with BoosterPack pins J1.8 (Light Sensor interrupt).
+// Initializing two I2C pins, which correspond with
+// BoosterPack pins J1.9 (SCL) and J1.10 (SDA).
+// Input: none
+// Output: none
+void BSP_BP_LightSensor_Init(void){
+    BSP_LightSensor_Init();
+}
+
+// ------------BSP_BP_LightSensor_Input------------
+// Query the OPT3001 light sensor for a measurement.
+// Wait until the measurement is ready, which may
+// take 800 ms.
+// Input: none
+// Output: light intensity (units 100*lux)
+// Assumes: BSP_BP_LightSensor_Init() has been called
+// Note: this call is blocking
+
+// TODO: use interrupt on PA5 to signal when the sensor has data.
+static int LightBusy = 0;                                    // 0 = idle; 1 = measuring
+uint32_t BSP_BP_LightSensor_Input(void) {
+    uint32_t light;
+    LightBusy = 1;
+    lightsensorstart(0x44);
+    while (BSP_LightSensor_INTstatus()) {
+    };  // wait for conversion to complete
+    light = lightsensorend(0x44);
+    LightBusy = 0;
+    return light;
+}
+
+// ------------BSP_BP_LightSensor_Start------------
+// Start a measurement using the OPT3001.
+// If a measurement is currently in progress, return
+// immediately.
+// Input: none
+// Output: none
+// Assumes: BSP_BP_LightSensor_Init() has been called
+void BSP_BP_LightSensor_Start(void) {
+    if (LightBusy == 0) {
+        // no measurement is in progress, so start one
+        LightBusy = 1;
+        lightsensorstart(0x44);
+    }
+}
+
+// ------------BSP_BP_LightSensor_End------------
+// Query the OPT3001 light sensor for a measurement.
+// If no measurement is currently in progress, start
+// one and return zero immediately.  If the measurement
+// is not yet complete, return zero immediately.  If
+// the measurement is complete, store the result in the
+// pointer provided and return one.
+// Input: light is pointer to store light intensity (units 100*lux)
+// Output: one if measurement is ready and pointer is valid
+//         zero if measurement is not ready and pointer unchanged
+// Assumes: BSP_BP_LightSensor_Init() has been called
+int BSP_BP_LightSensor_End(uint32_t *light) {
+    uint32_t lightLocal;
+    if (LightBusy == 0) {
+        // no measurement is in progress, so start one
+        LightBusy = 1;
+        lightsensorstart(0x44);
+        return 0;  // measurement needs more time to complete
+    } else {
+        // measurement is in progress
+        if (BSP_LightSensor_INTstatus()) { //! if not working check function
+            return 0;  // measurement needs more time to complete
+        } else {
+            lightLocal = lightsensorend(0x44);
+            *light = lightLocal;
+            LightBusy = 0;
+            return 1;  // measurement is complete; pointer valid
+        }
+    }
+}

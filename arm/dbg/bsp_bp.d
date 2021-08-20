@@ -21,5 +21,5 @@
 .\dbg\bsp_bp.o: ..\..\qpc\include\qpset.h
 .\dbg\bsp_bp.o: ..\..\qpc\include\qassert.h
 .\dbg\bsp_bp.o: ..\..\qpc\include\qs_dummy.h
-.\dbg\bsp_bp.o: bsp_bp.h
 .\dbg\bsp_bp.o: ..\..\FreeRtos_proj\bsp.h
+.\dbg\bsp_bp.o: bsp_bp.h

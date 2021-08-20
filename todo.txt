@@ -115,3 +115,8 @@ somefolder/*
 
 # exception to the rule
 !somefolder/.gitkeep
+
+LIGHT SENSOR:
+The sesnor has a data ready pin which can be used to trigger an event through an interrupt handler or polling.
+PA5 can be polled within the BSP hook function every tick, this can increase the lenght of the tick function.
+An interrupt handler can be used to post form ISR events.
