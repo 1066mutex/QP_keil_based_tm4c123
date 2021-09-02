@@ -22,6 +22,7 @@
 .\dbg\bsp.o: ..\..\qpc\include\qassert.h
 .\dbg\bsp.o: ..\..\qpc\include\qs_dummy.h
 .\dbg\bsp.o: ..\bsp.h
+.\dbg\bsp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\dbg\bsp.o: ..\dpp.h
 .\dbg\bsp.o: ..\arm\bsp_bp.h
 .\dbg\bsp.o: ..\ports.h
@@ -33,6 +34,7 @@
 .\dbg\bsp.o: ..\CMSIS\Include\cmsis_armcc.h
 .\dbg\bsp.o: ..\CMSIS\Include\mpu_armv7.h
 .\dbg\bsp.o: ..\ek-tm4c123gxl\system_TM4C123GH6PM.h
+.\dbg\bsp.o: ..\UART0.h
 .\dbg\bsp.o: ..\ek-tm4c123gxl\rom.h
 .\dbg\bsp.o: ..\ek-tm4c123gxl\sysctl.h
 .\dbg\bsp.o: ..\ek-tm4c123gxl\gpio.h

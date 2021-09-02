@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>0</interw>
-            <Optim>4</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -666,6 +666,16 @@
               <FileName>Profile.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Profile.h</FilePath>
+            </File>
+            <File>
+              <FileName>UART0.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\UART0.h</FilePath>
+            </File>
+            <File>
+              <FileName>BLE_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BLE_uart.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1332,6 +1342,16 @@
               <FileType>5</FileType>
               <FilePath>..\Profile.h</FilePath>
             </File>
+            <File>
+              <FileName>UART0.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\UART0.h</FilePath>
+            </File>
+            <File>
+              <FileName>BLE_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BLE_uart.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -1927,6 +1947,16 @@
               <FileName>Profile.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Profile.h</FilePath>
+            </File>
+            <File>
+              <FileName>UART0.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\UART0.h</FilePath>
+            </File>
+            <File>
+              <FileName>BLE_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BLE_uart.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -34,6 +34,7 @@
 #ifndef BSP_H
 #define BSP_H
 #include <stdint.h>
+#include <string.h>
 //!SYSTEM CORE CLOCK == 50MHZ
 // RTOS tick rate 1000Hz 1ms
 #define BSP_TICKS_PER_SEC    configTICK_RATE_HZ
@@ -41,7 +42,10 @@
 /* 1 If booster pack is used in project */
 #define BOOSTER_PACK_USED      1
 
-
+#define UART1_RX_BUFF_HAS_DATA ((UART1->FR & UART_FR_RXFE)! == 0)
+#define BLE_FRAME_START_TOKEN '?'
+#define BLE_FRAME_STOP_TOKEN ';'
+#define UART1_CHAR (UART1->DR & 0xFF)
 
 void BSP_init(void);
 void BSP_displayPaused(uint8_t paused);
@@ -128,44 +132,64 @@ void BSP_Microphone_Input(uint16_t *mic);
 void BSP_Microphone_Init(void);
 void BSP_Microphone_Get(void);
 
-// OPT3001 light sensor I2C ===================================
+// Accelerometer =================================================
 
-// ------------BSP_LightSensor_Init------------
-// Initialize a GPIO pin for input, which corresponds
-// with BoosterPack pins J1.8 (Light Sensor interrupt).
-// Initialize two I2C pins, which correspond with
-// BoosterPack pins J1.9 (SCL) and J1.10 (SDA).
-// Input: none
-// Output: none
-void BSP_LightSensor_Init(void);
+    void BSP_Accelerometer_Init(void);
 
-// receives two bytes from specified slave
-// Note for HMC6352 compass only:
-// Used with 'A' commands
-// Note for TMP102 thermometer only:
-// Used to read the contents of the pointer register
-uint16_t BSP_I2C_Recv2(int8_t slave);
+    void BSP_AccelerometerGet(void);
+    
+    void BSP_Accelerometer_Input(uint16_t *x, uint16_t *y, uint16_t *z);
 
-// sends one byte to specified slave
-// Note for HMC6352 compass only:
-// Used with 'S', 'W', 'O', 'C', 'E', 'L', and 'A' commands
-//  For 'A' commands, I2C_Recv2() should also be called
-// Note for TMP102 thermometer only:
-// Used to change the pointer register
-// Returns 0 if successful, nonzero if error
-uint16_t BSP_I2C_Send1(int8_t slave, uint8_t data1);
+    // OPT3001 light sensor I2C ===================================
 
-// sends three bytes to specified slave
-// Note for HMC6352 compass only:
-// Used with 'w' and 'G' commands
-// Note for TMP102 thermometer only:
-// Used to change the contents of the pointer register
-// Returns 0 if successful, nonzero if error
-uint16_t BSP_I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2,
-                              uint8_t data3);
+    // ------------BSP_LightSensor_Init------------
+    // Initialize a GPIO pin for input, which corresponds
+    // with BoosterPack pins J1.8 (Light Sensor interrupt).
+    // Initialize two I2C pins, which correspond with
+    // BoosterPack pins J1.9 (SCL) and J1.10 (SDA).
+    // Input: none
+    // Output: none
+    void BSP_LightSensor_Init(void);
 
-// return the status of light sensor INT output on PA5
-// INT pin reports active low
-int BSP_LightSensor_INTstatus(void);
+    // receives two bytes from specified slave
+    // Note for HMC6352 compass only:
+    // Used with 'A' commands
+    // Note for TMP102 thermometer only:
+    // Used to read the contents of the pointer register
+    uint16_t BSP_I2C_Recv2(int8_t slave);
+
+    // sends one byte to specified slave
+    // Note for HMC6352 compass only:
+    // Used with 'S', 'W', 'O', 'C', 'E', 'L', and 'A' commands
+    //  For 'A' commands, I2C_Recv2() should also be called
+    // Note for TMP102 thermometer only:
+    // Used to change the pointer register
+    // Returns 0 if successful, nonzero if error
+    uint16_t BSP_I2C_Send1(int8_t slave, uint8_t data1);
+
+    // sends three bytes to specified slave
+    // Note for HMC6352 compass only:
+    // Used with 'w' and 'G' commands
+    // Note for TMP102 thermometer only:
+    // Used to change the contents of the pointer register
+    // Returns 0 if successful, nonzero if error
+    uint16_t BSP_I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2,
+                           uint8_t data3);
+
+    // return the status of light sensor INT output on PA5
+    // INT pin reports active low
+    int BSP_LightSensor_INTstatus(void);
+
+    //! uart1 ===============================================
+
+    void UART1_Init(void);
+    void UART1_OutString(uint8_t *pt);
+   
+        //-----------------------UART1_OutUDec-----------------------
+        // Output a 32-bit number in unsigned decimal format
+        // Input: 32-bit number to be transferred
+        // Output: none
+        // Variable format 1-10 digits with no space before or after
+        void UART1_OutUDec(uint32_t n);
 
 #endif /* BSP_H */

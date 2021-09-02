@@ -44,13 +44,16 @@ int main() {
     static QEvt const *philoQueueSto[N_PHILO][N_PHILO];
     static QEvt const *heartbeatQueueSto[10]; //! heartbeat queue.
     static QEvt const *sensorQueueSto[10]; //! sensor queue.
+    static QEvt const *BLE_uartQueueSto[10];  //! sensor queue.
     static QSubscrList subscrSto[MAX_PUB_SIG];
     static QF_MPOOL_EL(TableEvt) smlPoolSto[2*N_PHILO]; /* small pool */
+    static QF_MPOOL_EL(UartEvt) medlPoolSto[2 * N_PHILO]; /* medium pool */
 
     static StackType_t philoStack[N_PHILO][configMINIMAL_STACK_SIZE];
     static StackType_t tableStack[configMINIMAL_STACK_SIZE];
     static StackType_t heartbeatStack[configMINIMAL_STACK_SIZE];//! heartbeat stack
     static StackType_t sensorStack[configMINIMAL_STACK_SIZE];//! sensor stack
+    static StackType_t BLE_uartStack[configMINIMAL_STACK_SIZE];  //! BLE_uart stack
 
     uint8_t n;
 
@@ -58,6 +61,7 @@ int main() {
     Table_ctor(); /* instantiate the Table active object */
     Heartbeat_ctor();
     Sensor_ctor();
+    BLE_uart_ctor();
     QF_init(); /* initialize the framework and the underlying RT kernel */
 
     /* initialize publish-subscribe... */
@@ -66,6 +70,7 @@ int main() {
     /* initialize event pools... */
     //!  for more info see book page 350
     QF_poolInit(smlPoolSto, sizeof(smlPoolSto), sizeof(smlPoolSto[0]));
+    QF_poolInit(medlPoolSto, sizeof(medlPoolSto), sizeof(medlPoolSto[0]));
 
     /* initialize the Board Support Package
     * NOTE: BSP_init() is called *after* initializing publish-subscribe and
@@ -89,7 +94,7 @@ int main() {
 
     QActive_setAttr(AO_Table, TASK_NAME_ATTR, "Table");
     QACTIVE_START(AO_Table,          /* AO to start */
-        (uint_fast8_t)(N_PHILO + 1), /* QP priority of the AO */
+        (uint_fast8_t)(N_PHILO + 3), /* QP priority of the AO */
         tableQueueSto,               /* event queue storage */
         Q_DIM(tableQueueSto),        /* queue length [events] */
         tableStack,                  /* stack storage */
@@ -105,13 +110,22 @@ int main() {
         sizeof(heartbeatStack),          /* stack size [bytes] */
         (QEvt *)0);                  /* initialization event (not used) */
 
-    QActive_setAttr(AO_Sensor, TASK_NAME_ATTR, "Heartbeat");
+    QActive_setAttr(AO_Sensor, TASK_NAME_ATTR, "AO_Sensor");
     QACTIVE_START(AO_Sensor,                   /* AO to start */
-                  (uint_fast8_t)(N_PHILO + 3), /* QP priority of the AO */
+                  (uint_fast8_t)(N_PHILO + 4), /* QP priority of the AO */
                   sensorQueueSto,           /* event queue storage */
                   Q_DIM(sensorQueueSto),    /* queue length [events] */
                   sensorStack,              /* stack storage */
                   sizeof(sensorStack),      /* stack size [bytes] */
+                  (QEvt *)0);                  /* initialization event (not used) */
+
+    QActive_setAttr(AO_BLE_uart, TASK_NAME_ATTR, "AO_BLE_uart");
+    QACTIVE_START(AO_BLE_uart,                 /* AO to start */
+                  (uint_fast8_t)(N_PHILO + 1), /* QP priority of the AO */
+                  BLE_uartQueueSto,            /* event queue storage */
+                  Q_DIM(BLE_uartQueueSto),     /* queue length [events] */
+                  BLE_uartStack,               /* stack storage */
+                  sizeof(BLE_uartStack),       /* stack size [bytes] */
                   (QEvt *)0);                  /* initialization event (not used) */
 
     return QF_run(); /* run the QF application */

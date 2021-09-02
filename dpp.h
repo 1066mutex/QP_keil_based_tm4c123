@@ -21,28 +21,31 @@
 
 //TODO: ensure that all signals are kept in appropriate location. see @brief 1
 enum DPPSignals {
-  EAT_SIG = Q_USER_SIG, /* published by Table to let a philosopher eat */
-  DONE_SIG,             /* published by Philosopher when done eating */
-  PAUSE_SIG,            /* published by BSP to pause serving forks */
-  SERVE_SIG,            /* published by BSP to serve re-start serving forks */
-  TEST_SIG,             /* published by BSP to test the application */
-  BUTTON3_PRESSED_SIG,
-  BUTTON3_DEPRESSED_SIG,
-  BUTTON4_PRESSED_SIG,
-  BUTTON4_DEPRESSED_SIG,
-  JOYSTICK_PRESSED_SIG,
-  JOYSTICK_DEPRESSED_SIG,
-  NEW_TEMP_DATA_SIG,
-  MAX_PUB_SIG,            /* the last published signal see: @brief 1 */
-  POLLING_TIMEOUT_SIG,    /* the periodic timeout signal */
-  DATA_READY_SIG,         /* the invented reminder signal */
-  PROCESS_DATA_SIG,       /* the invented reminder signal */
-  TERMINATE_SIG,          /* terminate the application */
-  NEW_LIGHT_DATA_SIG,     /* posted direclty to blinky for display, dynamic */
-  HUNGRY_SIG,             /* posted direclty to Table from hungry Philo */
-  TIMEOUT_SIG,            /* used by Philosophers for time events */
-  TIMEOUT1_SIG,           /* used by Philosophers for time events */
-  MAX_SIG                 /* the last signal */
+    EAT_SIG = Q_USER_SIG, /* published by Table to let a philosopher eat */
+    DONE_SIG,             /* published by Philosopher when done eating */
+    PAUSE_SIG,            /* published by BSP to pause serving forks */
+    SERVE_SIG,            /* published by BSP to serve re-start serving forks */
+    TEST_SIG,             /* published by BSP to test the application */
+    BUTTON3_PRESSED_SIG,
+    BUTTON3_DEPRESSED_SIG,
+    BUTTON4_PRESSED_SIG,
+    BUTTON4_DEPRESSED_SIG,
+    JOYSTICK_PRESSED_SIG,
+    JOYSTICK_DEPRESSED_SIG,
+    NEW_TEMP_DATA_SIG,
+    MAX_PUB_SIG, /* the last published signal see: @brief 1 */
+    NEW_UART_DATA_SIG,
+    SHOW_UART_DATA_SIG,
+    PACKING_UART_DATA_SIG,
+    POLLING_TIMEOUT_SIG, /* the periodic timeout signal */
+    DATA_READY_SIG,      /* the invented reminder signal */
+    PROCESS_DATA_SIG,    /* the invented reminder signal */
+    TERMINATE_SIG,       /* terminate the application */
+    NEW_LIGHT_DATA_SIG,  /* posted direclty to blinky for display, dynamic */
+    HUNGRY_SIG,          /* posted direclty to Table from hungry Philo */
+    TIMEOUT_SIG,         /* used by Philosophers for time events */
+    TIMEOUT1_SIG,        /* used by Philosophers for time events */
+    MAX_SIG              /* the last signal */
 };
 
 /*$declare${Events::TableEvt} ##############################################*/
@@ -74,6 +77,18 @@ typedef struct{
 /* public: */
     uint32_t temp;
 } TempEvt;
+/* Events UartEvt========================================================= */
+
+typedef struct{
+/* protected: */
+    QEvt super;
+
+/* public: */
+    uint16_t temp;
+    uint16_t temp2;
+    uint16_t urtCharToInt;
+    char rxString[30]; // holds received string
+} UartEvt;
 
 /* number of philosophers */
 #define N_PHILO ((uint8_t)5)
@@ -100,6 +115,14 @@ void Heartbeat_ctor(void);
 extern QActive * const AO_Heartbeat;
 
 /* AO_Heartbeat  ##########################################################*/
+
+/* AO_BLE_uart  ##########################################################*/
+void BLE_uart_ctor(void);
+
+extern QActive *const AO_BLE_uart;
+
+/* AO_BLE_uart  ##########################################################*/
+
 
 /* AO_Sensor  ##########################################################*/
 void Sensor_ctor(void);

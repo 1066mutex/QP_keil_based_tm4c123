@@ -946,7 +946,7 @@ void BSP_LCD_DrawChar(int16_t x, int16_t y, char c, int16_t textColor, int16_t b
 //        textColor 16-bit color of the characters
 // bgColor is Black and size is 1
 // Output: number of characters printed
-uint32_t BSP_LCD_DrawString(uint16_t x, uint16_t y, char *pt, int16_t textColor) {
+uint32_t BSP_LCD_DrawString(uint16_t x, uint16_t y, const char *pt, int16_t textColor) {
     uint32_t count = 0;
     if (y > 12) return 0;
     while (*pt) {
@@ -1283,7 +1283,7 @@ void BSP_LCD_PlotIncrement(void) {
 
 /* OPT3001 light sensor  ******************************************************/
 
-// local functions ****************************************************************
+// local functions *************************************************************
 //
 
 // Send the appropriate codes to initiate a

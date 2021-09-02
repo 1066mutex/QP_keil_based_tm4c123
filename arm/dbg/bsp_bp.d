@@ -22,4 +22,5 @@
 .\dbg\bsp_bp.o: ..\..\qpc\include\qassert.h
 .\dbg\bsp_bp.o: ..\..\qpc\include\qs_dummy.h
 .\dbg\bsp_bp.o: ..\..\FreeRtos_proj\bsp.h
+.\dbg\bsp_bp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\dbg\bsp_bp.o: bsp_bp.h

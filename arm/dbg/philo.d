@@ -23,3 +23,4 @@
 .\dbg\philo.o: ..\..\qpc\include\qs_dummy.h
 .\dbg\philo.o: ..\dpp.h
 .\dbg\philo.o: ..\bsp.h
+.\dbg\philo.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

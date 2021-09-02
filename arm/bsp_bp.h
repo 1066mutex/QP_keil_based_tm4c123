@@ -151,8 +151,8 @@
 // J2.19 servo PWM                       {TM4C123 PB2, MSP432 P2.5}
 // J4.35 nothing                         {TM4C123 PC6, MSP432 P6.7}
 
-#ifndef BSP_BSTPACK_H
-#define BSP_BSTPACK_H
+#ifndef BSP_BP_H
+#define BSP_BP_H
 
 
 /* !!! device initialisation ##########################################################:
@@ -357,7 +357,7 @@ void BSP_LCD_DrawChar(int16_t x, int16_t y, char c, int16_t textColor,
 //        textColor 16-bit color of the characters
 // bgColor is Black and size is 1
 // Output: number of characters printed
-uint32_t BSP_LCD_DrawString(uint16_t x, uint16_t y, char *pt,
+uint32_t BSP_LCD_DrawString(uint16_t x, uint16_t y, const char *pt,
                             int16_t textColor);
 
 //********BSP_LCD_SetCursor*****************
@@ -503,4 +503,4 @@ int BSP_BP_LightSensor_End(uint32_t *light);
 //-------------------------------------------------------------------------
 
 
-#endif /* BSP_BSTPACK_H */
+#endif /* BSP_BP_H */

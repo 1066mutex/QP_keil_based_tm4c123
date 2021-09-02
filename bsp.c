@@ -38,38 +38,41 @@
 #include "ports.h"
 #include "profile.h"
 
-#include "TM4C123GH6PM.h"        /* the device specific header (TI) */
-#include "rom.h"                 /* the built-in ROM functions (TI) */
-#include "sysctl.h"              /* system control driver (TI) */
-#include "gpio.h"                /* GPIO driver (TI) */
+#include "TM4C123GH6PM.h" /* the device specific header (TI) */
+#include "UART0.h"        //! used for testing uart device
+#include "rom.h"    /* the built-in ROM functions (TI) */
+#include "sysctl.h" /* system control driver (TI) */
+#include "gpio.h" /* GPIO driver (TI) */
 #include "hw_i2c.h"
 /* add other drivers if necessary... */
 
-#define TIMER_1A_PSV (TIMER1->TAPV) // TIMER prescaler value.
-#define TIMER_1A_CLK  (SystemCoreClock/TIMER_1A_PSV) // timer 1A clk
+#define TIMER_1A_PSV (TIMER1->TAPV)                    // TIMER prescaler value.
+#define TIMER_1A_CLK (SystemCoreClock / TIMER_1A_PSV)  // timer 1A clk
 
-#define PWM_CYCLES (SystemCoreClock / 2048) // time reload value for RGB (pwm) leds.
+#define PWM_CYCLES (SystemCoreClock / 2048)  // time reload value for RGB (pwm) leds.
 
-Q_DEFINE_THIS_FILE  /* define the name of this file for assertions */
+Q_DEFINE_THIS_FILE /* define the name of this file for assertions */
 
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! CAUTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! CAUTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 * Assign a priority to EVERY ISR explicitly by calling NVIC_SetPriority().
 * DO NOT LEAVE THE ISR PRIORITIES AT THE DEFAULT VALUE!
 */
-enum KernelUnawareISRs { /* see NOTE1 */
-    UART0_PRIO,
-    /* ... */
-    MAX_KERNEL_UNAWARE_CMSIS_PRI /* keep always last */
-};
+    enum KernelUnawareISRs { /* see NOTE1 */
+                             // UART0_PRIO,
+                             /* ... */
+                             MAX_KERNEL_UNAWARE_CMSIS_PRI /* keep always last */
+    };
 /* "kernel-unaware" interrupts can't overlap "kernel-aware" interrupts */
 Q_ASSERT_COMPILE(
-   MAX_KERNEL_UNAWARE_CMSIS_PRI
-   <= (configMAX_SYSCALL_INTERRUPT_PRIORITY >> (8-__NVIC_PRIO_BITS)));
+    MAX_KERNEL_UNAWARE_CMSIS_PRI <= (configMAX_SYSCALL_INTERRUPT_PRIORITY >> (8 - __NVIC_PRIO_BITS)));
 
 enum KernelAwareISRs {
     SYSTICK_PRIO = (configMAX_SYSCALL_INTERRUPT_PRIORITY >> (8 - __NVIC_PRIO_BITS)),  //5
     GPIOA_PRIO = (configMAX_SYSCALL_INTERRUPT_PRIORITY >> (8 - __NVIC_PRIO_BITS)),    //5
-    ADC0SS3_PRIO,  /* ADC0 SS3 priority */                                                                   
+    UART1_PRIO = (configMAX_SYSCALL_INTERRUPT_PRIORITY >> (8 - __NVIC_PRIO_BITS)),    //5
+    UART0_PRIO = (configMAX_SYSCALL_INTERRUPT_PRIORITY >> (8 - __NVIC_PRIO_BITS)),
+    ADC1SS3_PRIO, /* ADC0 SS3 priority */
+
     /* ... */
     MAX_KERNEL_AWARE_CMSIS_PRI /* keep always last */
 
@@ -86,33 +89,33 @@ Q_ASSERT_COMPILE(MAX_KERNEL_AWARE_CMSIS_PRI <= (0xFF >> (8 - __NVIC_PRIO_BITS)))
 #define DELAY 0x80
 
 /* Local-scope objects ------------------------------------------------------*/
-static uint32_t l_rnd; // random seed
+static uint32_t l_rnd;  // random seed
 
 #ifdef Q_SPY
 
-    QSTimeCtr QS_tickTime_;
-    QSTimeCtr QS_tickPeriod_;
+QSTimeCtr QS_tickTime_;
+QSTimeCtr QS_tickPeriod_;
 
-    /* QS identifiers for non-QP sources of events */
-    static uint8_t const l_TickHook = (uint8_t)0;
-    static uint8_t const l_GPIOPortA_IRQHandler = (uint8_t)0;
+/* QS identifiers for non-QP sources of events */
+static uint8_t const l_TickHook = (uint8_t)0;
+static uint8_t const l_GPIOPortA_IRQHandler = (uint8_t)0;
 
-    #define UART_BAUD_RATE      115200U
-    #define UART_FR_TXFE        (1U << 7)
-    #define UART_FR_RXFE        (1U << 4)
-    #define UART_TXFIFO_DEPTH   16U
+#define UART_BAUD_RATE 115200U
+#define UART_FR_TXFE (1U << 7)
+#define UART_FR_RXFE (1U << 4)
+#define UART_TXFIFO_DEPTH 16U
 
-    enum AppRecords { /* application-specific trace records */
-        PHILO_STAT = QS_USER,
-        PAUSED_STAT,
-        COMMAND_STAT
-    };
+enum AppRecords { /* application-specific trace records */
+                  PHILO_STAT = QS_USER,
+                  PAUSED_STAT,
+                  COMMAND_STAT
+};
 
 #endif
 /* Local-scope functions ------------------------------------------------------*/
-    void mcuTempSensorInit(void);
-
-    /* ISRs used in this project ===============================================*/
+void mcuTempSensorInit(void);
+static void l_adcinit1(void);
+/* ISRs used in this project ===============================================*/
 
 /* NOTE: this ISR is for testing of the various preemption scenarios
 *  by triggering the GPIOPortA interrupt from the debugger. You achieve
@@ -129,19 +132,19 @@ static uint32_t l_rnd; // random seed
 *  select the "Other Systems Register" group. From there, you need to write
 *  0 to the STIR write-only register and press enter.
 */
-    /* NOTE: only the "FromISR" FreeRTOS API variants are allowed in the ISRs! */
-    void GPIOPortA_IRQHandler(void); /* prototype */
-    void GPIOPortA_IRQHandler(void) {
-        BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+/* NOTE: only the "FromISR" FreeRTOS API variants are allowed in the ISRs! */
+void GPIOPortA_IRQHandler(void); /* prototype */
+void GPIOPortA_IRQHandler(void) {
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-        /* for testing... */
-        QACTIVE_POST_FROM_ISR(AO_Table,
-                              Q_NEW_FROM_ISR(QEvt, MAX_PUB_SIG),
-                              &xHigherPriorityTaskWoken,
-                              &l_GPIOPortA_IRQHandler);
+    /* for testing... */
+    QACTIVE_POST_FROM_ISR(AO_Table,
+                          Q_NEW_FROM_ISR(QEvt, MAX_PUB_SIG),
+                          &xHigherPriorityTaskWoken,
+                          &l_GPIOPortA_IRQHandler);
 
-        /* the usual end of FreeRTOS ISR... */
-        portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+    /* the usual end of FreeRTOS ISR... */
+    portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
 /*..........................................................................*/
 /* TODO: implement
@@ -169,14 +172,14 @@ void UART0_IRQHandler(void) {
 
 /* Application hooks used in this project ==================================*/
 /* NOTE: only the "FromISR" API variants are allowed in vApplicationTickHook */
-void vApplicationTickHook(void) { //! called by freeRtos tick() 
+void vApplicationTickHook(void) {  //! called by freeRtos tick()
     // TODO: check the tick rate with oscilloscope, toggle IO pin
-    
+
     /* state of the button debouncing, see below */
     static struct ButtonsDebouncing {
         uint32_t depressed;
         uint32_t previous;
-    } buttons = { ~0U, ~0U };
+    } buttons = {~0U, ~0U};
     uint32_t current;
     uint32_t tmp;
     // booster pack buttons
@@ -184,15 +187,15 @@ void vApplicationTickHook(void) { //! called by freeRtos tick()
     static struct ButtonsDebouncing1 {
         uint32_t depressed1;
         uint32_t previous1;
-    } buttons1 = { ~0U, ~0U };
+    } buttons1 = {~0U, ~0U};
     uint32_t current1;
     uint32_t tmp1;
-    
+
     // joystick button debouncing.
     static struct ButtonsDebouncing2 {
         uint32_t depressed1;
         uint32_t previous1;
-    } buttons2 = { ~0U, ~0U };
+    } buttons2 = {~0U, ~0U};
     uint32_t current2;
     uint32_t tmp2;
     //! used to inform RTOS of a thread switch request.
@@ -203,31 +206,30 @@ void vApplicationTickHook(void) { //! called by freeRtos tick()
 
 #ifdef Q_SPY
     {
-        tmp = SysTick->CTRL; /* clear SysTick_CTRL_COUNTFLAG */
+        tmp = SysTick->CTRL;            /* clear SysTick_CTRL_COUNTFLAG */
         QS_tickTime_ += QS_tickPeriod_; /* account for the clock rollover */
     }
 #endif
-// TODO combine all the button debounce into one variable, get the state of each button
-//      and pack into one variable then debounce them 
+    // TODO combine all the button debounce into one variable, get the state of each button
+    //      and pack into one variable then debounce them
 
     /* Perform the debouncing of buttons. The algorithm for debouncing
     * adapted from the book "Embedded Systems Dictionary" by Jack Ganssle
     * and Michael Barr, page 71.
     */
     current = ~LEDS_PORT->DATA_Bits[BTN_SW1 | BTN_SW2]; /* read SW1 and SW2 */
-    tmp = buttons.depressed; /* save the debounced depressed buttons */
-    buttons.depressed |= (buttons.previous & current); /* set depressed */
-    buttons.depressed &= (buttons.previous | current); /* clear released */
-    buttons.previous   = current; /* update the history */
-    tmp ^= buttons.depressed;     /* changed debounced depressed */
-    if ((tmp & BTN_SW1) != 0U) {  /* debounced SW1 state changed? */
-        if ((buttons.depressed & BTN_SW1) != 0U) { /* is SW1 depressed? */
+    tmp = buttons.depressed;                            /* save the debounced depressed buttons */
+    buttons.depressed |= (buttons.previous & current);  /* set depressed */
+    buttons.depressed &= (buttons.previous | current);  /* clear released */
+    buttons.previous = current;                         /* update the history */
+    tmp ^= buttons.depressed;                           /* changed debounced depressed */
+    if ((tmp & BTN_SW1) != 0U) {                        /* debounced SW1 state changed? */
+        if ((buttons.depressed & BTN_SW1) != 0U) {      /* is SW1 depressed? */
             /* demonstrate the ISR APIs: QF_PUBLISH_FROM_ISR and Q_NEW_FROM_ISR */
             QF_PUBLISH_FROM_ISR(Q_NEW_FROM_ISR(QEvt, PAUSE_SIG),
                                 &xHigherPriorityTaskWoken,
                                 &l_TickHook);
-        }
-        else { /* the button is released */
+        } else { /* the button is released */
             /* demonstrate the ISR APIs: POST_FROM_ISR and Q_NEW_FROM_ISR */
             QACTIVE_POST_FROM_ISR(AO_Table,
                                   Q_NEW_FROM_ISR(QEvt, SERVE_SIG),
@@ -237,27 +239,27 @@ void vApplicationTickHook(void) { //! called by freeRtos tick()
     }
     //! debounce BoosterPack user buttons TODO: can select not to use the tiva buttons.
     current1 = ~BSTR_BTN_SWS_PORT->DATA_Bits[BSTR_BTN_SW3 | BSTR_BTN_SW4]; /* read SW1 and SW2 */
-    tmp1 = buttons1.depressed1;                                              /* save the debounced depressed1 buttons1 */
-    buttons1.depressed1 |= (buttons1.previous1 & current1);                    /* set depressed1 */
-    buttons1.depressed1 &= (buttons1.previous1 | current1);                    /* clear released */
-    buttons1.previous1 = current1;                                           /* update the history */
-    tmp1 ^= buttons1.depressed1;                                             /* changed debounced depressed1 */
+    tmp1 = buttons1.depressed1;                                            /* save the debounced depressed1 buttons1 */
+    buttons1.depressed1 |= (buttons1.previous1 & current1);                /* set depressed1 */
+    buttons1.depressed1 &= (buttons1.previous1 | current1);                /* clear released */
+    buttons1.previous1 = current1;                                         /* update the history */
+    tmp1 ^= buttons1.depressed1;                                           /* changed debounced depressed1 */
     if ((tmp1 & BSTR_BTN_SW3) != 0U) {                                     /* debounced SW1 state changed? */
-        if ((buttons1.depressed1 & BSTR_BTN_SW3) != 0U) {                   /* is SW1 depressed1? */
+        if ((buttons1.depressed1 & BSTR_BTN_SW3) != 0U) {                  /* is SW1 depressed1? */
             /* demonstrate the ISR APIs: QF_PUBLISH_FROM_ISR and Q_NEW_FROM_ISR */
             QF_PUBLISH_FROM_ISR(Q_NEW_FROM_ISR(QEvt, BUTTON3_PRESSED_SIG),
                                 &xHigherPriorityTaskWoken,
                                 &l_TickHook);
         } else { /* the button is released */
             /* demonstrate the ISR APIs: POST_FROM_ISR and Q_NEW_FROM_ISR */
-            QACTIVE_POST_FROM_ISR(AO_Heartbeat, // BUG: this was set to AO_table
+            QACTIVE_POST_FROM_ISR(AO_Heartbeat,  // BUG: this was set to AO_table
                                   Q_NEW_FROM_ISR(QEvt, BUTTON3_DEPRESSED_SIG),
                                   &xHigherPriorityTaskWoken,
                                   &l_TickHook);
         }
     }
 
-    if ((tmp1 & BSTR_BTN_SW4) != 0U) {                   /* debounced SW1 state changed? */
+    if ((tmp1 & BSTR_BTN_SW4) != 0U) {                    /* debounced SW1 state changed? */
         if ((buttons1.depressed1 & BSTR_BTN_SW4) != 0U) { /* is SW1 depressed1? */
             /* demonstrate the ISR APIs: QF_PUBLISH_FROM_ISR and Q_NEW_FROM_ISR */
             static QEvt const btn4prsEvt = {BUTTON4_PRESSED_SIG, 0U, 0U};
@@ -272,25 +274,26 @@ void vApplicationTickHook(void) { //! called by freeRtos tick()
 
     //! debounce BoosterPack Joystick button TODO: can select not to use the tiva buttons.
     current2 = ~BSP_BP_JST_BTN_PORT->DATA_Bits[BSP_BP_JST_BTN_PIN]; /* read SW1 and SW2 */
-    tmp2 = buttons2.depressed1;                                              /* save the debounced depressed1 buttons1 */
-    buttons2.depressed1 |= (buttons2.previous1 & current2);                    /* set depressed1 */
-    buttons2.depressed1 &= (buttons2.previous1 | current2);                    /* clear released */
-    buttons2.previous1 = current2;                                           /* update the history */
-    tmp2 ^= buttons2.depressed1;                                             /* changed debounced depressed1 */
-    if ((tmp2 & BSP_BP_JST_BTN_PIN) != 0U) {                                 /* debounced SW1 state changed? */
-        if ((buttons2.depressed1 & BSP_BP_JST_BTN_PIN) != 0U) {              /* is SW1 depressed1? */
+    tmp2 = buttons2.depressed1;                                     /* save the debounced depressed1 buttons1 */
+    buttons2.depressed1 |= (buttons2.previous1 & current2);         /* set depressed1 */
+    buttons2.depressed1 &= (buttons2.previous1 | current2);         /* clear released */
+    buttons2.previous1 = current2;                                  /* update the history */
+    tmp2 ^= buttons2.depressed1;                                    /* changed debounced depressed1 */
+    if ((tmp2 & BSP_BP_JST_BTN_PIN) != 0U) {                        /* debounced SW1 state changed? */
+        if ((buttons2.depressed1 & BSP_BP_JST_BTN_PIN) != 0U) {     /* is SW1 depressed1? */
             /* demonstrate the ISR APIs: QF_PUBLISH_FROM_ISR and Q_NEW_FROM_ISR */
             QF_PUBLISH_FROM_ISR(Q_NEW_FROM_ISR(QEvt, JOYSTICK_PRESSED_SIG),
                                 &xHigherPriorityTaskWoken,
                                 &l_TickHook);
         } else { /* the button is released */
             /* demonstrate the ISR APIs: POST_FROM_ISR and Q_NEW_FROM_ISR */
-            QACTIVE_POST_FROM_ISR(AO_Heartbeat, // BUG: this was set to AO_table
+            QACTIVE_POST_FROM_ISR(AO_Heartbeat,  // BUG: this was set to AO_table
                                   Q_NEW_FROM_ISR(QEvt, JOYSTICK_DEPRESSED_SIG),
                                   &xHigherPriorityTaskWoken,
                                   &l_TickHook);
         }
     }
+
     /* notify FreeRTOS to perform context switch from ISR, if needed */
     portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
@@ -299,9 +302,9 @@ void vApplicationIdleHook(void) {
     float volatile x;
 
     /* toggle the User LED on and then off, see NOTE01 */
-      QF_INT_DISABLE();
-    GPIOF->DATA_Bits[LED_BLUE] = 0xFFU;  /* turn the Blue LED on  */
-    GPIOF->DATA_Bits[LED_BLUE] = 0U;     /* turn the Blue LED off */
+    QF_INT_DISABLE();
+    GPIOF->DATA_Bits[LED_BLUE] = 0xFFU; /* turn the Blue LED on  */
+    GPIOF->DATA_Bits[LED_BLUE] = 0U;    /* turn the Blue LED off */
     QF_INT_ENABLE();
 
     /* Some flating point code is to exercise the VFP... */
@@ -309,18 +312,18 @@ void vApplicationIdleHook(void) {
     x = x * 1.73205F;
 
 #ifdef Q_SPY
-    QS_rxParse();  /* parse all the received bytes */
+    QS_rxParse(); /* parse all the received bytes */
 
-    if ((UART0->FR & UART_FR_TXFE) != 0U) {  /* TX done? */
-        uint16_t fifo = UART_TXFIFO_DEPTH;   /* max bytes we can accept */
+    if ((UART0->FR & UART_FR_TXFE) != 0U) { /* TX done? */
+        uint16_t fifo = UART_TXFIFO_DEPTH;  /* max bytes we can accept */
         uint8_t const *block;
 
         QF_INT_DISABLE();
-        block = QS_getBlock(&fifo);  /* try to get next block to transmit */
+        block = QS_getBlock(&fifo); /* try to get next block to transmit */
         QF_INT_ENABLE();
 
-        while (fifo-- != 0) {  /* any bytes in the block? */
-            UART0->DR = *block++;  /* put into the FIFO */
+        while (fifo-- != 0) {     /* any bytes in the block? */
+            UART0->DR = *block++; /* put into the FIFO */
         }
     }
 #elif defined NDEBUG
@@ -342,16 +345,15 @@ void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
 * provide an implementation of vApplicationGetIdleTaskMemory() to provide
 * the memory that is used by the Idle task.
 */
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer,
-                                    StackType_t **ppxIdleTaskStackBuffer,
-                                    uint32_t *pulIdleTaskStackSize )
-{
+void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer,
+                                   StackType_t **ppxIdleTaskStackBuffer,
+                                   uint32_t *pulIdleTaskStackSize) {
     /* If the buffers to be provided to the Idle task are declared inside
     * this function then they must be declared static - otherwise they will
     * be allocated on the stack and so not exists after this function exits.
     */
     static StaticTask_t xIdleTaskTCB;
-    static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
+    static StackType_t uxIdleTaskStack[configMINIMAL_STACK_SIZE];
 
     /* Pass out a pointer to the StaticTask_t structure in which the
     * Idle task's state will be stored.
@@ -379,14 +381,14 @@ void BSP_init(void) {
 
     /* enable clock for to the peripherals used by this application... */
     /* enable Run mode for GPIOD, GPIOF */
-    SYSCTL->RCGCGPIO |= PORTD | PORTF ;
+    SYSCTL->RCGCGPIO |= PORTD | PORTF;
 
     /* configure the LEDs and push buttons */
     LEDS_PORT->DIR |= (LED_RED | LED_GREEN | LED_BLUE); /* set as output */
     LEDS_PORT->DEN |= (LED_RED | LED_GREEN | LED_BLUE); /* digital enable */
-    LEDS_PORT->DATA_Bits[LED_RED]   = 0U; /* turn the LED off */
-    LEDS_PORT->DATA_Bits[LED_GREEN] = 0U; /* turn the LED off */
-    LEDS_PORT->DATA_Bits[LED_BLUE]  = 0U; /* turn the LED off */
+    LEDS_PORT->DATA_Bits[LED_RED] = 0U;                 /* turn the LED off */
+    LEDS_PORT->DATA_Bits[LED_GREEN] = 0U;               /* turn the LED off */
+    LEDS_PORT->DATA_Bits[LED_BLUE] = 0U;                /* turn the LED off */
 
     /* configure the User Switches on tm4c123 board */
     LEDS_PORT->DIR &= ~(BTN_SW1 | BTN_SW2); /*  set direction: input */
@@ -396,25 +398,28 @@ void BSP_init(void) {
     /* booster pack User Switches initialization */
     /* unlock gpio port D */
     BSTR_BTN_SWS_PORT->LOCK = 0x4C4F434B;
-    BSTR_BTN_SWS_PORT->CR = 0xFF; /* allow changes to PD7-0 */
+    BSTR_BTN_SWS_PORT->CR = 0xFF;                             /* allow changes to PD7-0 */
     BSTR_BTN_SWS_PORT->DIR &= ~(BSTR_BTN_SW3 | BSTR_BTN_SW4); /*  set direction: input */
-   
+
     ROM_GPIOPadConfigSet(GPIOD_BASE, (BSTR_BTN_SW3 | BSTR_BTN_SW4),
                          GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
-//BSP_BP_D_LedsInit();
-BSP_BP_RGB_ledsInit();
-BSP_BP_BuzzerIO_Init(200);
-BSP_BP_Joystick_Init();
-BSP_BP_SPI_TFT_Init();
-BSP_Microphone_Init();
-mcuTempSensorInit();
-//! use when profiling TODO: add ifdef guards 
-Profile_Init();
-BSP_randomSeed(1234U);
+    //BSP_BP_D_LedsInit();
+    BSP_BP_RGB_ledsInit();
+    BSP_BP_BuzzerIO_Init(200);
+    BSP_BP_Joystick_Init();
+    BSP_BP_SPI_TFT_Init();
+    BSP_Microphone_Init();
+    BSP_Accelerometer_Init();
+    UART1_Init();
+    UART0_Init();
+    //mcuTempSensorInit();
+    //! use when profiling TODO: add ifdef guards
+    Profile_Init();
+    BSP_randomSeed(1234U);
 
-/* initialize the QS software tracing... */
-if (QS_INIT((void *)0) == 0U) {
-    Q_ERROR();
+    /* initialize the QS software tracing... */
+    if (QS_INIT((void *)0) == 0U) {
+        Q_ERROR();
     }
     QS_OBJ_DICTIONARY(&l_TickHook);
     QS_OBJ_DICTIONARY(&l_GPIOPortA_IRQHandler);
@@ -486,19 +491,19 @@ void BSP_BP_LedBlueOn(void) {
 
 /* TFT spi I/O BoosterPack ..............................................................*/
 
-void BSP_BP_TFT_CS_LOW(void){
+void BSP_BP_TFT_CS_LOW(void) {
     BP_SPI_CS_PORT->DATA_Bits[BP_SPI_CS_PIN] = 0U;
 }
 //...........................................................................
-void BSP_BP_TFT_CS_HIGH(void){
+void BSP_BP_TFT_CS_HIGH(void) {
     BP_SPI_CS_PORT->DATA_Bits[BP_SPI_CS_PIN] = BP_SPI_CS_PIN;
 }
 //...........................................................................
-void BSP_BP_TFT_RESET_HIGH(void){
+void BSP_BP_TFT_RESET_HIGH(void) {
     BP_LCD_RST_PORT->DATA_Bits[BP_LCD_RST_PIN] = BP_LCD_RST_PIN;
 }
 //...........................................................................
-void BSP_BP_TFT_RESET_LOW(void){
+void BSP_BP_TFT_RESET_LOW(void) {
     BP_LCD_RST_PORT->DATA_Bits[BP_LCD_RST_PIN] = 0U;
 }
 //...........................................................................
@@ -511,20 +516,16 @@ void BSP_BP_TFT_DC_DATA(void) {
 }
 //...........................................................................
 
-
-
-
-
 // TODO: will not need this but a good example on toggling leds as display.
 void BSP_displayPhilStat(uint8_t n, char const *stat) {
     GPIOF->DATA_Bits[LED_RED] =
-         ((stat[0] == 'e')   /* Is Philo[n] eating? */
-         ? 0xFFU             /* turn the LED1 on  */
-         : 0U);              /* turn the LED1 off */
+        ((stat[0] == 'e') /* Is Philo[n] eating? */
+             ? 0xFFU      /* turn the LED1 on  */
+             : 0U);       /* turn the LED1 off */
 
     QS_BEGIN(PHILO_STAT, AO_Philo[n]) /* application-specific record begin */
-        QS_U8(1, n);  /* Philosopher number */
-        QS_STR(stat); /* Philosopher status */
+    QS_U8(1, n);                      /* Philosopher number */
+    QS_STR(stat);                     /* Philosopher status */
     QS_END()
 }
 /*..........................................................................*/
@@ -532,7 +533,7 @@ void BSP_displayPaused(uint8_t paused) {
     GPIOF->DATA_Bits[LED_RED] = ((paused != 0U) ? 0xFFU : 0U);
 
     QS_BEGIN(PAUSED_STAT, (void *)0) /* application-specific record begin */
-        QS_U8(1, paused);  /* Paused status */
+    QS_U8(1, paused);                /* Paused status */
     QS_END()
 }
 /*..........................................................................*/
@@ -551,8 +552,8 @@ uint32_t BSP_random(void) { /* a very cheap pseudo-random-number generator */
     /* "Super-Duper" Linear Congruential Generator (LCG)
     * LCG(2^32, 3*7*11*13*23, 0, seed)
     */
-    rnd = l_rnd * (3U*7U*11U*13U*23U);
-    l_rnd = rnd; /* set for the next time */
+    rnd = l_rnd * (3U * 7U * 11U * 13U * 23U);
+    l_rnd = rnd;      /* set for the next time */
     xTaskResumeAll(); /* unlock the FreeRTOS scheduler */
 
     return (rnd >> 8);
@@ -580,18 +581,22 @@ void QF_onStartup(void) {
     * Assign a priority to EVERY ISR explicitly by calling NVIC_SetPriority().
     * DO NOT LEAVE THE ISR PRIORITIES AT THE DEFAULT VALUE!
     */
-    NVIC_SetPriority(UART0_IRQn,     UART0_PRIO);
-    NVIC_SetPriority(SysTick_IRQn,   SYSTICK_PRIO);
-    NVIC_SetPriority(GPIOA_IRQn,     GPIOA_PRIO);
-    NVIC_SetPriority(ADC0SS3_IRQn, ADC0SS3_PRIO);
+    NVIC_SetPriority(UART0_IRQn, UART0_PRIO);
+    NVIC_SetPriority(SysTick_IRQn, SYSTICK_PRIO);
+    NVIC_SetPriority(GPIOA_IRQn, GPIOA_PRIO);
+    NVIC_SetPriority(ADC1SS3_IRQn, ADC1SS3_PRIO);
+    NVIC_SetPriority(UART1_IRQn, UART1_PRIO);
+    NVIC_SetPriority(UART0_IRQn, UART0_PRIO);
     /* ... */
 
     /* enable IRQs... */
     NVIC_EnableIRQ(GPIOA_IRQn);
-    NVIC_EnableIRQ(ADC0SS3_IRQn);
+    NVIC_EnableIRQ(ADC1SS3_IRQn);
+    NVIC_EnableIRQ(UART1_IRQn);
+    NVIC_EnableIRQ(UART0_IRQn);
 
 #ifdef Q_SPY
-    NVIC_EnableIRQ(UART0_IRQn);  /* UART0 interrupt used for QS-RX */
+    NVIC_EnableIRQ(UART0_IRQn); /* UART0 interrupt used for QS-RX */
 #endif
 }
 /*..........................................................................*/
@@ -624,11 +629,11 @@ void Q_onAssert(char const *module, int loc) {
 #ifdef Q_SPY
 /*..........................................................................*/
 uint8_t QS_onStartup(void const *arg) {
-    static uint8_t qsTxBuf[2*1024]; /* buffer for QS-TX channel */
-    static uint8_t qsRxBuf[100];    /* buffer for QS-RX channel */
+    static uint8_t qsTxBuf[2 * 1024]; /* buffer for QS-TX channel */
+    static uint8_t qsRxBuf[100];      /* buffer for QS-RX channel */
     uint32_t tmp;
 
-    QS_initBuf  (qsTxBuf, sizeof(qsTxBuf));
+    QS_initBuf(qsTxBuf, sizeof(qsTxBuf));
     QS_rxInitBuf(qsRxBuf, sizeof(qsRxBuf));
 
     /* enable clock for UART0 and GPIOA (used by UART0 pins) */
@@ -637,30 +642,30 @@ uint8_t QS_onStartup(void const *arg) {
 
     /* configure UART0 pins for UART operation */
     tmp = (1U << 0) | (1U << 1);
-    GPIOA->DIR   &= ~tmp;
-    GPIOA->SLR   &= ~tmp;
-    GPIOA->ODR   &= ~tmp;
-    GPIOA->PUR   &= ~tmp;
-    GPIOA->PDR   &= ~tmp;
-    GPIOA->AMSEL &= ~tmp;  /* disable analog function on the pins */
-    GPIOA->AFSEL |= tmp;   /* enable ALT function on the pins */
-    GPIOA->DEN   |= tmp;   /* enable digital I/O on the pins */
-    GPIOA->PCTL  &= ~0x00U;
-    GPIOA->PCTL  |= 0x11U;
+    GPIOA->DIR &= ~tmp;
+    GPIOA->SLR &= ~tmp;
+    GPIOA->ODR &= ~tmp;
+    GPIOA->PUR &= ~tmp;
+    GPIOA->PDR &= ~tmp;
+    GPIOA->AMSEL &= ~tmp; /* disable analog function on the pins */
+    GPIOA->AFSEL |= tmp;  /* enable ALT function on the pins */
+    GPIOA->DEN |= tmp;    /* enable digital I/O on the pins */
+    GPIOA->PCTL &= ~0x00U;
+    GPIOA->PCTL |= 0x11U;
 
     /* configure the UART for the desired baud rate, 8-N-1 operation */
     tmp = (((SystemCoreClock * 8U) / UART_BAUD_RATE) + 1U) / 2U;
-    UART0->IBRD   = tmp / 64U;
-    UART0->FBRD   = tmp % 64U;
-    UART0->LCRH   = (0x3U << 5); /* configure 8-N-1 operation */
-    UART0->LCRH  |= (0x1U << 4); /* enable FIFOs */
-    UART0->CTL    = (1U << 0)    /* UART enable */
-                    | (1U << 8)  /* UART TX enable */
-                    | (1U << 9); /* UART RX enable */
+    UART0->IBRD = tmp / 64U;
+    UART0->FBRD = tmp % 64U;
+    UART0->LCRH = (0x3U << 5);  /* configure 8-N-1 operation */
+    UART0->LCRH |= (0x1U << 4); /* enable FIFOs */
+    UART0->CTL = (1U << 0)      /* UART enable */
+                 | (1U << 8)    /* UART TX enable */
+                 | (1U << 9);   /* UART RX enable */
 
     /* configure UART interrupts (for the RX channel) */
-    UART0->IM   |= (1U << 4) | (1U << 6); /* enable RX and RX-TO interrupt */
-    UART0->IFLS |= (0x2U << 2);    /* interrupt on RX FIFO half-full */
+    UART0->IM |= (1U << 4) | (1U << 6); /* enable RX and RX-TO interrupt */
+    UART0->IFLS |= (0x2U << 2);         /* interrupt on RX FIFO half-full */
     /* NOTE: do not enable the UART0 interrupt yet. Wait till QF_onStartup() */
 
     QS_tickPeriod_ = SystemCoreClock / BSP_TICKS_PER_SEC;
@@ -678,11 +683,10 @@ uint8_t QS_onStartup(void const *arg) {
 void QS_onCleanup(void) {
 }
 /*..........................................................................*/
-QSTimeCtr QS_onGetTime(void) {  /* NOTE: invoked with interrupts DISABLED */
+QSTimeCtr QS_onGetTime(void) {                               /* NOTE: invoked with interrupts DISABLED */
     if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) == 0) { /* not set? */
         return QS_tickTime_ - (QSTimeCtr)SysTick->VAL;
-    }
-    else { /* the rollover occured, but the SysTick_ISR did not run yet */
+    } else { /* the rollover occured, but the SysTick_ISR did not run yet */
         return QS_tickTime_ + QS_tickPeriod_ - (QSTimeCtr)SysTick->VAL;
     }
 }
@@ -709,8 +713,7 @@ void QS_onReset(void) {
 /*..........................................................................*/
 /*! callback function to execute a user command (to be implemented in BSP) */
 void QS_onCommand(uint8_t cmdId,
-                  uint32_t param1, uint32_t param2, uint32_t param3)
-{
+                  uint32_t param1, uint32_t param2, uint32_t param3) {
     (void)cmdId;
     (void)param1;
     (void)param2;
@@ -718,16 +721,15 @@ void QS_onCommand(uint8_t cmdId,
 
     /* application-specific record */
     QS_BEGIN(COMMAND_STAT, (void *)1)
-        QS_U8(2, cmdId);
-        QS_U32(8, param1);
-        QS_U32(8, param2);
-        QS_U32(8, param3);
+    QS_U8(2, cmdId);
+    QS_U32(8, param1);
+    QS_U32(8, param2);
+    QS_U32(8, param3);
     QS_END()
 
     if (cmdId == 10U) {
         Q_ERROR(); /* for testing of assertion failure */
-    }
-    else if (cmdId == 11U) {
+    } else if (cmdId == 11U) {
         assert_failed("QS_onCommand", 123);
     }
 }
@@ -844,14 +846,14 @@ void BSP_BP_BuzzerIO_Init(uint16_t duty) {
     // ***************** Timer1A initialization *****************
     SYSCTL->RCGCGPIO |= 0x0020;  // !activate clock for Port F DONE
     while ((SYSCTL->PRGPIO & 0x20) == 0) {
-    };                           // allow time for clock to stabilize
+    };                     // allow time for clock to stabilize
     GPIOF->AFSEL |= 0x04;  // enable alt funct on PF2
     GPIOF->DEN |= 0x04;    // enable digital I/O on PF2
-                                 // configure PF2 as PWM
+                           // configure PF2 as PWM
     GPIOF->PCTL = (GPIOF->PCTL & 0xFFFFF0FF) + 0x00000500;
     GPIOF->AMSEL &= ~0x04;  // disable analog functionality on PF2
-    
-    SYSCTL->RCGCPWM |= 0x02;     // activate clock for Timer1
+
+    SYSCTL->RCGCPWM |= 0x02;  // activate clock for Timer1
     while ((SYSCTL->PRPWM & 0x02) == 0) {
     };  // allow time for clock to stabilize
 
@@ -867,12 +869,9 @@ void BSP_BP_BuzzerIO_Init(uint16_t duty) {
     PWM1->_3_GENA |= (0x000000C0 | 0x00000008); /* Set PWM output when counter matches PWMCMPA clear on reload*/
     PWM1->_3_LOAD = 1;                          // set load value for 50Hz 16MHz/65 = 250kHz and (250KHz/5000)
     //PWM1->_3_CMPA register not configured, pwm output stays at 0.
-    PWM1->_3_CTL |= 0x01;                       // Enable Generator 3 counter
-    PWM1->ENABLE |= (1U << 6);                  /* Enable PWM1 channel 0 output */
-
+    PWM1->_3_CTL |= 0x01;      // Enable Generator 3 counter
+    PWM1->ENABLE |= (1U << 6); /* Enable PWM1 channel 0 output */
 }
-
-
 
 // ------------BSP_Buzzer_Set------------
 // Set new duty cycle for the buzzer.
@@ -909,7 +908,6 @@ void BSP_BP_Buzzer_Freq(float32_t freq) {
 //TODO: Test the frequency on a scope for correctness.
 //      Idea. use uint instead of float avoid floating point math?
 
-
 // pwm on pf2 PWM4 M1PWM6
 
 /**!
@@ -920,35 +918,32 @@ void BSP_BP_Buzzer_Freq(float32_t freq) {
  * -- control individual led pwm. 
  */
 
-
-void BSP_BP_D_LedsInit(void){
-
-// initialise  PB3 PC4 PF3
-/* enable Run mode for GPIOB, GPIOC, GPIOF */
-SYSCTL->RCGCGPIO |= PORTB | PORTC | PORTF;
-/* configure BOOSTER PCK Switches and leds */
-/* BSTR_LED_RED_PORT BSTR_LED_RED have been configured above, same PF1 used */
-// PB3
-BSTR_LED_GREEN_PORT->DIR |= (BSTR_LED_GREEN);    /* set as output */
-BSTR_LED_GREEN_PORT->AFSEL &= ~(BSTR_LED_GREEN); /* disable alt funct on PB3 */
-BSTR_LED_GREEN_PORT->PUR &= ~(BSTR_LED_GREEN);   /* disable pull-up on PB3 */
-BSTR_LED_GREEN_PORT->DEN |= (BSTR_LED_GREEN);    /* digital enable */
-// PC4
-BSTR_LED_BLUE_PORT->DIR |= (BSTR_LED_BLUE);    /* set as output */
-BSTR_LED_BLUE_PORT->AFSEL &= ~(BSTR_LED_BLUE); /* disable alt funct on PC4 */
-BSTR_LED_BLUE_PORT->PUR &= ~(BSTR_LED_BLUE);   /* disable pull-up on PC4 */
-BSTR_LED_BLUE_PORT->DEN |= (BSTR_LED_BLUE);    /* digital enable */
-// PF3
-BSTR_LED_RED_PORT->DEN |= (BSTR_LED_RED);    /* digital enable */
-BSTR_LED_RED_PORT->AFSEL &= ~(BSTR_LED_RED); /* disable alt funct on PF3 */
-BSTR_LED_RED_PORT->PUR &= ~(BSTR_LED_RED);   /* disable pull-up on PF3 */
-BSTR_LED_RED_PORT->DIR |= (BSTR_LED_RED);    /* set as output */
-// turn off all leds.
-BSTR_LED_GREEN_PORT->DATA_Bits[BSTR_LED_GREEN] = BSTR_LED_GREEN; /* turn the LED off */
-BSTR_LED_BLUE_PORT->DATA_Bits[BSTR_LED_BLUE] = BSTR_LED_BLUE;    /* turn the LED off */
-BSTR_LED_RED_PORT->DATA_Bits[BSTR_LED_RED] = BSTR_LED_RED;       /* turn the LED off */
+void BSP_BP_D_LedsInit(void) {
+    // initialise  PB3 PC4 PF3
+    /* enable Run mode for GPIOB, GPIOC, GPIOF */
+    SYSCTL->RCGCGPIO |= PORTB | PORTC | PORTF;
+    /* configure BOOSTER PCK Switches and leds */
+    /* BSTR_LED_RED_PORT BSTR_LED_RED have been configured above, same PF1 used */
+    // PB3
+    BSTR_LED_GREEN_PORT->DIR |= (BSTR_LED_GREEN);    /* set as output */
+    BSTR_LED_GREEN_PORT->AFSEL &= ~(BSTR_LED_GREEN); /* disable alt funct on PB3 */
+    BSTR_LED_GREEN_PORT->PUR &= ~(BSTR_LED_GREEN);   /* disable pull-up on PB3 */
+    BSTR_LED_GREEN_PORT->DEN |= (BSTR_LED_GREEN);    /* digital enable */
+    // PC4
+    BSTR_LED_BLUE_PORT->DIR |= (BSTR_LED_BLUE);    /* set as output */
+    BSTR_LED_BLUE_PORT->AFSEL &= ~(BSTR_LED_BLUE); /* disable alt funct on PC4 */
+    BSTR_LED_BLUE_PORT->PUR &= ~(BSTR_LED_BLUE);   /* disable pull-up on PC4 */
+    BSTR_LED_BLUE_PORT->DEN |= (BSTR_LED_BLUE);    /* digital enable */
+    // PF3
+    BSTR_LED_RED_PORT->DEN |= (BSTR_LED_RED);    /* digital enable */
+    BSTR_LED_RED_PORT->AFSEL &= ~(BSTR_LED_RED); /* disable alt funct on PF3 */
+    BSTR_LED_RED_PORT->PUR &= ~(BSTR_LED_RED);   /* disable pull-up on PF3 */
+    BSTR_LED_RED_PORT->DIR |= (BSTR_LED_RED);    /* set as output */
+    // turn off all leds.
+    BSTR_LED_GREEN_PORT->DATA_Bits[BSTR_LED_GREEN] = BSTR_LED_GREEN; /* turn the LED off */
+    BSTR_LED_BLUE_PORT->DATA_Bits[BSTR_LED_BLUE] = BSTR_LED_BLUE;    /* turn the LED off */
+    BSTR_LED_RED_PORT->DATA_Bits[BSTR_LED_RED] = BSTR_LED_RED;       /* turn the LED off */
 }
-
 
 void BSP_BP_RGB_ledsInit(void) {
     // enable Run mode for GPIOB, GPIOC, GPIOF
@@ -966,18 +961,18 @@ void BSP_BP_RGB_ledsInit(void) {
     BSTR_LED_GREEN_PORT->DEN |= (BSTR_LED_GREEN);                                         /* digital enable */
     // PC4
     BSTR_LED_BLUE_PORT->DIR |= (BSTR_LED_BLUE);                                         /* set as output */
-    BSTR_LED_BLUE_PORT->AFSEL |= (BSTR_LED_BLUE);                                      /* disable alt funct on PC4 */
+    BSTR_LED_BLUE_PORT->AFSEL |= (BSTR_LED_BLUE);                                       /* disable alt funct on PC4 */
     BSTR_LED_BLUE_PORT->PUR &= ~(BSTR_LED_BLUE);                                        /* disable pull-up on PC4 */
     BSTR_LED_BLUE_PORT->PCTL |= ((BSTR_LED_BLUE_PORT->PCTL & 0xFFF0FFFF) + 0x00070000); /* configure PC4 as PWM */
     BSTR_LED_BLUE_PORT->AMSEL &= ~(BSTR_LED_BLUE);                                      /* disable analog functionality */
     BSTR_LED_BLUE_PORT->DEN |= (BSTR_LED_BLUE);                                         /* digital enable */
     // PF3 for Timer1B
     BSTR_LED_RED_PORT->DIR |= (BSTR_LED_RED);                                         /* set as output */
-    BSTR_LED_RED_PORT->AFSEL |= (BSTR_LED_RED);                                      /* disable alt funct on PF3 */
+    BSTR_LED_RED_PORT->AFSEL |= (BSTR_LED_RED);                                       /* disable alt funct on PF3 */
     BSTR_LED_RED_PORT->PUR &= ~(BSTR_LED_RED);                                        /* disable pull-up on PF3 */
     BSTR_LED_RED_PORT->PCTL |= ((BSTR_LED_RED_PORT->PCTL & 0xFFFF0FFF) + 0x00007000); /* configure PF3 as PWM */
     BSTR_LED_RED_PORT->AMSEL &= ~(BSTR_LED_RED);                                      /* disable analog functionality */
-    BSTR_LED_RED_PORT->DEN |= (BSTR_LED_RED);                                       /* digital enable */
+    BSTR_LED_RED_PORT->DEN |= (BSTR_LED_RED);                                         /* digital enable */
 
     // enable Timers for pwm clock
     //
@@ -990,42 +985,44 @@ void BSP_BP_RGB_ledsInit(void) {
     TIMER1->CFG = 0x00000004;      // configure for 16-bit timer mode
                                    // configure for alternate (PWM) mode
     TIMER1->TBMR = (0x00000008 | 0x00000002);
-    TIMER1->TBILR = PWM_CYCLES;                // defines when output signal is set
+    TIMER1->TBILR = PWM_CYCLES;  // defines when output signal is set
     //TIMER1->TBMATCHR register is not set, keeps pwm output at 0
     //
     // enable Timer1B 16-b, PWM, inverted to match comments
-    TIMER1->CTL |= (0x00004000 | 0x00000100);  
-    //==============================================================================================  
+    TIMER1->CTL |= (0x00004000 | 0x00000100);
+    //==============================================================================================
 
     // ***************** Timer3B (PB3) initialization *****************
     SYSCTL->RCGCTIMER |= 0x08;  // activate clock for Timer1
 
-    while ((SYSCTL->PRTIMER & 0x08) == 0) {};   // allow time for clock to stabilize
-    TIMER3->CTL &= ~(0x00000100);               // disable Timer3B during setup
-    TIMER3->CFG = 0x00000004;                   // configure for 16-bit timer mode
-                                                // configure for alternate (PWM) mode
+    while ((SYSCTL->PRTIMER & 0x08) == 0) {
+    };                             // allow time for clock to stabilize
+    TIMER3->CTL &= ~(0x00000100);  // disable Timer3B during setup
+    TIMER3->CFG = 0x00000004;      // configure for 16-bit timer mode
+                                   // configure for alternate (PWM) mode
     TIMER3->TBMR = (0x00000008 | 0x00000002);
-    TIMER3->TBILR = PWM_CYCLES;                  // defines when output signal is set
+    TIMER3->TBILR = PWM_CYCLES;  // defines when output signal is set
     //TIMER3->TBMATCHR register is not set, keeps pwm output at 0
     //
     // enable Timer1B 16-b, PWM, inverted to match comments
-    TIMER3->CTL |= (0x00004000 | 0x00000100);   // enable PWM
+    TIMER3->CTL |= (0x00004000 | 0x00000100);  // enable PWM
 
     //==============================================================================================
 
     // ***************** Wide Timer0A (PC4) initialization *****************
     SYSCTL->RCGCWTIMER |= 0x01;  // activate clock for Wide Timer0
 
-    while ((SYSCTL->PRWTIMER & 0x01) == 0) {};  // allow time for clock to stabilize
-    WTIMER0->CTL &= ~(0x0000001);               // disable Timer3B during setup
-    WTIMER0->CFG = 0x00000004;                  // configure for 32-bit timer mode
-                                                // configure for alternate (PWM) mode
+    while ((SYSCTL->PRWTIMER & 0x01) == 0) {
+    };                             // allow time for clock to stabilize
+    WTIMER0->CTL &= ~(0x0000001);  // disable Timer3B during setup
+    WTIMER0->CFG = 0x00000004;     // configure for 32-bit timer mode
+                                   // configure for alternate (PWM) mode
     WTIMER0->TAMR = (0x00000008 | 0x00000002);
-    WTIMER0->TAILR = PWM_CYCLES;                 // defines when output signal is set
-    //WTIMER0->TAMATCHR register is not set, keeps pwm output at 0 
+    WTIMER0->TAILR = PWM_CYCLES;  // defines when output signal is set
+    //WTIMER0->TAMATCHR register is not set, keeps pwm output at 0
     //
     // enable Wide Timer0A 32-b, PWM, inverted to match comments
-    WTIMER0->CTL |= (0x00000040 | 0x00000001);  
+    WTIMER0->CTL |= (0x00000040 | 0x00000001);
     //==============================================================================================
 
     // End of function ====================================================================//
@@ -1034,27 +1031,27 @@ void BSP_BP_RGB_ledsInit(void) {
 // set pwm for each led
 // assumes that led rgb init has been called
 // takes duty cycle as percentage.
-// ! check! duty == 0 pwm on for 20ns the lowest to disable use pwm disable. 
-void BSP_BP_LedRedDuty(uint8_t dutyCycle){
+// ! check! duty == 0 pwm on for 20ns the lowest to disable use pwm disable.
+void BSP_BP_LedRedDuty(uint8_t dutyCycle) {
     if (dutyCycle > 100) {
         /* duty cycle is out of range do nothing */
-        return; // todo: can assert here.
+        return;  // todo: can assert here.
     }
-    TIMER1->TBMATCHR = ((PWM_CYCLES*dutyCycle)/100)-1;
+    TIMER1->TBMATCHR = ((PWM_CYCLES * dutyCycle) / 100) - 1;
 }
-void BSP_BP_LedGreenDuty(uint8_t dutyCycle){
+void BSP_BP_LedGreenDuty(uint8_t dutyCycle) {
     if (dutyCycle > 100) {
         /* duty cycle is out of range do nothing */
-        return; // todo: can assert here.
+        return;  // todo: can assert here.
     }
-    TIMER3->TBMATCHR = ((PWM_CYCLES*dutyCycle)/100)-1;
+    TIMER3->TBMATCHR = ((PWM_CYCLES * dutyCycle) / 100) - 1;
 }
-void BSP_BP_LedBlueDuty(uint8_t dutyCycle){
+void BSP_BP_LedBlueDuty(uint8_t dutyCycle) {
     if (dutyCycle > 100) {
         /* duty cycle is out of range do nothing */
-        return; // todo: can assert here.
+        return;  // todo: can assert here.
     }
-    WTIMER0->TAMATCHR = ((PWM_CYCLES*dutyCycle)/100)-1;
+    WTIMER0->TAMATCHR = ((PWM_CYCLES * dutyCycle) / 100) - 1;
 }
 
 /**
@@ -1092,11 +1089,13 @@ void BSP_BP_LedBlueDuty(uint8_t dutyCycle){
 uint8_t BSP_BP_SPIwritecommand(uint8_t c) {
     // wait until SSI2 not busy/transmit FIFO empty
     // todo remove while loop, blocking
-    while ((SSI2->SR & 0x00000010) == 0x00000010) {};
+    while ((SSI2->SR & 0x00000010) == 0x00000010) {
+    };
     BSP_BP_TFT_CS_LOW();
     BSP_BP_TFT_DC_COMMAND();
     SSI2->DR = c;  // data out
-    while ((SSI2->SR & 0x00000004) == 0) {};  // wait until response
+    while ((SSI2->SR & 0x00000004) == 0) {
+    };  // wait until response
     BSP_BP_TFT_CS_HIGH();
     return (uint8_t)SSI2->DR;  // return the response
 }
@@ -1107,18 +1106,20 @@ uint8_t BSP_BP_SPIwritecommand(uint8_t c) {
 uint8_t BSP_BP_SPIwritedata(uint8_t c) {
     // wait until SSI2 not busy/transmit FIFO empty
     // todo remove while loop.
-    while ((SSI2->SR & 0x00000010) == 0x00000010) {};
+    while ((SSI2->SR & 0x00000010) == 0x00000010) {
+    };
     BSP_BP_TFT_CS_LOW();
     BSP_BP_TFT_DC_DATA();
     SSI2->DR = c;  // data out
-    while ((SSI2->SR & 0x00000004) == 0) {};  // wait until response
+    while ((SSI2->SR & 0x00000004) == 0) {
+    };  // wait until response
     BSP_BP_TFT_CS_HIGH();
     return (uint8_t)SSI2->DR;  // return the response
 }
 
 //! delay function required for initialisation of LCD display.
 //BUG: not sure if this will work with the arm none eabi gcc compiler!
-// try the TI compiler version  
+// try the TI compiler version
 
 // delay function from sysctl.c
 // which delays 3.3*ulCount cycles
@@ -1136,9 +1137,9 @@ void parrotdelay(uint32_t ulCount) {
 //Keil uVision Code
 __asm void
 parrotdelay(uint32_t ulCount) {
-    subs    r0, #1 
-    bne     parrotdelay
-    bx      lr
+    subs   r0, #1 
+    bne    parrotdelay
+    bx     lr
 }
 
 #endif
@@ -1220,7 +1221,7 @@ void BSP_BP_SPI_TFT_Init(void) {
 // END LCD display functions===================================================//
 //
 
-// ADC initialisation==========================================================//
+// ADC0 initialisation==========================================================//
 // There are six analog inputs on the Educational BoosterPack MKII:
 // microphone (J1.6/PE5/AIN8)
 // joystick X (J1.2/PB5/AIN11) and Y (J3.26/PD3/AIN4)
@@ -1229,14 +1230,27 @@ void BSP_BP_SPI_TFT_Init(void) {
 // initialization.  The joystick uses sample sequencer 1,
 // the accelerometer sample sequencer 2, and the microphone
 // uses sample sequencer 3.
-static void adcinit(void) {
+static void adcinit0(void) {
     SYSCTL->RCGCADC |= 0x00000001;  // 1) activate ADC0
     while ((SYSCTL->PRADC & 0x01) == 0) {
     };                     // 2) allow time for clock to stabilize
                            // 3-7) GPIO initialization in more specific functions
     ADC0->PC &= ~0xF;      // 8) clear max sample rate field
-    ADC0->PC |= 0x2;       //    configure for 125K samples/sec ** see data sheet 
+    ADC0->PC |= 0x2;       //    configure for 125K samples/sec ** see data sheet
     ADC0->SSPRI = 0x3210;  // 9) Sequencer 3 is lowest priority
+                           // 10-15) sample sequencer initialization in more specific functions
+}
+// ADC1 initialisation==========================================================//
+// analog input for microphone (J1.6/PE5/AIN8) on the Educational BoosterPack MKII:
+// microphone uses sample sequencer 3.
+static void l_adcinit1(void) {
+    SYSCTL->RCGCADC |= 0x00000002;  // 1) activate ADC1
+    while ((SYSCTL->PRADC & 0x02) == 0) {
+    };                     // 2) allow time for clock to stabilize
+                           // 3-7) GPIO initialization in more specific functions
+    ADC1->PC &= ~0xF;      // 8) clear max sample rate field
+    ADC1->PC |= 0x3;       //    configure for 250K samples/sec ** see data sheet
+    ADC1->SSPRI = 0x3210;  // 9) Sequencer 3 is lowest priority
                            // 10-15) sample sequencer initialization in more specific functions
 }
 
@@ -1263,7 +1277,7 @@ void BSP_BP_Joystick_Init(void) {
     BSP_BP_ADC_Y_PORT->DEN &= ~0x08;   // 7b) enable analog functionality on PD3
     BSP_BP_ADC_X_PORT->DEN &= ~0x20;   // 7c) enable analog functionality on PB5
 
-    adcinit();  // 8-9) general ADC initialization
+    adcinit0();  // 8-9) general ADC initialization
 
     ADC0->ACTSS &= ~0x0002;  // 10) disable sample sequencer 1
     ADC0->EMUX &= ~0x00F0;   // 11) seq1 is software trigger
@@ -1284,7 +1298,7 @@ void BSP_BP_Joystick_Init(void) {
 //        select is pointer to store Select status (0 if pressed)
 // Output: none
 // Assumes: BSP_Joystick_Init() has been called
-
+// TODO: clean up the blocking while loop.
 void BSP_Joystick_Input(uint16_t *x, uint16_t *y) {
     // ADC0->PSSI = 0x0002;  // 1) initiate SS1
     // while ((ADC0->RIS & 0x02) == 0) {
@@ -1298,7 +1312,7 @@ void BSP_Joystick_Input(uint16_t *x, uint16_t *y) {
         * TF = (1/2^n)/(z-((2^n - 1)/2^n)),
         * e.g., n=3, y(k+1) = y(k) - y(k)/8 + x(k)/8 => y += (x - y)/8
         */
-       
+
     *x = ADC0->SSFIFO1 >> 2;  // read first result
 
     *y = ADC0->SSFIFO1 >> 2;  // 3b) read second result
@@ -1317,23 +1331,23 @@ static void mcuTempSensorInit(void) {
     /* initialize ADC0 */
     ADC0->ACTSS &= ~8;         /* disable SS3 during configuration */
     ADC0->EMUX &= ~0xF000;     /* software trigger conversion seq 0 */
-    ADC0->SSMUX3 = 0;          /* get input from channel 0 */
+    ADC0->SSMUX3 = 0x0008;     /* get input from channel 0 */
     ADC0->SSCTL3 |= 0x0E;      /* take chip temperature, set flag at 1st sample */
     ADC0->IM |= 0x0008;        //  enable SS3 interrupts
     ADC0->ACTSS |= (1U << 3);  //  enable sample sequencer 3
 }
 // TODO place in the isr section above.
-void ADCSeq3_IRQHandler(void) {
+void ADC1Seq3_IRQHandler(void) {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    ADC0->ISC |= (1U << 3);  // clear interrupt flag
+    ADC1->ISC |= (1U << 3);  // clear interrupt flag
 
     TempEvt *reading = Q_NEW_FROM_ISR(TempEvt, NEW_TEMP_DATA_SIG);
-
     // read adc coversion result from SS3 FIFO and convert to °C using
     // Temp = 147.5 – ((75 × Vref(+) – Vref(–)) × ADC_output)) / 4096. tm4c vref == 3.3v
     //
-    reading->temp = 147 - ((247 * ADC0->SSFIFO3) / 4096);
+    // reading->temp = 147 - ((247 * ADC0->SSFIFO3) / 4096);
+    reading->temp = (ADC1->SSFIFO3 >> 2);
     QACTIVE_POST_FROM_ISR(AO_Heartbeat,
                           (QEvt *)reading,
                           &xHigherPriorityTaskWoken,
@@ -1350,28 +1364,28 @@ void BSP_SystemTempGet(void) {
 
 // ------------BSP_Accelerometer_Init------------
 // Initialize three ADC pins, which correspond with
-// BoosterPack pins J3.23 (X), J3.24 (Y), and
-// J3.25 (Y).
+// BoosterPack pins J3.23 (X) (PD0/AIN7), J3.24 (Y) (PD1/AIN6), and
+// J3.25 (Y) (PD2/AIN5).
 // Input: none
 // Output: none
 void BSP_Accelerometer_Init(void) {
-    adcinit();
+    adcinit0();
     SYSCTL->RCGCGPIO |= 0x00000008;  // 1) activate clock for Port D
     while ((SYSCTL->PRGPIO & 0x08) == 0) {
-    };                           // allow time for clock to stabilize
-                                 // 2) no need to unlock PD2-0
-    GPIOD->AMSEL |= 0x07;  // 3) enable analog on PD2-0
-                                 // 4) configure PD2-0 as ?? (skip this line because PCTL is for digital only)
-    GPIOD->DIR &= ~0x07;   // 5) make PD2-0 input
-    GPIOD->AFSEL |= 0x07;  // 6) enable alt funct on PD2-0
-    GPIOD->DEN &= ~0x07;   // 7) enable analog functionality on PD2-0
-    adcinit();                   // 8-9) general ADC initialization
-    ADC0->ACTSS &= ~0x0004;     // 10) disable sample sequencer 2
-    ADC0->EMUX &= ~0x0F00;      // 11) seq2 is software trigger
-    ADC0->SSMUX2 = 0x0567;      // 12) set channels for SS2
-    ADC0->SSCTL2 = 0x0600;      // 13) no D0 END0 IE0 TS0 D1 END1 IE1 TS1 D2 TS2, yes IE2 END2
-    ADC0->IM &= ~0x0004;        // 14) disable SS2 interrupts
-    ADC0->ACTSS |= 0x0004;      // 15) enable sample sequencer 2
+    };                       // allow time for clock to stabilize
+                             // 2) no need to unlock PD2-0
+    GPIOD->AMSEL |= 0x07;    // 3) enable analog on PD2-0
+                             // 4) configure PD2-0 as ?? (skip this line because PCTL is for digital only)
+    GPIOD->DIR &= ~0x07;     // 5) make PD2-0 input
+    GPIOD->AFSEL |= 0x07;    // 6) enable alt funct on PD2-0
+    GPIOD->DEN &= ~0x07;     // 7) enable analog functionality on PD2-0
+    adcinit0();              // 8-9) general ADC initialization
+    ADC0->ACTSS &= ~0x0004;  // 10) disable sample sequencer 2
+    ADC0->EMUX &= ~0x0F00;   // 11) seq2 is software trigger
+    ADC0->SSMUX2 = 0x0567;   // 12) set channels for SS2
+    ADC0->SSCTL2 = 0x0600;   // 13) no D0 END0 IE0 TS0 D1 END1 IE1 TS1 D2 TS2, yes IE2 END2
+    ADC0->IM &= ~0x0004;     // 14) disable SS2 interrupts
+    ADC0->ACTSS |= 0x0004;   // 15) enable sample sequencer 2
 }
 
 // ------------BSP_Accelerometer_Input------------
@@ -1384,10 +1398,12 @@ void BSP_Accelerometer_Init(void) {
 //        z is pointer to store Z-measurement (0 to 1023)
 // Output: none
 // Assumes: BSP_Accelerometer_Init() has been called
+// TODO: remove blocking while loop.
 void BSP_Accelerometer_Input(uint16_t *x, uint16_t *y, uint16_t *z) {
-    ADC0->PSSI = 0x0004;  // 1) initiate SS2
-    // TODO: add while loop timeout
-    while ((ADC0->RIS & 0x04) == 0) {};// 2) wait for conversion done
+    // ADC0->PSSI = 0x0004;  // 1) initiate SS2
+    // // TODO: add while loop timeout
+    // while ((ADC0->RIS & 0x04) == 0) {};// 2) wait for conversion done
+    //! SSFIFO2 >> 2 as result is a 10-bit value and fifo data is 12-bits
     *x = ADC0->SSFIFO2 >> 2;  // 3a) read first result
     *y = ADC0->SSFIFO2 >> 2;  // 3b) read second result
     *z = ADC0->SSFIFO2 >> 2;  // 3c) read third result
@@ -1410,23 +1426,25 @@ void BSP_AccelerometerGet(void) {
 // Input: none
 // Output: none
 void BSP_Microphone_Init(void) {
-    adcinit();
+    l_adcinit1();
     SYSCTL->RCGCGPIO |= 0x00000010;  // 1) activate clock for Port E
     while ((SYSCTL->PRGPIO & 0x10) == 0) {
-    };                           // allow time for clock to stabilize
-                                 // 2) no need to unlock PE5
-    GPIOE->AMSEL |= 0x20;  // 3) enable analog on PE5
-                                 // 4) configure PE5 as ?? (skip this line because PCTL is for digital only)
-    GPIOE->DIR &= ~0x20;   // 5) make PE5 input
-    GPIOE->AFSEL |= 0x20;  // 6) enable alt funct on PE5
-    GPIOE->DEN &= ~0x20;   // 7) enable analog functionality on PE5
-    adcinit();                   // 8-9) general ADC initialization
-    ADC0->ACTSS &= ~0x0008;     // 10) disable sample sequencer 3
-    ADC0->EMUX &= ~0xF000;      // 11) seq3 is software trigger
-    ADC0->SSMUX3 = 0x0008;      // 12) set channels for SS3
-    ADC0->SSCTL3 = 0x0006;      // 13) no D0 TS0, yes IE0 END0
-    ADC0->IM &= ~0x0008;        // 14) disable SS3 interrupts
-    ADC0->ACTSS |= 0x0008;      // 15) enable sample sequencer 3
+    };                       // allow time for clock to stabilize
+                             // 2) no need to unlock PE5
+    GPIOE->AMSEL |= 0x20;    // 3) enable analog on PE5
+                             // 4) configure PE5 as ?? (skip this line because PCTL is for digital only)
+    GPIOE->DIR &= ~0x20;     // 5) make PE5 input
+    GPIOE->AFSEL |= 0x20;    // 6) enable alt funct on PE5
+    GPIOE->DEN &= ~0x20;     // 7) enable analog functionality on PE5
+    l_adcinit1();            // 8-9) general ADC initialization
+    ADC1->ACTSS &= ~0x0008;  // 10) disable sample sequencer 3
+    ADC1->EMUX &= ~0xF000;   // 11) seq3 is software trigger
+    ADC1->SSMUX3 = 0x0008;   // 12) set channels for SS3
+    ADC1->SSCTL3 = 0x0006;   // 13) no D0 TS0, yes IE0 END0
+    ADC1->SAC |= 0x2;        // 14) 4x hardware oversampling
+    ADC1->PP |= 0x00300000;  // 14) Resolution 12-bit
+    ADC1->IM |= 0x0008;      // 15) enable SS3 interrupts
+    ADC1->ACTSS |= 0x0008;   // 16) enable sample sequencer 3
 }
 
 // ------------BSP_Microphone_Input------------
@@ -1441,15 +1459,14 @@ void BSP_Microphone_Input(uint16_t *mic) {
     // ADC0->PSSI = 0x0008;  // 1) initiate SS3
     // while ((ADC0->RIS & 0x08) == 0) {
     // };                           // 2) wait for conversion done
-    *mic = ADC0->SSFIFO3 >> 2;  // 3) read result
-    ADC0->ISC = 0x0008;         // 4) acknowledge completion
+    *mic = ADC1->SSFIFO3 >> 2;  // 3) read result
+    ADC1->ISC = 0x0008;         // 4) acknowledge completion
 }
 
 // trigger the ADC to sample the mic input.
-void BSP_Microphone_Get(void){
-    ADC0->PSSI = 0x0008;  // 1) initiate SS3
+void BSP_Microphone_Get(void) {
+    ADC1->PSSI = 0x0008;  // 1) initiate SS3
 }
-
 
 // I2C initialization==============================================
 
@@ -1460,21 +1477,20 @@ void BSP_Microphone_Get(void){
 // initialization.
 #define MAXRETRIES 5  // number of receive attempts before giving up
 void static i2cinit(void) {
-    SYSCTL->RCGCI2C |= 0x0002;   // 1a) activate clock for I2C1
-    SYSCTL->RCGCGPIO |= PORTA;   // 1b) activate clock for Port A
+    SYSCTL->RCGCI2C |= 0x0002;              // 1a) activate clock for I2C1
+    SYSCTL->RCGCGPIO |= PORTA;              // 1b) activate clock for Port A
     while ((SYSCTL->PRGPIO & 0x01) == 0) {  // TODO: add while loop timeout
     };                                      // allow time for clock to stabilize
                                             // 2) no need to unlock PA7-6
-    GPIOA->AMSEL &= ~0xC0;        // 3) disable analog functionality on PA7-6
-                                  // 4) configure PA7-6 as I2C1
+    GPIOA->AMSEL &= ~0xC0;                  // 3) disable analog functionality on PA7-6
+                                            // 4) configure PA7-6 as I2C1
     GPIOA->PCTL = (GPIOA->PCTL & 0x00FFFFFF) + 0x33000000;
-    GPIOA->ODR |= 0x80;           // 5) enable open drain on PA7 only
-    GPIOA->AFSEL |= 0xC0;         // 6) enable alt funct on PA7-6
-    GPIOA->DEN |= 0xC0;           // 7) enable digital I/O on PA7-6
-    I2C1->MCR = 0x00000010;       // 8) master function enable
-    I2C1->MTPR = 39;              // 9) configure for 100 kbps clock
-                                  // 20*(TPR+1)*12.5ns = 10us, with TPR=39
-
+    GPIOA->ODR |= 0x80;      // 5) enable open drain on PA7 only
+    GPIOA->AFSEL |= 0xC0;    // 6) enable alt funct on PA7-6
+    GPIOA->DEN |= 0xC0;      // 7) enable digital I/O on PA7-6
+    I2C1->MCR = 0x00000010;  // 8) master function enable
+    I2C1->MTPR = 39;         // 9) configure for 100 kbps clock
+                             // 20*(TPR+1)*12.5ns = 10us, with TPR=39
 }
 
 static void L_waitTillReady(void) {
@@ -1486,27 +1502,27 @@ static void L_waitTillReady(void) {
 // Used with 'A' commands
 // Note for TMP102 thermometer only:
 // Used to read the contents of the pointer register
-uint16_t BSP_I2C_Recv2(int8_t slave){
+uint16_t BSP_I2C_Recv2(int8_t slave) {
     uint8_t data1, data2;
     int retryCounter = 1;
     do {
-        L_waitTillReady();            // wait for I2C ready
+        L_waitTillReady();                // wait for I2C ready
         I2C1->MSA = (slave << 1) & 0xFE;  // MSA[7:1] is slave address
         I2C1->MSA |= 0x01;                // MSA[0] is 1 for receive
-       
-        I2C1->MCS = (I2C_MCS_ACK          // positive data ack
-                     //& ~I2C_MCS_STOP    // no stop
-                      | I2C_MCS_START      // generate start/restart
-                      | I2C_MCS_RUN);      // master enable
-        L_waitTillReady();           // wait for transmission done
-        data1 = (I2C1->MDR & 0xFF);  // MSB data sent first
 
-        I2C1->MCS = (I2C_MCS_STOP    // generate stop
-                    //& ~I2C_MCS_ACK     // negative data ack (last byte)
-                    //& ~I2C_MCS_START   // no start/restart
-                    | I2C_MCS_RUN);  // master enable
-        L_waitTillReady();               // wait for transmission done
-        data2 = (I2C1->MDR & 0xFF);      // LSB data sent last
+        I2C1->MCS = (I2C_MCS_ACK      // positive data ack
+                                      //& ~I2C_MCS_STOP    // no stop
+                     | I2C_MCS_START  // generate start/restart
+                     | I2C_MCS_RUN);  // master enable
+        L_waitTillReady();            // wait for transmission done
+        data1 = (I2C1->MDR & 0xFF);   // MSB data sent first
+
+        I2C1->MCS = (I2C_MCS_STOP  // generate stop
+                     //& ~I2C_MCS_ACK     // negative data ack (last byte)
+                     //& ~I2C_MCS_START   // no start/restart
+                     | I2C_MCS_RUN);      // master enable
+        L_waitTillReady();                // wait for transmission done
+        data2 = (I2C1->MDR & 0xFF);       // LSB data sent last
         retryCounter = retryCounter + 1;  // increment retry counter
     }                                     // repeat if error
     while (((I2C1->MCS & (I2C_MCS_ADRACK | I2C_MCS_ERROR)) != 0) && (retryCounter <= MAXRETRIES));
@@ -1522,22 +1538,20 @@ uint16_t BSP_I2C_Recv2(int8_t slave){
 // Returns 0 if successful, nonzero if error
 uint16_t BSP_I2C_Send1(int8_t slave, uint8_t data1) {
     while (I2C1->MCS & I2C_MCS_BUSY) {
-    };                                 // wait for I2C ready
+    };                                // wait for I2C ready
     I2C1->MSA = (slave << 1) & 0xFE;  // MSA[7:1] is slave address
     I2C1->MSA &= ~0x01;               // MSA[0] is 0 for send
     I2C1->MDR = data1 & 0xFF;         // prepare first byte
     I2C1->MCS = (0
-                  //                       & ~I2C_MCS_ACK     // no data ack (no data on send)
-                  | I2C_MCS_STOP   // generate stop
-                  | I2C_MCS_START  // generate start/restart
-                  | I2C_MCS_RUN);  // master enable
+                 //                       & ~I2C_MCS_ACK     // no data ack (no data on send)
+                 | I2C_MCS_STOP         // generate stop
+                 | I2C_MCS_START        // generate start/restart
+                 | I2C_MCS_RUN);        // master enable
     while (I2C1->MCS & I2C_MCS_BUSY) {  // TODO: add while loop timeout
     };                                  // wait for transmission done
         // return error bits
     return (I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR));
 }
-
-
 
 uint16_t BSP_I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2, uint8_t data3) {
     L_waitTillReady();
@@ -1545,11 +1559,11 @@ uint16_t BSP_I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2, uint8_t data3
     I2C1->MSA &= ~0x01;               // MSA[0] is 0 for send
     I2C1->MDR = data1 & 0xFF;         // prepare first byte
 
-    I2C1->MCS = (I2C_MCS_START       // generate start/restart
-                 | I2C_MCS_RUN);     // master enable
-                                     // & ~I2C_MCS_ACK    // no data ack (no data on send)
-                                     // & ~I2C_MCS_STOP   // no stop
-    L_waitTillReady();               // wait for transmission done
+    I2C1->MCS = (I2C_MCS_START    // generate start/restart
+                 | I2C_MCS_RUN);  // master enable
+                                  // & ~I2C_MCS_ACK    // no data ack (no data on send)
+                                  // & ~I2C_MCS_STOP   // no stop
+    L_waitTillReady();            // wait for transmission done
         // check error bits
     if ((I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR)) != 0) {
         // send stop if nonzero
@@ -1561,33 +1575,33 @@ uint16_t BSP_I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2, uint8_t data3
         // return error bits if nonzero
         return (I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR));
     }
-    I2C1->MDR = data2 & 0xFF;       // prepare second byte
+    I2C1->MDR = data2 & 0xFF;  // prepare second byte
 
-    I2C1->MCS = (I2C_MCS_RUN);     // master enable
+    I2C1->MCS = (I2C_MCS_RUN);  // master enable
 
-                                   //& ~I2C_MCS_ACK     // no data ack (no data on send)
-                                   //& ~I2C_MCS_STOP    // no stop
-                                   //& ~I2C_MCS_START   // no start/restart
-    L_waitTillReady();             // wait for transmission done
+    //& ~I2C_MCS_ACK     // no data ack (no data on send)
+    //& ~I2C_MCS_STOP    // no stop
+    //& ~I2C_MCS_START   // no start/restart
+    L_waitTillReady();  // wait for transmission done
         // check error bits
     if ((I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR)) != 0) {
         // send stop if nonzero
         I2C1->MCS = (0 | I2C_MCS_STOP);  // stop
 
-                                   // & ~I2C_MCS_ACK    // no data ack (no data on send)
-                                   // & ~I2C_MCS_START  // no start/restart
-                                   // & ~I2C_MCS_RUN   // master disable
+        // & ~I2C_MCS_ACK    // no data ack (no data on send)
+        // & ~I2C_MCS_START  // no start/restart
+        // & ~I2C_MCS_RUN   // master disable
 
         // return error bits if nonzero
         return (I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR));
     }
-    I2C1->MDR = data3 & 0xFF;      // prepare third byte
+    I2C1->MDR = data3 & 0xFF;  // prepare third byte
 
     I2C1->MCS = (I2C_MCS_STOP     // generate stop
                  | I2C_MCS_RUN);  // master enable
                                   // & ~I2C_MCS_ACK     // no data ack (no data on send)
                                   //& ~I2C_MCS_START   // no start/restart
-    L_waitTillReady();  // wait for transmission done
+    L_waitTillReady();            // wait for transmission done
         // return error bits
     return (I2C1->MCS & (I2C_MCS_DATACK | I2C_MCS_ADRACK | I2C_MCS_ERROR));
 }
@@ -1600,14 +1614,14 @@ uint16_t BSP_I2C_Send3(int8_t slave, uint8_t data1, uint8_t data2, uint8_t data3
 // Input: none
 // Output: none
 // TODO: make interrupt pin/ configure ISR and NVIC
-// TODO: use #defined IO definetions (port.h). 
-void BSP_LightSensor_Init(void) { // bsp light sensor IO inti
+// TODO: use #defined IO definetions (port.h).
+void BSP_LightSensor_Init(void) {  // bsp light sensor IO inti
     i2cinit();
     // 1) activate clock for Port A (done in i2cinit())
     // allow time for clock to stabilize (done in i2cinit())
     // 2) no need to unlock PA5
     GPIOA->AMSEL &= ~0x20;  // 3) disable analog on PA5
-                                  // 4) configure PA5 as GPIO
+                            // 4) configure PA5 as GPIO
     GPIOA->PCTL = (GPIOA->PCTL & 0xFF0FFFFF) + 0x00000000;
     GPIOA->DIR &= ~0x20;    // 5) make PA5 input
     GPIOA->AFSEL &= ~0x20;  // 6) disable alt funct on PA5
@@ -1616,7 +1630,457 @@ void BSP_LightSensor_Init(void) { // bsp light sensor IO inti
 
 // light sensor data DATA_READY
 int BSP_LightSensor_INTstatus(void) {
-  
-    return (BSP_BP_OPT3001_IRQ_PORT->DATA_Bits[BSP_BP_OPT3001_IRQ_PIN] 
-            == BSP_BP_OPT3001_IRQ_PIN) ? 1U : 0U;
+    return (BSP_BP_OPT3001_IRQ_PORT->DATA_Bits[BSP_BP_OPT3001_IRQ_PIN] == BSP_BP_OPT3001_IRQ_PIN) ? 1U : 0U;
 }
+
+// UART1 Initialisation ======================================================================
+//
+
+#define FIFOSIZE 256   // size of the FIFOs (must be power of 2)
+#define FIFOSUCCESS 1  // return value on success
+#define FIFOFAIL 0     // return value on failure
+uint32_t RxPutI;       // should be 0 to SIZE-1
+uint32_t RxGetI;       // should be 0 to SIZE-1
+uint32_t RxFifoLost;   // should be 0
+uint8_t RxFIFO[FIFOSIZE];
+void RxFifo_Init(void) {
+    RxPutI = RxGetI = 0;  // empty
+    RxFifoLost = 0;       // occurs on overflow
+}
+int RxFifo_Put(uint8_t data) {
+    if (((RxPutI + 1) & (FIFOSIZE - 1)) == RxGetI) {
+        RxFifoLost++;
+        return FIFOFAIL;  // fail if full
+    }
+    RxFIFO[RxPutI] = data;                   // save in FIFO
+    RxPutI = (RxPutI + 1) & (FIFOSIZE - 1);  // next place to put
+    return FIFOSUCCESS;
+}
+int RxFifo_Get(uint8_t *datapt) {
+    if (RxPutI == RxGetI) return 0;          // fail if empty
+    *datapt = RxFIFO[RxGetI];                // retrieve data
+    RxGetI = (RxGetI + 1) & (FIFOSIZE - 1);  // next place to get
+    return FIFOSUCCESS;
+}
+
+//------------UART1_InStatus------------
+// Returns how much data available for reading
+// Input: none
+// Output: number of elements in receive FIFO
+uint32_t UART1_InStatus(void) {
+    return ((RxPutI - RxGetI) & (FIFOSIZE - 1));
+}
+
+#define UART_FR_TXFE 0x00000080      // UART Transmit FIFO Empty
+#define UART_FR_RXFF 0x00000040      // UART Receive FIFO Full
+#define UART_FR_TXFF 0x00000020      // UART Transmit FIFO Full
+#define UART_FR_RXFE 0x00000010      // UART Receive FIFO Empty
+#define UART_FR_BUSY 0x00000008      // UART Transmit Busy
+#define UART_LCRH_WLEN_8 0x00000060  // 8 bit word length
+#define UART_LCRH_FEN 0x00000010     // UART Enable FIFOs
+#define UART_CTL_UARTEN 0x00000001   // UART Enable
+#define UART_IFLS_RX1_8 0x00000000   // RX FIFO >= 1/8 full
+#define UART_IFLS_TX1_8 0x00000000   // TX FIFO <= 1/8 full
+#define UART_IM_RTIM 0x00000040      // UART Receive Time-Out Interrupt \
+                                                    // Mask
+#define UART_IM_TXIM 0x00000020      // UART Transmit Interrupt Mask
+#define UART_IM_RXIM 0x00000010      // UART Receive Interrupt Mask
+#define UART_RIS_RTRIS 0x00000040    // UART Receive Time-Out Raw \
+                                                    // Interrupt Status
+#define UART_RIS_TXRIS 0x00000020    // UART Transmit Raw Interrupt \
+                                                    // Status
+#define UART_RIS_RXRIS 0x00000010    // UART Receive Raw Interrupt \
+                                                    // Status
+#define UART_ICR_RTIC 0x00000040     // Receive Time-Out Interrupt Clear
+#define UART_ICR_TXIC 0x00000020     // Transmit Interrupt Clear
+#define UART_ICR_RXIC 0x00000010     // Receive Interrupt Clear
+
+//------------UART1_Init------------
+// Initialize the UART1 for 115,200 baud rate (assuming 50 MHz clock),
+// 8 bit word length, no parity bits, one stop bit, FIFOs enabled
+// Input: none
+// Output: none
+void UART1_Init(void) {
+    SYSCTL->RCGCUART |= 0x02;        // activate UART1
+    SYSCTL->RCGCGPIO |= 0x02;        // activate port B
+    RxFifo_Init();                   // initialize empty FIFO
+    UART1->CTL &= ~UART_CTL_UARTEN;  // disable UART
+    UART1->IBRD = 325;               // IBRD = int(50,000,000 / (16 * 115200)) = int(27.126736) (interger part)
+    UART1->FBRD = 33;                // FBRD = round(0.126736 * 64) = 26 (fractional part)
+                                     // 8 bit word length (no parity bits, one stop bit, FIFOs)
+    UART1->LCRH = (UART_LCRH_WLEN_8 | UART_LCRH_FEN);
+    UART1->IFLS &= ~0x3F;  // clear TX and RX interrupt FIFO level fields
+                           // configure interrupt for TX FIFO <= 1/8 full
+                           // configure interrupt for RX FIFO >= 1/8 full
+    UART1->IFLS += (UART_IFLS_TX1_8 | UART_IFLS_RX1_8);
+    // enable RX FIFO interrupts and RX time-out interrupt
+    UART1->IM |= (UART_IM_RXIM | UART_IM_RTIM);
+    UART1->CTL |= 0x301;   // enable UART
+    GPIOB->AFSEL |= 0x03;  // enable alt funct on PB1-0
+    GPIOB->DEN |= 0x03;    // enable digital I/O on PB1-0
+                           // configure PB1-0 as UART
+    GPIOB->PCTL = (GPIOB->PCTL & 0xFFFFFF00) + 0x00000011;
+    GPIOB->AMSEL &= ~0x03;  // disable analog functionality on PB
+}
+// copy from hardware RX FIFO to software RX FIFO
+// stop when hardware RX FIFO is empty or software RX FIFO is full
+void static copyHardwareToSoftware(void) {
+    uint8_t letter;
+    while (((UART1->FR & UART_FR_RXFE) == 0) && (UART1_InStatus() < (FIFOSIZE - 1))) {
+        letter = UART1->DR;
+        RxFifo_Put(letter);
+    }
+}
+
+// input ASCII character from UART
+// spin if RxFifo is empty
+uint8_t UART1_InChar(void) {
+    uint8_t letter;
+    while (RxFifo_Get(&letter) == FIFOFAIL) {
+    };
+    return (letter);
+}
+//------------UART1_OutChar------------
+// Output 8-bit to serial port
+// Input: letter is an 8-bit ASCII character to be transferred
+// Output: none
+void UART1_OutChar(uint8_t data) {
+    while ((UART1->FR & UART_FR_TXFF) != 0)
+        ;
+    UART1->DR = data;
+}
+// at least one of two things has happened:
+// hardware RX FIFO goes from 1 to 2 or more items
+// UART receiver has timed out
+// void UART1_Handler(void) {
+//     if (UART1->RIS & UART_RIS_RXRIS) {  // hardware RX FIFO >= 2 items
+//         UART1->ICR = UART_ICR_RXIC;     // acknowledge RX FIFO
+//         // copy from hardware RX FIFO to software RX FIFO
+//         copyHardwareToSoftware();
+//     }
+//     if (UART1->RIS & UART_RIS_RTRIS) {  // receiver timed out
+//         UART1->ICR = UART_ICR_RTIC;     // acknowledge receiver time out
+//         // copy from hardware RX FIFO to software RX FIFO
+//         copyHardwareToSoftware();
+//     }
+// }
+
+//------------UART1_OutString------------
+// Output String (NULL termination)
+// Input: pointer to a NULL-terminated string to be transferred
+// Output: none
+void UART1_OutString(uint8_t *pt) {
+    while (*pt) {
+        UART1_OutChar(*pt);
+        pt++;
+    }
+}
+
+//-----------------------UART1_OutUDec-----------------------
+// Output a 32-bit number in unsigned decimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// Variable format 1-10 digits with no space before or after
+void UART1_OutUDec(uint32_t n) {
+    // This function uses recursion to convert decimal number
+    //   of unspecified length as an ASCII string
+    if (n >= 10) {
+        UART1_OutUDec(n / 10);
+        n = n % 10;
+    }
+    UART1_OutChar(n + '0'); /* n is between 0 and 9 */
+}
+
+//------------UART1_FinishOutput------------
+// Wait for all transmission to finish
+// Input: none
+// Output: none
+void UART1_FinishOutput(void) {
+    // Wait for entire tx message to be sent
+    // UART Transmit FIFO Empty =1, when Tx done
+    while ((UART1->FR & UART_FR_TXFE) == 0)
+        ;
+    // wait until not busy
+    while ((UART1->FR & UART_FR_BUSY))
+        ;
+}
+
+//! Uart0 for testing --------------------------------
+
+//------------UART0_Init------------
+// Initialize the UART for 115,200 baud rate (assuming 80 MHz UART clock),
+// 8 bit word length, no parity bits, one stop bit, FIFOs enabled
+// Input: none
+// Output: none
+void UART0_Init(void) {
+    SYSCTL->RCGCUART |= 0x01;  // activate UART0
+    SYSCTL->RCGCGPIO |= 0x01;  // activate port A
+    while ((SYSCTL->PRGPIO & 0x01) == 0) {
+    };
+    UART0->CTL &= ~UART_CTL_UARTEN;  // disable UART
+    UART0->IBRD = 325;               // IBRD = int(80,000,000 / (16 * 115200)) = int(43.402778)
+    UART0->FBRD = 33;                // FBRD = round(0.402778 * 64) = 26
+                                     // 8 bit word length (no parity bits, one stop bit, FIFOs)
+    UART0->LCRH = (UART_LCRH_WLEN_8 | UART_LCRH_FEN);
+
+    UART0->IFLS &= ~0x3F;  // clear TX and RX interrupt FIFO level fields
+                           // configure interrupt for TX FIFO <= 1/8 full
+                           // configure interrupt for RX FIFO >= 1/8 full
+    UART0->IFLS += (UART_IFLS_TX1_8 | UART_IFLS_RX1_8);
+    // enable RX FIFO interrupts and RX time-out interrupt
+    UART0->IM |= (UART_IM_RXIM | UART_IM_RTIM);
+    UART0->CTL |= 0x301;   // enable UART
+    GPIOA->AFSEL |= 0x03;  // enable alt funct on PA1-0
+    GPIOA->DEN |= 0x03;    // enable digital I/O on PA1-0
+                           // configure PA1-0 as UART
+    GPIOA->PCTL = (GPIOA->PCTL & 0xFFFFFF00) + 0x00000011;
+    GPIOA->AMSEL &= ~0x03;  // disable analog functionality on PA
+}
+
+//------------UART0_InChar------------
+// Wait for new serial port input
+// Input: none
+// Output: ASCII code for key typed
+char UART0_InChar(void) {
+    while ((UART0->FR & UART_FR_RXFE) != 0)
+        ;
+    // mask as it is a 32bit reg only need lower 8bits
+    return ((char)(UART0->DR & 0xFF));  // type cast to char.
+}
+//------------UART0_OutChar------------
+// Output 8-bit to serial port
+// Input: letter is an 8-bit ASCII character to be transferred
+// Output: none
+void UART0_OutChar(char data) {
+    while ((UART0->FR & UART_FR_TXFF) != 0)
+        ;
+    UART0->DR = data;
+}
+
+//------------UART0_OutString------------
+// Output String (NULL termination)
+// Input: pointer to a NULL-terminated string to be transferred
+// Output: none
+void UART0_OutString(char *pt) {
+    while (*pt) {
+        UART0_OutChar(*pt);
+        pt++;
+    }
+}
+
+//------------UART0_InUDec------------
+// InUDec accepts ASCII input in unsigned decimal format
+//     and converts to a 32-bit unsigned number
+//     valid range is 0 to 4294967295 (2^32-1)
+// Input: none
+// Output: 32-bit unsigned number
+// If you enter a number above 4294967295, it will return an incorrect value
+// Backspace will remove last digit typed
+uint32_t UART0_InUDec(void) {
+    uint32_t number = 0, length = 0;
+    char character;
+    character = UART0_InChar();
+    while (character != CR_U) {  // accepts until <enter> is typed
+                                 // The next line checks that the input is a digit, 0-9.
+                                 // If the character is not 0-9, it is ignored and not echoed
+        if ((character >= '0') && (character <= '9')) {
+            number = 10 * number + (character - '0');  // this line overflows if above 4294967295
+            length++;
+            UART0_OutChar(character);
+        }
+        // If the input is a backspace, then the return number is
+        // changed and a backspace is outputted to the screen
+        else if ((character == BS) && length) {
+            number /= 10;
+            length--;
+            UART0_OutChar(character);
+        }
+        character = UART0_InChar();
+    }
+    return number;
+}
+
+//-----------------------UART0_OutUDec-----------------------
+// Output a 32-bit number in unsigned decimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// Variable format 1-10 digits with no space before or after
+void UART0_OutUDec(uint32_t n) {
+    // This function uses recursion to convert decimal number
+    //   of unspecified length as an ASCII string
+    if (n >= 10) {
+        UART0_OutUDec(n / 10);
+        n = n % 10;
+    }
+    UART0_OutChar(n + '0'); /* n is between 0 and 9 */
+}
+
+//---------------------UART0_InUHex----------------------------------------
+// Accepts ASCII input in unsigned hexadecimal (base 16) format
+// Input: none
+// Output: 32-bit unsigned number
+// No '$' or '0x' need be entered, just the 1 to 8 hex digits
+// It will convert lower case a-f to uppercase A-F
+//     and converts to a 16 bit unsigned number
+//     value range is 0 to FFFFFFFF
+// If you enter a number above FFFFFFFF, it will return an incorrect value
+// Backspace will remove last digit typed
+uint32_t UART0_InUHex(void) {
+    uint32_t number = 0;
+    uint32_t digit = 0;
+    uint32_t length = 0;
+
+    char character;
+    character = UART0_InChar();
+    while (character != CR_U) {
+        digit = 0x10;  // assume bad
+        if ((character >= '0') && (character <= '9')) {
+            digit = character - '0';
+        } else if ((character >= 'A') && (character <= 'F')) {
+            digit = (character - 'A') + 0xA;
+        } else if ((character >= 'a') && (character <= 'f')) {
+            digit = (character - 'a') + 0xA;
+        }
+        // If the character is not 0-9 or A-F, it is ignored and not echoed
+        if (digit <= 0xF) {
+            number = number * 0x10 + digit;
+            length++;
+            UART0_OutChar(character);
+        }
+        // Backspace outputted and return value changed if a backspace is inputted
+        else if ((character == BS) && length) {
+            number /= 0x10;
+            length--;
+            UART0_OutChar(character);
+        }
+        character = UART0_InChar();
+    }
+    return number;
+}
+
+//--------------------------UART0_OutUHex----------------------------
+// Output a 32-bit number in unsigned hexadecimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// Variable format 1 to 8 digits with no space before or after
+void UART0_OutUHex(uint32_t number) {
+    // This function uses recursion to convert the number of
+    //   unspecified length as an ASCII string
+    if (number >= 0x10) {
+        UART0_OutUHex(number / 0x10);
+        UART0_OutUHex(number % 0x10);
+    } else {
+        if (number < 0xA) {
+            UART0_OutChar(number + '0');
+        } else {
+            UART0_OutChar((number - 0x0A) + 'A');
+        }
+    }
+}
+//--------------------------UART0_OutUHex2----------------------------
+// Output a 32-bit number in unsigned hexadecimal format
+// Input: 32-bit number to be transferred
+// Output: none
+// Fixed format 2 digits with no space before or after
+void outnibble(uint32_t n) {
+    if (n < 0xA) {
+        UART0_OutChar(n + '0');
+    } else {
+        UART0_OutChar((n - 0x0A) + 'A');
+    }
+}
+void UART0_OutUHex2(uint32_t number) {
+    outnibble(number / 0x10);  // ms digit
+    outnibble(number % 0x10);  // ls digit
+}
+//------------UART0_InString------------
+// Accepts ASCII characters from the serial port
+//    and adds them to a string until <enter> is typed
+//    or until max length of the string is reached.
+// It echoes each character as it is inputted.
+// If a backspace is inputted, the string is modified
+//    and the backspace is echoed
+// terminates the string with a null character
+// uses busy-waiting synchronization on RDRF
+// Input: pointer to empty buffer, size of buffer
+// Output: Null terminated string
+// -- Modified by Agustinus Darmawan + Mingjie Qiu --
+void UART0_InString(char *bufPt, uint16_t max) {
+    int length = 0;
+    char character;
+    character = UART0_InChar();
+    while (character != CR_U) {
+        if (character == BS) {
+            if (length) {
+                bufPt--;
+                length--;
+                UART0_OutChar(BS);
+            }
+        } else if (length < max) {
+            *bufPt = character;
+            bufPt++;
+            length++;
+            UART0_OutChar(character);
+        }
+        character = UART0_InChar();
+    }
+    *bufPt = 0;
+}
+
+typedef struct {
+    char messBuff[20];  // TODO: make sure the correct buffer size is used, char timeout
+    uint8_t idx;
+    char data;
+    enum UARTstate { WAITING_FOR_START = 1,
+                     GOT_START } state;
+} URT_t;
+URT_t uart1;
+
+void UART1_IRQHandler(void);  // prototype
+// at least one of two things has happened:
+// hardware RX FIFO goes from 1 to 2 or more items
+// UART receiver has timed out
+// TODO: needs refectoring 
+void UART1_IRQHandler(void) {
+    URT_t *uartPtr = &uart1;
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    uint32_t status = UART1->RIS;               /* get the raw interrupt status */
+    UART1->ICR = status;                        /* clear the asserted interrupts */
+    while (((UART1->FR & UART_FR_RXFE) == 0)) { /* while RX FIFO NOT empty */
+        uartPtr->data = UART1_CHAR;
+        UART0_OutChar(uartPtr->data);
+        // look for start token;
+        if (uartPtr->data == BLE_FRAME_START_TOKEN) {
+            uartPtr->state = GOT_START;
+        }
+        // save the data
+        if (uartPtr->state == GOT_START) {
+            uartPtr->messBuff[uartPtr->idx] = uartPtr->data;
+            uartPtr->idx++;
+        }
+    }
+    // check for end
+    if (uartPtr->data == BLE_FRAME_STOP_TOKEN) {
+        UartEvt *character = Q_NEW_FROM_ISR(UartEvt, NEW_UART_DATA_SIG);
+        // copy buffer into event buffer and add '\0' at the end.
+        for (int i = 0; i < uartPtr->idx; i++) {
+            character->rxString[i] = uartPtr->messBuff[i];
+        }
+        character->rxString[uartPtr->idx - 1] = '\0';
+        // reset buffer memory
+        memset(uartPtr->messBuff, '\0', uartPtr->idx);
+        uartPtr->idx = 0;
+        uartPtr->state = WAITING_FOR_START;
+        // post Evt.
+        QACTIVE_POST_FROM_ISR(AO_BLE_uart,
+                              (QEvt *)character,
+                              &xHigherPriorityTaskWoken,
+                              &UART0_IRQHandler);
+    }
+
+    /* let FreeRTOS determine if context switch is needed...  */
+    portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+}
+
+
+

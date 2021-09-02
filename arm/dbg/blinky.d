@@ -23,4 +23,5 @@
 .\dbg\blinky.o: ..\..\qpc\include\qs_dummy.h
 .\dbg\blinky.o: ..\dpp.h
 .\dbg\blinky.o: ..\bsp.h
+.\dbg\blinky.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\dbg\blinky.o: ..\arm\bsp_bp.h
