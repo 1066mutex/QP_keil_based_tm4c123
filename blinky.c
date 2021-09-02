@@ -27,11 +27,22 @@ typedef struct
 QTimeEvt timeEvt;
 uint16_t heartbeat_time;
 uint16_t buzzer_freq;
-uint16_t ADC_0;
-uint16_t ADC_2;
+uint16_t joystickAxis0;
+uint16_t joystickAxis1;
+uint16_t accelaAxisX;
+uint16_t accelaAxisY;
+uint16_t accelaAxisZ;
 uint16_t sound;
 uint8_t tempAvg[2];
 uint8_t tempAvgInx;
+uint16_t urtCharToInt;
+uint16_t ledPwm;
+uint16_t urtIdx;
+char urtFrame[20];
+enum { WAITING = 1,
+     GOT_START
+      }urtFrameState;
+    
 }Heartbeat;
 
 /* protected: */
@@ -75,13 +86,21 @@ static QState Heartbeat_initial(Heartbeat* const me, QEvt const* const e){
     QActive_subscribe(&me->super, BUTTON4_DEPRESSED_SIG);
     QActive_subscribe(&me->super, BUTTON4_PRESSED_SIG);
     QActive_subscribe(&me->super, JOYSTICK_PRESSED_SIG);
+    QActive_subscribe(&me->super, BUTTON3_PRESSED_SIG);
 
     BSP_ledRedOff();
     BSP_LCD_Init(); // TODO: move to bsp_init()
     BSP_BP_Joystick_Init();  // TODO: move to bsp_init()
+    // TODO: make display objects with parameters for strings, location, colour etc.
+    //       don't have to use magic numbers.
     BSP_LCD_DrawString(0, 4, "SysTemp:", LCD_YELLOW);
+    BSP_LCD_DrawString(0, 5, "Acc x:", LCD_ORANGE);
+    BSP_LCD_DrawString(0, 6, "Acc y:", LCD_ORANGE);
+    BSP_LCD_DrawString(0, 7, "Acc z:", LCD_ORANGE);
     BSP_LCD_DrawString(0, 8, "light:", LCD_YELLOW);
     me->buzzer_freq = 10;
+    me->urtIdx = 0 ;
+    me->urtFrameState = WAITING;    // uart frame state machine start state.
     return Q_TRAN(&Heartbeat_off);  //*go to off (1)
 }
 static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
@@ -96,7 +115,8 @@ static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
             QTimeEvt_armX(&me->timeEvt, BSP_TICKS_PER_SEC / 2U, BSP_TICKS_PER_SEC / 16U);
             //! the timer will expire once for the first value, then use the second value
             //! continuously
-            status_ = Q_HANDLED(); //*do entry actions (3).
+           //BSP_Microphone_Get();
+            status_ = Q_HANDLED();  //*do entry actions (3).
             break;
         }
         
@@ -111,6 +131,24 @@ static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
         case NEW_LIGHT_DATA_SIG: {
             BSP_LCD_SetCursor(8, 8);
             BSP_LCD_OutUDec5(Q_EVT_CAST(OPT3001Evt)->lightData, LCD_CYAN);
+            //! output to ble
+           // UART1_OutUDec(Q_EVT_CAST(OPT3001Evt)->lightData);
+            //UART1_OutString("\r\n");
+            status_ = Q_HANDLED();
+            break;
+        }
+        case BUTTON3_PRESSED_SIG: {
+            UART1_OutString(me->urtFrame);
+
+            me->urtIdx = 0;
+            BSP_LCD_DrawString(9, 10, me->urtFrame, LCD_CYAN);
+            memset(me->urtFrame,1,strlen(me->urtFrame));
+            status_ = Q_HANDLED();
+            break;
+        }
+        case SHOW_UART_DATA_SIG: {
+         
+         
             status_ = Q_HANDLED();
             break;
         }
@@ -122,6 +160,26 @@ static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
         case JOYSTICK_PRESSED_SIG: {
             BSP_BP_Buzzer_Freq(0.00033);
             status_ = Q_TRAN(&Heartbeat_stop);
+            break;
+        }
+        case NEW_TEMP_DATA_SIG: {
+            // average
+            // if (me->tempAvgInx < 2){
+            //     me->tempAvg[me->tempAvgInx] = Q_EVT_CAST(TempEvt)->temp;
+            //     me->tempAvgInx++;
+            // }else{
+
+            // BSP_LCD_SetCursor(9, 4);
+            // BSP_LCD_OutUDec((me->tempAvg[0] + me->tempAvg[1])/2, LCD_YELLOW);
+            // me->tempAvgInx = 0;
+
+            // }
+            //BSP_Microphone_Input(&me->sound);
+            BSP_LCD_SetCursor(3, 3);
+            BSP_LCD_OutUDec4(Q_EVT_CAST(TempEvt)->temp, LCD_GREEN);  // mic data
+
+            status_ = Q_HANDLED();
+
             break;
         }
         default: {
@@ -139,8 +197,11 @@ static QState Heartbeat_on(Heartbeat* const me, QEvt const* const e){
             //BSP_BP_LedBlueOn();
             BSP_BP_LedBlueDuty(20);
             //BSP_BP_Buzzer_Set(me->buzzer_freq);
+            //BSP_Microphone_Get(); //! (1)trigger microphone ADC convertion
             BSP_Joystick_Trigger();
-            BSP_Microphone_Get();
+            BSP_AccelerometerGet();
+            //! print to uart device
+            
             status_ = Q_HANDLED();
             break;
         }
@@ -155,18 +216,24 @@ static QState Heartbeat_on(Heartbeat* const me, QEvt const* const e){
             }
             //BSP_BP_LedBlueOff();
             //BSP_BP_Buzzer_Set(0);
-            
+            BSP_Microphone_Get();  //! (2)trigger microphone ADC convertion
             BSP_BP_LedBlueDuty(5);
-            BSP_Joystick_Input(&me->ADC_0, &me->ADC_2);
-            BSP_Microphone_Input(&me->sound);
-            BSP_LCD_FillRect(2, 100, 120, 12, LCD_BLUE);
+            BSP_Joystick_Input(&me->joystickAxis0, &me->joystickAxis1);
+           // BSP_LCD_FillRect(2, 100, 120, 12, LCD_BLUE);
             BSP_LCD_SetCursor(3, 1);
-            BSP_LCD_OutUDec4(me->ADC_0, LCD_RED);
+            BSP_LCD_OutUDec4(me->joystickAxis0, LCD_RED);
             BSP_LCD_SetCursor(3, 2);
-            BSP_LCD_OutUDec4(me->ADC_2, LCD_BLUE);
-            BSP_LCD_SetCursor(3, 3);
-            BSP_LCD_OutUDec4(me->sound, LCD_GREEN); // mic data
-            BSP_SystemTempGet(); // trigger temp Reading.
+            BSP_LCD_OutUDec4(me->joystickAxis1, LCD_BLUE);
+
+            BSP_Accelerometer_Input(&me->accelaAxisX, &me->accelaAxisY, &me->accelaAxisZ);
+            BSP_LCD_SetCursor(6, 5);
+            BSP_LCD_OutUDec4(me->accelaAxisX, LCD_RED);
+            BSP_LCD_SetCursor(6, 6);
+            BSP_LCD_OutUDec4(me->accelaAxisY, LCD_BLUE);
+            BSP_LCD_SetCursor(6, 7);
+            BSP_LCD_OutUDec4(me->accelaAxisZ, LCD_BLUE);
+           // BSP_SystemTempGet(); // trigger temp Reading.
+            //BSP_Microphone_Get();  //! this is blocking, waits for the conversion to complete.
             status_ = Q_HANDLED();
             break;
         }
@@ -187,27 +254,11 @@ static QState Heartbeat_off(Heartbeat* const me, QEvt const* const e){
 
     switch (e->sig) { //*wait for event signal (5).
         case TIMEOUT1_SIG: {
+            
             status_ = Q_TRAN(&Heartbeat_on);
             break;
         }
-        case NEW_TEMP_DATA_SIG: {
-           // average 
-            if (me->tempAvgInx < 2){
-                me->tempAvg[me->tempAvgInx] = Q_EVT_CAST(TempEvt)->temp;
-                me->tempAvgInx++;
-            }else{
-
-            BSP_LCD_SetCursor(9, 4);
-            BSP_LCD_OutUDec((me->tempAvg[0] + me->tempAvg[1])/2, LCD_YELLOW);
-            me->tempAvgInx = 0;
-
-            }
-            
-            
-            status_ = Q_HANDLED();
-            
-            break;
-        }
+        
         default: { //* go off's super state on start (2)
             status_ = Q_SUPER(&Heartbeat_start);  // BUG: had this as (&QHsm_top)
             break;
@@ -224,7 +275,7 @@ static QState Heartbeat_stop(Heartbeat* const me, QEvt const* const e){
         case JOYSTICK_DEPRESSED_SIG: {
             BSP_BP_Buzzer_Freq(0.00);
             //BSP_LCD_DrawString(0, 5, "Hello www", LCD_YELLOW);
-            BSP_Microphone_Get();  //! this is blocking, waits for the conversion to complete.
+            
             status_ = Q_TRAN(&Heartbeat_start);
             break;
         }
@@ -238,3 +289,6 @@ static QState Heartbeat_stop(Heartbeat* const me, QEvt const* const e){
 }
 
 // TODO: handle the NEW_LIGHT_DATA_SIG signal with the
+
+
+
