@@ -48,6 +48,8 @@ enum DPPSignals {
     MAX_SIG              /* the last signal */
 };
 
+enum { UART1_FIFO_LEN = 8 }; // only using 8bits of the uart register see@ UART Int.
+
 /*$declare${Events::TableEvt} ##############################################*/
 /*${Events::TableEvt} ......................................................*/
 typedef struct {
@@ -79,15 +81,16 @@ typedef struct{
 } TempEvt;
 /* Events UartEvt========================================================= */
 
-typedef struct{
-/* protected: */
+typedef struct {
+    /* protected: */
     QEvt super;
 
 /* public: */
     uint16_t temp;
     uint16_t temp2;
     uint16_t urtCharToInt;
-    char rxString[30]; // holds received string
+    uint8_t len;                 // length of string.
+    char chars[UART1_FIFO_LEN];  // holds received string
 } UartEvt;
 
 /* number of philosophers */

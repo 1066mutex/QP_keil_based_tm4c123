@@ -1695,6 +1695,8 @@ uint32_t UART1_InStatus(void) {
 #define UART_ICR_TXIC 0x00000020     // Transmit Interrupt Clear
 #define UART_ICR_RXIC 0x00000010     // Receive Interrupt Clear
 
+//TODO: try 16bit uart, also change uart length enum in UartEvt struct for this test.
+//TODO: Use 115200 buad rate.
 //------------UART1_Init------------
 // Initialize the UART1 for 115,200 baud rate (assuming 50 MHz clock),
 // 8 bit word length, no parity bits, one stop bit, FIFOs enabled
@@ -2040,43 +2042,72 @@ void UART1_IRQHandler(void);  // prototype
 // at least one of two things has happened:
 // hardware RX FIFO goes from 1 to 2 or more items
 // UART receiver has timed out
-// TODO: needs refectoring 
+
+// TODO: needs deleting. 
+// void UART1_IRQHandler(void) {
+//     URT_t *uartPtr = &uart1;
+//     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+//     uint32_t status = UART1->RIS;               /* get the raw interrupt status */
+//     UART1->ICR = status;                        /* clear the asserted interrupts */
+//     while (((UART1->FR & UART_FR_RXFE) == 0)) { /* while RX FIFO NOT empty */
+//         uartPtr->data = UART1_CHAR;
+//         UART0_OutChar(uartPtr->data);
+//         // look for start token;
+//         if (uartPtr->data == BLE_FRAME_START_TOKEN) {
+//             uartPtr->state = GOT_START;
+//         }
+//         // save the data
+//         if (uartPtr->state == GOT_START) {
+//             uartPtr->messBuff[uartPtr->idx] = uartPtr->data;
+//             uartPtr->idx++;
+//         }
+//     }
+//     // check for end
+//     if (uartPtr->data == BLE_FRAME_STOP_TOKEN) {
+//         UartEvt *character = Q_NEW_FROM_ISR(UartEvt, NEW_UART_DATA_SIG);
+//         // copy buffer into event buffer and add '\0' at the end.
+//         for (int i = 0; i < uartPtr->idx; i++) {
+//             character->chars[i] = uartPtr->messBuff[i];
+//         }
+//         character->chars[uartPtr->idx - 1] = '\0';
+//         // reset buffer memory
+//         memset(uartPtr->messBuff, '\0', uartPtr->idx);
+//         uartPtr->idx = 0;
+//         uartPtr->state = WAITING_FOR_START;
+//         // post Evt.
+//         QACTIVE_POST_FROM_ISR(AO_BLE_uart,
+//                               (QEvt *)character,
+//                               &xHigherPriorityTaskWoken,
+//                               &UART0_IRQHandler);
+//     }
+
+//     /* let FreeRTOS determine if context switch is needed...  */
+//     portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+// }
+
+/**
+ * @brief UART1 ISR handler.
+ *        collects all recieved characters from the FIFO buffer into a single event 
+ *        and then post it to the BLE handler active object for processing.
+ * 
+ */
 void UART1_IRQHandler(void) {
-    URT_t *uartPtr = &uart1;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     uint32_t status = UART1->RIS;               /* get the raw interrupt status */
     UART1->ICR = status;                        /* clear the asserted interrupts */
-    while (((UART1->FR & UART_FR_RXFE) == 0)) { /* while RX FIFO NOT empty */
-        uartPtr->data = UART1_CHAR;
-        UART0_OutChar(uartPtr->data);
-        // look for start token;
-        if (uartPtr->data == BLE_FRAME_START_TOKEN) {
-            uartPtr->state = GOT_START;
+    UartEvt *evt = Q_NEW_FROM_ISR(UartEvt, NEW_UART_DATA_SIG);
+
+    evt->len = 0;
+    while (((UART1->FR & UART_FR_RXFE) == 0) && (evt->len < UART1_FIFO_LEN)) {
+            evt->chars[evt->len] = UART1_CHAR;
+            ++evt->len;
         }
-        // save the data
-        if (uartPtr->state == GOT_START) {
-            uartPtr->messBuff[uartPtr->idx] = uartPtr->data;
-            uartPtr->idx++;
-        }
-    }
-    // check for end
-    if (uartPtr->data == BLE_FRAME_STOP_TOKEN) {
-        UartEvt *character = Q_NEW_FROM_ISR(UartEvt, NEW_UART_DATA_SIG);
-        // copy buffer into event buffer and add '\0' at the end.
-        for (int i = 0; i < uartPtr->idx; i++) {
-            character->rxString[i] = uartPtr->messBuff[i];
-        }
-        character->rxString[uartPtr->idx - 1] = '\0';
-        // reset buffer memory
-        memset(uartPtr->messBuff, '\0', uartPtr->idx);
-        uartPtr->idx = 0;
-        uartPtr->state = WAITING_FOR_START;
-        // post Evt.
-        QACTIVE_POST_FROM_ISR(AO_BLE_uart,
-                              (QEvt *)character,
-                              &xHigherPriorityTaskWoken,
-                              &UART0_IRQHandler);
-    }
+    /* Q_ASSERT(evt->len < UART_FIFO_LEN) */
+
+    QACTIVE_POST_FROM_ISR(AO_BLE_uart,
+                          &evt->super,
+                          &xHigherPriorityTaskWoken,
+                          &UART1_IRQHandler);
 
     /* let FreeRTOS determine if context switch is needed...  */
     portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);

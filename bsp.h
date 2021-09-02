@@ -47,6 +47,7 @@
 #define BLE_FRAME_STOP_TOKEN ';'
 #define UART1_CHAR (UART1->DR & 0xFF)
 
+
 void BSP_init(void);
 void BSP_displayPaused(uint8_t paused);
 void BSP_displayPhilStat(uint8_t n, char const *stat);

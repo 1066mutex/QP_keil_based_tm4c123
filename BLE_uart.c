@@ -94,12 +94,14 @@ static QState BLE_uart_start(BLE_uart* const me, QEvt const* const e) {
 
         case NEW_UART_DATA_SIG: {
             
-            
-            // char temp = Q_EVT_CAST(UartEvt)->temp;
+            UartEvt const* evt = Q_EVT_CAST(UartEvt);
+            uint8_t n;
+            for (n = 0; (n < evt->len); ++n) {
+                UART0_OutChar(evt->chars[n]);
+            }
 
-            UART0_OutString("\r\nAO\r\n");
-            UART0_OutString(Q_EVT_CAST(UartEvt)->rxString);
-            UART0_OutString("\r\n");
+            //UART0_OutString(evt->chars);
+            // UART0_OutString("\r\n");
             // if (temp != BLE_FRAME_START_TOKEN) {
             //     // print out data.
 

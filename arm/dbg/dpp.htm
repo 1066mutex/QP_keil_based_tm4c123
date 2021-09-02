@@ -3,16 +3,16 @@
 <title>Static Call Graph - [.\dbg\dpp.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\dbg\dpp.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Wed Sep 01 19:02:53 2021
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Sep 02 12:59:49 2021
 <BR><P>
-<H3>Maximum Stack Usage =        232 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        248 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
-Table_serving &rArr; QF_publish_ &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_tickXFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+Table_serving &rArr; QF_publish_ &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_publishFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 <P>
 <H3>
 Mutually Recursive functions
 </H3> <LI><a href="#[b1]">parrotdelay</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[b1]">parrotdelay</a><BR>
- <LI><a href="#[12c]">fillmessage</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[12c]">fillmessage</a><BR>
+ <LI><a href="#[123]">fillmessage</a>&nbsp;&nbsp;&nbsp;&rArr;&nbsp;&nbsp;&nbsp;<a href="#[123]">fillmessage</a><BR>
 </UL>
 <P>
 <H3>
@@ -74,10 +74,10 @@ Function Pointers
  <LI><a href="#[7e]">Heartbeat_off</a> from blinky.o(i.Heartbeat_off) referenced from blinky.o(i.Heartbeat_initial)
  <LI><a href="#[7e]">Heartbeat_off</a> from blinky.o(i.Heartbeat_off) referenced from blinky.o(i.Heartbeat_on)
  <LI><a href="#[7e]">Heartbeat_off</a> from blinky.o(i.Heartbeat_off) referenced from blinky.o(i.Heartbeat_start)
- <LI><a href="#[7f]">Heartbeat_on</a> from blinky.o(i.Heartbeat_on) referenced from blinky.o(i.Heartbeat_off)
- <LI><a href="#[80]">Heartbeat_start</a> from blinky.o(i.Heartbeat_start) referenced from blinky.o(i.Heartbeat_off)
- <LI><a href="#[80]">Heartbeat_start</a> from blinky.o(i.Heartbeat_start) referenced from blinky.o(i.Heartbeat_on)
- <LI><a href="#[80]">Heartbeat_start</a> from blinky.o(i.Heartbeat_start) referenced from blinky.o(i.Heartbeat_stop)
+ <LI><a href="#[80]">Heartbeat_on</a> from blinky.o(i.Heartbeat_on) referenced from blinky.o(i.Heartbeat_off)
+ <LI><a href="#[7f]">Heartbeat_start</a> from blinky.o(i.Heartbeat_start) referenced from blinky.o(i.Heartbeat_off)
+ <LI><a href="#[7f]">Heartbeat_start</a> from blinky.o(i.Heartbeat_start) referenced from blinky.o(i.Heartbeat_on)
+ <LI><a href="#[7f]">Heartbeat_start</a> from blinky.o(i.Heartbeat_start) referenced from blinky.o(i.Heartbeat_stop)
  <LI><a href="#[81]">Heartbeat_stop</a> from blinky.o(i.Heartbeat_stop) referenced from blinky.o(i.Heartbeat_start)
  <LI><a href="#[36]">Hibernate_IRQHandler</a> from startup_tm4c123gh6pm.o(.text) referenced from startup_tm4c123gh6pm.o(RESET)
  <LI><a href="#[14]">I2C0_IRQHandler</a> from startup_tm4c123gh6pm.o(.text) referenced from startup_tm4c123gh6pm.o(RESET)
@@ -133,14 +133,14 @@ Function Pointers
  <LI><a href="#[43]">SSI3_IRQHandler</a> from startup_tm4c123gh6pm.o(.text) referenced from startup_tm4c123gh6pm.o(RESET)
  <LI><a href="#[8]">SVC_Handler</a> from port.o(.emb_text) referenced from startup_tm4c123gh6pm.o(RESET)
  <LI><a href="#[8a]">Sensor_busy</a> from lightsensor.o(i.Sensor_busy) referenced from lightsensor.o(i.Sensor_idle)
- <LI><a href="#[87]">Sensor_idle</a> from lightsensor.o(i.Sensor_idle) referenced from lightsensor.o(i.Sensor_busy)
- <LI><a href="#[87]">Sensor_idle</a> from lightsensor.o(i.Sensor_idle) referenced from lightsensor.o(i.Sensor_processing)
+ <LI><a href="#[88]">Sensor_idle</a> from lightsensor.o(i.Sensor_idle) referenced from lightsensor.o(i.Sensor_busy)
+ <LI><a href="#[88]">Sensor_idle</a> from lightsensor.o(i.Sensor_idle) referenced from lightsensor.o(i.Sensor_processing)
  <LI><a href="#[89]">Sensor_initial</a> from lightsensor.o(i.Sensor_initial) referenced from lightsensor.o(i.Sensor_ctor)
  <LI><a href="#[8b]">Sensor_polling</a> from lightsensor.o(i.Sensor_polling) referenced from lightsensor.o(i.Sensor_initial)
  <LI><a href="#[8b]">Sensor_polling</a> from lightsensor.o(i.Sensor_polling) referenced from lightsensor.o(i.Sensor_processing)
- <LI><a href="#[88]">Sensor_processing</a> from lightsensor.o(i.Sensor_processing) referenced from lightsensor.o(i.Sensor_busy)
- <LI><a href="#[88]">Sensor_processing</a> from lightsensor.o(i.Sensor_processing) referenced from lightsensor.o(i.Sensor_idle)
- <LI><a href="#[88]">Sensor_processing</a> from lightsensor.o(i.Sensor_processing) referenced from lightsensor.o(i.Sensor_polling)
+ <LI><a href="#[87]">Sensor_processing</a> from lightsensor.o(i.Sensor_processing) referenced from lightsensor.o(i.Sensor_busy)
+ <LI><a href="#[87]">Sensor_processing</a> from lightsensor.o(i.Sensor_processing) referenced from lightsensor.o(i.Sensor_idle)
+ <LI><a href="#[87]">Sensor_processing</a> from lightsensor.o(i.Sensor_processing) referenced from lightsensor.o(i.Sensor_polling)
  <LI><a href="#[28]">SysCtrl_IRQHandler</a> from startup_tm4c123gh6pm.o(.text) referenced from startup_tm4c123gh6pm.o(RESET)
  <LI><a href="#[b]">SysTick_Handler</a> from port.o(i.SysTick_Handler) referenced from startup_tm4c123gh6pm.o(RESET)
  <LI><a href="#[78]">SystemInit</a> from system_tm4c123gh6pm.o(i.SystemInit) referenced from startup_tm4c123gh6pm.o(.text)
@@ -197,8 +197,8 @@ Function Pointers
 Global Symbols
 </H3>
 <P><STRONG><a name="[9c]"></a>__main</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, __main.o(!!!main))
-<BR><BR>[Calls]<UL><LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
-<LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
+<BR><BR>[Calls]<UL><LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
+<LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
 </UL>
 
 <P><STRONG><a name="[9f]"></a>__scatterload</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __scatter.o(!!!scatter))
@@ -209,9 +209,9 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
 </UL>
 
-<P><STRONG><a name="[146]"></a>__scatterload_rt2_thumb_only</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __scatter.o(!!!scatter), UNUSED)
+<P><STRONG><a name="[13a]"></a>__scatterload_rt2_thumb_only</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __scatter.o(!!!scatter), UNUSED)
 
-<P><STRONG><a name="[147]"></a>__scatterload_null</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __scatter.o(!!!scatter), UNUSED)
+<P><STRONG><a name="[13b]"></a>__scatterload_null</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __scatter.o(!!!scatter), UNUSED)
 
 <P><STRONG><a name="[a2]"></a>__scatterload_copy</STRONG> (Thumb, 26 bytes, Stack size unknown bytes, __scatter_copy.o(!!handler_copy), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_copy
@@ -219,7 +219,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_copy
 </UL>
 
-<P><STRONG><a name="[148]"></a>__scatterload_zeroinit</STRONG> (Thumb, 28 bytes, Stack size unknown bytes, __scatter_zi.o(!!handler_zi), UNUSED)
+<P><STRONG><a name="[13c]"></a>__scatterload_zeroinit</STRONG> (Thumb, 28 bytes, Stack size unknown bytes, __scatter_zi.o(!!handler_zi), UNUSED)
 
 <P><STRONG><a name="[a8]"></a>__rt_lib_init</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit.o(.ARM.Collect$$libinit$$00000000))
 <BR><BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_li
@@ -229,72 +229,72 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_fp_init
 </UL>
 
-<P><STRONG><a name="[149]"></a>__rt_lib_init_alloca_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000002E))
+<P><STRONG><a name="[13d]"></a>__rt_lib_init_alloca_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000002E))
 
-<P><STRONG><a name="[14a]"></a>__rt_lib_init_argv_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000002C))
+<P><STRONG><a name="[13e]"></a>__rt_lib_init_argv_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000002C))
 
-<P><STRONG><a name="[14b]"></a>__rt_lib_init_atexit_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000001B))
+<P><STRONG><a name="[13f]"></a>__rt_lib_init_atexit_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000001B))
 
-<P><STRONG><a name="[14c]"></a>__rt_lib_init_clock_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000021))
+<P><STRONG><a name="[140]"></a>__rt_lib_init_clock_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000021))
 
-<P><STRONG><a name="[14d]"></a>__rt_lib_init_cpp_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000032))
+<P><STRONG><a name="[141]"></a>__rt_lib_init_cpp_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000032))
 
-<P><STRONG><a name="[14e]"></a>__rt_lib_init_exceptions_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000030))
+<P><STRONG><a name="[142]"></a>__rt_lib_init_exceptions_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000030))
 
-<P><STRONG><a name="[14f]"></a>__rt_lib_init_fp_trap_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000001F))
+<P><STRONG><a name="[143]"></a>__rt_lib_init_fp_trap_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000001F))
 
-<P><STRONG><a name="[150]"></a>__rt_lib_init_getenv_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000023))
+<P><STRONG><a name="[144]"></a>__rt_lib_init_getenv_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000023))
 
-<P><STRONG><a name="[151]"></a>__rt_lib_init_heap_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000000A))
+<P><STRONG><a name="[145]"></a>__rt_lib_init_heap_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000000A))
 
-<P><STRONG><a name="[152]"></a>__rt_lib_init_lc_collate_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000011))
+<P><STRONG><a name="[146]"></a>__rt_lib_init_lc_collate_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000011))
 
-<P><STRONG><a name="[153]"></a>__rt_lib_init_lc_ctype_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000013))
+<P><STRONG><a name="[147]"></a>__rt_lib_init_lc_ctype_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000013))
 
-<P><STRONG><a name="[154]"></a>__rt_lib_init_lc_monetary_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000015))
+<P><STRONG><a name="[148]"></a>__rt_lib_init_lc_monetary_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000015))
 
-<P><STRONG><a name="[155]"></a>__rt_lib_init_lc_numeric_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000017))
+<P><STRONG><a name="[149]"></a>__rt_lib_init_lc_numeric_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000017))
 
-<P><STRONG><a name="[156]"></a>__rt_lib_init_lc_time_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000019))
+<P><STRONG><a name="[14a]"></a>__rt_lib_init_lc_time_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000019))
 
-<P><STRONG><a name="[157]"></a>__rt_lib_init_preinit_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000004))
+<P><STRONG><a name="[14b]"></a>__rt_lib_init_preinit_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000004))
 
-<P><STRONG><a name="[158]"></a>__rt_lib_init_rand_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000000E))
+<P><STRONG><a name="[14c]"></a>__rt_lib_init_rand_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000000E))
 
-<P><STRONG><a name="[159]"></a>__rt_lib_init_return</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000033))
+<P><STRONG><a name="[14d]"></a>__rt_lib_init_return</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000033))
 
-<P><STRONG><a name="[15a]"></a>__rt_lib_init_signal_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000001D))
+<P><STRONG><a name="[14e]"></a>__rt_lib_init_signal_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000001D))
 
-<P><STRONG><a name="[15b]"></a>__rt_lib_init_stdio_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000025))
+<P><STRONG><a name="[14f]"></a>__rt_lib_init_stdio_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$00000025))
 
-<P><STRONG><a name="[15c]"></a>__rt_lib_init_user_alloc_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000000C))
+<P><STRONG><a name="[150]"></a>__rt_lib_init_user_alloc_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libinit2.o(.ARM.Collect$$libinit$$0000000C))
 
 <P><STRONG><a name="[ad]"></a>__rt_lib_shutdown</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown.o(.ARM.Collect$$libshutdown$$00000000))
 <BR><BR>[Called By]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_exit_ls
 </UL>
 
-<P><STRONG><a name="[15d]"></a>__rt_lib_shutdown_cpp_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000004))
+<P><STRONG><a name="[151]"></a>__rt_lib_shutdown_cpp_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000004))
 
-<P><STRONG><a name="[15e]"></a>__rt_lib_shutdown_fini_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000002))
+<P><STRONG><a name="[152]"></a>__rt_lib_shutdown_fini_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000002))
 
-<P><STRONG><a name="[15f]"></a>__rt_lib_shutdown_fp_trap_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000009))
+<P><STRONG><a name="[153]"></a>__rt_lib_shutdown_fp_trap_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000009))
 
-<P><STRONG><a name="[160]"></a>__rt_lib_shutdown_heap_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000011))
+<P><STRONG><a name="[154]"></a>__rt_lib_shutdown_heap_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000011))
 
-<P><STRONG><a name="[161]"></a>__rt_lib_shutdown_return</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000012))
+<P><STRONG><a name="[155]"></a>__rt_lib_shutdown_return</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000012))
 
-<P><STRONG><a name="[162]"></a>__rt_lib_shutdown_signal_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$0000000C))
+<P><STRONG><a name="[156]"></a>__rt_lib_shutdown_signal_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$0000000C))
 
-<P><STRONG><a name="[163]"></a>__rt_lib_shutdown_stdio_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000006))
+<P><STRONG><a name="[157]"></a>__rt_lib_shutdown_stdio_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$00000006))
 
-<P><STRONG><a name="[164]"></a>__rt_lib_shutdown_user_alloc_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$0000000E))
+<P><STRONG><a name="[158]"></a>__rt_lib_shutdown_user_alloc_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$0000000E))
 
 <P><STRONG><a name="[a0]"></a>__rt_entry</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry.o(.ARM.Collect$$rtentry$$00000000))
-<BR><BR>[Called By]<UL><LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_rt2
-<LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+<BR><BR>[Called By]<UL><LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
+<LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_rt2
 </UL>
 
-<P><STRONG><a name="[165]"></a>__rt_entry_presh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000002))
+<P><STRONG><a name="[159]"></a>__rt_entry_presh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000002))
 
 <P><STRONG><a name="[a5]"></a>__rt_entry_sh</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry4.o(.ARM.Collect$$rtentry$$00000004))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8 + Unknown Stack Size
@@ -307,17 +307,17 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_lib_init
 </UL>
 
-<P><STRONG><a name="[166]"></a>__rt_entry_postsh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000009))
+<P><STRONG><a name="[15a]"></a>__rt_entry_postsh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000009))
 
 <P><STRONG><a name="[a9]"></a>__rt_entry_main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$0000000D))
-<BR><BR>[Stack]<UL><LI>Max Depth = 160 + Unknown Stack Size
-<LI>Call Chain = __rt_entry_main &rArr; main &rArr; QF_run &rArr; vTaskStartScheduler &rArr; xTaskCreateStatic &rArr; prvInitialiseNewTask
+<BR><BR>[Stack]<UL><LI>Max Depth = 184 + Unknown Stack Size
+<LI>Call Chain = __rt_entry_main &rArr; main &rArr; QF_run &rArr; vTaskStartScheduler &rArr; xTaskCreateStatic &rArr; prvInitialiseNewTask &rArr; pxPortInitialiseStack
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exit
-<LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<BR>[Calls]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exit
 </UL>
 
-<P><STRONG><a name="[167]"></a>__rt_entry_postli_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$0000000C))
+<P><STRONG><a name="[15b]"></a>__rt_entry_postli_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$0000000C))
 
 <P><STRONG><a name="[b8]"></a>__rt_exit</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtexit.o(.ARM.Collect$$rtexit$$00000000))
 <BR><BR>[Called By]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exit
@@ -327,7 +327,7 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_lib_shutdown
 </UL>
 
-<P><STRONG><a name="[168]"></a>__rt_exit_prels_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtexit2.o(.ARM.Collect$$rtexit$$00000002))
+<P><STRONG><a name="[15c]"></a>__rt_exit_prels_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtexit2.o(.ARM.Collect$$rtexit$$00000002))
 
 <P><STRONG><a name="[ae]"></a>__rt_exit_exit</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rtexit2.o(.ARM.Collect$$rtexit$$00000004))
 <BR><BR>[Calls]<UL><LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_sys_exit
@@ -336,12 +336,12 @@ Global Symbols
 <P><STRONG><a name="[8]"></a>SVC_Handler</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, port.o(.emb_text))
 <BR>[Address Reference Count : 1]<UL><LI> startup_tm4c123gh6pm.o(RESET)
 </UL>
-<P><STRONG><a name="[144]"></a>__asm___6_port_c_39a90d8d__prvStartFirstTask</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, port.o(.emb_text))
-<BR><BR>[Called By]<UL><LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xPortStartScheduler
+<P><STRONG><a name="[138]"></a>__asm___6_port_c_39a90d8d__prvStartFirstTask</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, port.o(.emb_text))
+<BR><BR>[Called By]<UL><LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xPortStartScheduler
 </UL>
 
-<P><STRONG><a name="[143]"></a>__asm___6_port_c_39a90d8d__prvEnableVFP</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, port.o(.emb_text))
-<BR><BR>[Called By]<UL><LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xPortStartScheduler
+<P><STRONG><a name="[137]"></a>__asm___6_port_c_39a90d8d__prvEnableVFP</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, port.o(.emb_text))
+<BR><BR>[Called By]<UL><LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xPortStartScheduler
 </UL>
 
 <P><STRONG><a name="[a]"></a>PendSV_Handler</STRONG> (Thumb, 88 bytes, Stack size 0 bytes, port.o(.emb_text))
@@ -351,14 +351,14 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_tm4c123gh6pm.o(RESET)
 </UL>
-<P><STRONG><a name="[13f]"></a>vPortGetIPSR</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, port.o(.emb_text))
-<BR><BR>[Called By]<UL><LI><a href="#[13e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortValidateInterruptPriority
+<P><STRONG><a name="[133]"></a>vPortGetIPSR</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, port.o(.emb_text))
+<BR><BR>[Called By]<UL><LI><a href="#[132]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortValidateInterruptPriority
 </UL>
 
 <P><STRONG><a name="[b1]"></a>parrotdelay</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, bsp.o(.emb_text))
 <BR><BR>[Calls]<UL><LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parrotdelay
 </UL>
-<BR>[Called By]<UL><LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Delay1ms
+<BR>[Called By]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Delay1ms
 <LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parrotdelay
 </UL>
 
@@ -720,10 +720,10 @@ Global Symbols
 <P><STRONG><a name="[9e]"></a>assert_failed</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, startup_tm4c123gh6pm.o(.text))
 <BR><BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
-<LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
-<LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Called By]<UL><LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[3b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC1Seq0_IRQHandler
 <LI><a href="#[9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DebugMon_Handler
 <LI><a href="#[7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UsageFault_Handler
@@ -733,32 +733,35 @@ Global Symbols
 <LI><a href="#[3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NMI_Handler
 <LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Reset_Handler
 <LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvTaskExitError
-<LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xPortStartScheduler
-<LI><a href="#[13e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortValidateInterruptPriority
-<LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
+<LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xPortStartScheduler
+<LI><a href="#[132]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortValidateInterruptPriority
+<LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
 <LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSwitchContext
-<LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
-<LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCreateStatic
-<LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskStartScheduler
-<LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskNotifyGiveFromISR
+<LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
+<LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCreateStatic
+<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskNotifyGiveFromISR
 </UL>
 
-<P><STRONG><a name="[fd]"></a>strlen</STRONG> (Thumb, 62 bytes, Stack size 8 bytes, strlen.o(.text))
+<P><STRONG><a name="[f5]"></a>strlen</STRONG> (Thumb, 62 bytes, Stack size 8 bytes, strlen.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = strlen
 </UL>
-<BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
+<BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
 </UL>
 
 <P><STRONG><a name="[b3]"></a>__aeabi_memset</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, aeabi_memset.o(.text))
 <BR><BR>[Calls]<UL><LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_memset
 </UL>
-<BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
-<LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
+<BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
+<LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
 </UL>
 
-<P><STRONG><a name="[129]"></a>__aeabi_memclr</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, rt_memclr.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[12]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_IRQHandler
-</UL>
+<P><STRONG><a name="[15d]"></a>__use_two_region_memory</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, heapauxi.o(.text), UNUSED)
+
+<P><STRONG><a name="[15e]"></a>__rt_heap_escrow$2region</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, heapauxi.o(.text), UNUSED)
+
+<P><STRONG><a name="[15f]"></a>__rt_heap_expand$2region</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, heapauxi.o(.text), UNUSED)
+
+<P><STRONG><a name="[160]"></a>__aeabi_memclr</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, rt_memclr.o(.text), UNUSED)
 
 <P><STRONG><a name="[b5]"></a>__rt_memclr</STRONG> (Thumb, 68 bytes, Stack size 0 bytes, rt_memclr.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_memset_w
@@ -768,17 +771,11 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memset
 </UL>
 
-<P><STRONG><a name="[169]"></a>__use_two_region_memory</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, heapauxi.o(.text), UNUSED)
+<P><STRONG><a name="[161]"></a>__aeabi_memclr4</STRONG> (Thumb, 0 bytes, Stack size 4 bytes, rt_memclr_w.o(.text), UNUSED)
 
-<P><STRONG><a name="[16a]"></a>__rt_heap_escrow$2region</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, heapauxi.o(.text), UNUSED)
+<P><STRONG><a name="[162]"></a>__aeabi_memclr8</STRONG> (Thumb, 0 bytes, Stack size 4 bytes, rt_memclr_w.o(.text), UNUSED)
 
-<P><STRONG><a name="[16b]"></a>__rt_heap_expand$2region</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, heapauxi.o(.text), UNUSED)
-
-<P><STRONG><a name="[16c]"></a>__aeabi_memclr4</STRONG> (Thumb, 0 bytes, Stack size 4 bytes, rt_memclr_w.o(.text), UNUSED)
-
-<P><STRONG><a name="[16d]"></a>__aeabi_memclr8</STRONG> (Thumb, 0 bytes, Stack size 4 bytes, rt_memclr_w.o(.text), UNUSED)
-
-<P><STRONG><a name="[16e]"></a>__rt_memclr_w</STRONG> (Thumb, 78 bytes, Stack size 4 bytes, rt_memclr_w.o(.text), UNUSED)
+<P><STRONG><a name="[163]"></a>__rt_memclr_w</STRONG> (Thumb, 78 bytes, Stack size 4 bytes, rt_memclr_w.o(.text), UNUSED)
 
 <P><STRONG><a name="[b6]"></a>_memset_w</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, rt_memclr_w.o(.text), UNUSED)
 <BR><BR>[Called By]<UL><LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_memclr
@@ -802,452 +799,411 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main
 </UL>
 
-<P><STRONG><a name="[16f]"></a>__user_libspace</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, libspace.o(.text), UNUSED)
+<P><STRONG><a name="[164]"></a>__user_libspace</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, libspace.o(.text), UNUSED)
 
 <P><STRONG><a name="[b7]"></a>__user_perproc_libspace</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, libspace.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__user_setup_stackheap
 </UL>
 
-<P><STRONG><a name="[170]"></a>__user_perthread_libspace</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, libspace.o(.text), UNUSED)
+<P><STRONG><a name="[165]"></a>__user_perthread_libspace</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, libspace.o(.text), UNUSED)
 
 <P><STRONG><a name="[af]"></a>_sys_exit</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, sys_exit.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_exit_exit
 </UL>
 
-<P><STRONG><a name="[171]"></a>__I$use$semihosting</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, use_no_semi.o(.text), UNUSED)
+<P><STRONG><a name="[166]"></a>__I$use$semihosting</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, use_no_semi.o(.text), UNUSED)
 
-<P><STRONG><a name="[172]"></a>__use_no_semihosting_swi</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, use_no_semi.o(.text), UNUSED)
+<P><STRONG><a name="[167]"></a>__use_no_semihosting_swi</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, use_no_semi.o(.text), UNUSED)
 
-<P><STRONG><a name="[173]"></a>__semihosting_library_function</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, indicate_semi.o(.text), UNUSED)
+<P><STRONG><a name="[168]"></a>__semihosting_library_function</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, indicate_semi.o(.text), UNUSED)
 
-<P><STRONG><a name="[3e]"></a>ADC1Seq3_IRQHandler</STRONG> (Thumb, 80 bytes, Stack size 16 bytes, bsp.o(i.ADC1Seq3_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = ADC1Seq3_IRQHandler &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[3e]"></a>ADC1Seq3_IRQHandler</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, bsp.o(i.ADC1Seq3_IRQHandler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = ADC1Seq3_IRQHandler &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newXFromISR_
 <LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_postFromISR_
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_tm4c123gh6pm.o(RESET)
 </UL>
-<P><STRONG><a name="[bb]"></a>BLE_uart_ctor</STRONG> (Thumb, 16 bytes, Stack size 8 bytes, ble_uart.o(i.BLE_uart_ctor))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = BLE_uart_ctor &rArr; QActive_ctor
+<P><STRONG><a name="[bb]"></a>BLE_uart_ctor</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, ble_uart.o(i.BLE_uart_ctor))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = BLE_uart_ctor &rArr; QActive_ctor
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_ctor
 </UL>
 <BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[f5]"></a>BSP_AccelerometerGet</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, bsp.o(i.BSP_AccelerometerGet))
-<BR><BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
+<P><STRONG><a name="[ed]"></a>BSP_AccelerometerGet</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, bsp.o(i.BSP_AccelerometerGet))
+<BR><BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
 </UL>
 
-<P><STRONG><a name="[bf]"></a>BSP_Accelerometer_Init</STRONG> (Thumb, 156 bytes, Stack size 8 bytes, bsp.o(i.BSP_Accelerometer_Init))
+<P><STRONG><a name="[bf]"></a>BSP_Accelerometer_Init</STRONG> (Thumb, 124 bytes, Stack size 8 bytes, bsp.o(i.BSP_Accelerometer_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = BSP_Accelerometer_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adcinit0
 </UL>
-<BR>[Called By]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
+<BR>[Called By]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
 </UL>
 
-<P><STRONG><a name="[f9]"></a>BSP_Accelerometer_Input</STRONG> (Thumb, 42 bytes, Stack size 8 bytes, bsp.o(i.BSP_Accelerometer_Input))
+<P><STRONG><a name="[f1]"></a>BSP_Accelerometer_Input</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, bsp.o(i.BSP_Accelerometer_Input))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = BSP_Accelerometer_Input
 </UL>
-<BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
+<BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
 </UL>
 
-<P><STRONG><a name="[e8]"></a>BSP_BP_BuzzerIO_Init</STRONG> (Thumb, 238 bytes, Stack size 0 bytes, bsp.o(i.BSP_BP_BuzzerIO_Init))
-<BR><BR>[Called By]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
+<P><STRONG><a name="[e1]"></a>BSP_BP_BuzzerIO_Init</STRONG> (Thumb, 190 bytes, Stack size 0 bytes, bsp.o(i.BSP_BP_BuzzerIO_Init))
+<BR><BR>[Called By]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
 </UL>
 
-<P><STRONG><a name="[fe]"></a>BSP_BP_Buzzer_Freq</STRONG> (Thumb, 52 bytes, Stack size 0 bytes, bsp.o(i.BSP_BP_Buzzer_Freq))
+<P><STRONG><a name="[f6]"></a>BSP_BP_Buzzer_Freq</STRONG> (Thumb, 48 bytes, Stack size 0 bytes, bsp.o(i.BSP_BP_Buzzer_Freq))
 <BR><BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_stop
-<LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
+<LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
 </UL>
 
-<P><STRONG><a name="[c1]"></a>BSP_BP_Joystick_Init</STRONG> (Thumb, 212 bytes, Stack size 8 bytes, bsp.o(i.BSP_BP_Joystick_Init))
+<P><STRONG><a name="[c1]"></a>BSP_BP_Joystick_Init</STRONG> (Thumb, 176 bytes, Stack size 8 bytes, bsp.o(i.BSP_BP_Joystick_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = BSP_BP_Joystick_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;adcinit0
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_initial
-<LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
+<LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
 </UL>
 
-<P><STRONG><a name="[f3]"></a>BSP_BP_LedBlueDuty</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, bsp.o(i.BSP_BP_LedBlueDuty))
-<BR><BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
-<LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
+<P><STRONG><a name="[eb]"></a>BSP_BP_LedBlueDuty</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, bsp.o(i.BSP_BP_LedBlueDuty))
+<BR><BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
+<LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
 </UL>
 
-<P><STRONG><a name="[c2]"></a>BSP_BP_LightSensor_End</STRONG> (Thumb, 56 bytes, Stack size 16 bytes, bsp_bp.o(i.BSP_BP_LightSensor_End))
-<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = BSP_BP_LightSensor_End &rArr; lightsensorend &rArr; BSP_I2C_Send3
+<P><STRONG><a name="[c2]"></a>BSP_BP_LightSensor_End</STRONG> (Thumb, 48 bytes, Stack size 16 bytes, bsp_bp.o(i.BSP_BP_LightSensor_End))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = BSP_BP_LightSensor_End &rArr; lightsensorend &rArr; BSP_I2C_Recv2
 </UL>
-<BR>[Calls]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lightsensorstart
+<BR>[Calls]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lightsensorstart
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lightsensorend
-<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LightSensor_INTstatus
+<LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LightSensor_INTstatus
 </UL>
 <BR>[Called By]<UL><LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Sensor_polling
 </UL>
 
-<P><STRONG><a name="[c6]"></a>BSP_BP_LightSensor_Init</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, bsp_bp.o(i.BSP_BP_LightSensor_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = BSP_BP_LightSensor_Init &rArr; BSP_LightSensor_Init
+<P><STRONG><a name="[c6]"></a>BSP_BP_LightSensor_Init</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, bsp_bp.o(i.BSP_BP_LightSensor_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = BSP_BP_LightSensor_Init &rArr; BSP_LightSensor_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LightSensor_Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Sensor_initial
 </UL>
 
-<P><STRONG><a name="[c8]"></a>BSP_BP_LightSensor_Start</STRONG> (Thumb, 22 bytes, Stack size 8 bytes, bsp_bp.o(i.BSP_BP_LightSensor_Start))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = BSP_BP_LightSensor_Start &rArr; lightsensorstart &rArr; BSP_I2C_Send3
+<P><STRONG><a name="[c8]"></a>BSP_BP_LightSensor_Start</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, bsp_bp.o(i.BSP_BP_LightSensor_Start))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = BSP_BP_LightSensor_Start &rArr; lightsensorstart &rArr; BSP_I2C_Recv2
 </UL>
-<BR>[Calls]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lightsensorstart
+<BR>[Calls]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lightsensorstart
 </UL>
 <BR>[Called By]<UL><LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Sensor_polling
 </UL>
 
-<P><STRONG><a name="[e7]"></a>BSP_BP_RGB_ledsInit</STRONG> (Thumb, 508 bytes, Stack size 0 bytes, bsp.o(i.BSP_BP_RGB_ledsInit))
-<BR><BR>[Called By]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
+<P><STRONG><a name="[e0]"></a>BSP_BP_RGB_ledsInit</STRONG> (Thumb, 392 bytes, Stack size 16 bytes, bsp.o(i.BSP_BP_RGB_ledsInit))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = BSP_BP_RGB_ledsInit
+</UL>
+<BR>[Called By]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
 </UL>
 
-<P><STRONG><a name="[c9]"></a>BSP_BP_SPI_TFT_Init</STRONG> (Thumb, 412 bytes, Stack size 8 bytes, bsp.o(i.BSP_BP_SPI_TFT_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = BSP_BP_SPI_TFT_Init &rArr; BSP_Delay1ms
+<P><STRONG><a name="[c9]"></a>BSP_BP_SPI_TFT_Init</STRONG> (Thumb, 346 bytes, Stack size 24 bytes, bsp.o(i.BSP_BP_SPI_TFT_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = BSP_BP_SPI_TFT_Init &rArr; BSP_Delay1ms
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Delay1ms
-<LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_TFT_RESET_LOW
-<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_TFT_RESET_HIGH
-<LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_TFT_CS_LOW
-<LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_TFT_CS_HIGH
+<BR>[Calls]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Delay1ms
 </UL>
-<BR>[Called By]<UL><LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
-<LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
+<BR>[Called By]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
+<LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
 </UL>
 
-<P><STRONG><a name="[cf]"></a>BSP_BP_SPIwritecommand</STRONG> (Thumb, 56 bytes, Stack size 4 bytes, bsp.o(i.BSP_BP_SPIwritecommand))
-<BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = BSP_BP_SPIwritecommand
+<P><STRONG><a name="[11a]"></a>BSP_BP_SPIwritecommand</STRONG> (Thumb, 40 bytes, Stack size 8 bytes, bsp.o(i.BSP_BP_SPIwritecommand))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = BSP_BP_SPIwritecommand
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_TFT_DC_COMMAND
-<LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_TFT_CS_LOW
-<LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_TFT_CS_HIGH
-</UL>
-<BR>[Called By]<UL><LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAddrWindow
-<LI><a href="#[121]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
-<LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
+<BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAddrWindow
+<LI><a href="#[119]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
+<LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
 </UL>
 
-<P><STRONG><a name="[d1]"></a>BSP_BP_SPIwritedata</STRONG> (Thumb, 56 bytes, Stack size 4 bytes, bsp.o(i.BSP_BP_SPIwritedata))
-<BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = BSP_BP_SPIwritedata
+<P><STRONG><a name="[d3]"></a>BSP_BP_SPIwritedata</STRONG> (Thumb, 40 bytes, Stack size 8 bytes, bsp.o(i.BSP_BP_SPIwritedata))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = BSP_BP_SPIwritedata
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_TFT_DC_DATA
-<LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_TFT_CS_LOW
-<LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_TFT_CS_HIGH
-</UL>
-<BR>[Called By]<UL><LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_FillRect
-<LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAddrWindow
-<LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pushColor
-<LI><a href="#[121]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
-<LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
+<BR>[Called By]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_FillRect
+<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAddrWindow
+<LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pushColor
+<LI><a href="#[119]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
+<LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
 </UL>
 
-<P><STRONG><a name="[ce]"></a>BSP_BP_TFT_CS_HIGH</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, bsp.o(i.BSP_BP_TFT_CS_HIGH))
-<BR><BR>[Called By]<UL><LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritedata
-<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritecommand
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPI_TFT_Init
-</UL>
-
-<P><STRONG><a name="[ca]"></a>BSP_BP_TFT_CS_LOW</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, bsp.o(i.BSP_BP_TFT_CS_LOW))
-<BR><BR>[Called By]<UL><LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritedata
-<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritecommand
-<LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPI_TFT_Init
-</UL>
-
-<P><STRONG><a name="[d0]"></a>BSP_BP_TFT_DC_COMMAND</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, bsp.o(i.BSP_BP_TFT_DC_COMMAND))
-<BR><BR>[Called By]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritecommand
-</UL>
-
-<P><STRONG><a name="[d2]"></a>BSP_BP_TFT_DC_DATA</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, bsp.o(i.BSP_BP_TFT_DC_DATA))
-<BR><BR>[Called By]<UL><LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritedata
-</UL>
-
-<P><STRONG><a name="[cb]"></a>BSP_BP_TFT_RESET_HIGH</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, bsp.o(i.BSP_BP_TFT_RESET_HIGH))
-<BR><BR>[Called By]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPI_TFT_Init
-</UL>
-
-<P><STRONG><a name="[cd]"></a>BSP_BP_TFT_RESET_LOW</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, bsp.o(i.BSP_BP_TFT_RESET_LOW))
-<BR><BR>[Called By]<UL><LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPI_TFT_Init
-</UL>
-
-<P><STRONG><a name="[cc]"></a>BSP_Delay1ms</STRONG> (Thumb, 22 bytes, Stack size 8 bytes, bsp.o(i.BSP_Delay1ms))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = BSP_Delay1ms
+<P><STRONG><a name="[ca]"></a>BSP_Delay1ms</STRONG> (Thumb, 24 bytes, Stack size 16 bytes, bsp.o(i.BSP_Delay1ms))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = BSP_Delay1ms
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parrotdelay
 </UL>
-<BR>[Called By]<UL><LI><a href="#[121]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
+<BR>[Called By]<UL><LI><a href="#[119]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPI_TFT_Init
 </UL>
 
-<P><STRONG><a name="[d3]"></a>BSP_I2C_Recv2</STRONG> (Thumb, 90 bytes, Stack size 24 bytes, bsp.o(i.BSP_I2C_Recv2))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = BSP_I2C_Recv2
+<P><STRONG><a name="[cb]"></a>BSP_I2C_Recv2</STRONG> (Thumb, 82 bytes, Stack size 32 bytes, bsp.o(i.BSP_I2C_Recv2))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = BSP_I2C_Recv2
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;L_waitTillReady
+<BR>[Calls]<UL><LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;L_waitTillReady
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lightsensorstart
+<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lightsensorstart
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lightsensorend
 </UL>
 
-<P><STRONG><a name="[12d]"></a>BSP_I2C_Send1</STRONG> (Thumb, 68 bytes, Stack size 0 bytes, bsp.o(i.BSP_I2C_Send1))
+<P><STRONG><a name="[124]"></a>BSP_I2C_Send1</STRONG> (Thumb, 42 bytes, Stack size 0 bytes, bsp.o(i.BSP_I2C_Send1))
 <BR><BR>[Called By]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lightsensorend
 </UL>
 
-<P><STRONG><a name="[d5]"></a>BSP_I2C_Send3</STRONG> (Thumb, 140 bytes, Stack size 24 bytes, bsp.o(i.BSP_I2C_Send3))
+<P><STRONG><a name="[cd]"></a>BSP_I2C_Send3</STRONG> (Thumb, 96 bytes, Stack size 24 bytes, bsp.o(i.BSP_I2C_Send3))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = BSP_I2C_Send3
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;L_waitTillReady
+<BR>[Calls]<UL><LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;L_waitTillReady
 </UL>
-<BR>[Called By]<UL><LI><a href="#[c3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lightsensorstart
+<BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lightsensorstart
 <LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;lightsensorend
 </UL>
 
-<P><STRONG><a name="[f7]"></a>BSP_Joystick_Input</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, bsp.o(i.BSP_Joystick_Input))
-<BR><BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
+<P><STRONG><a name="[ef]"></a>BSP_Joystick_Input</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, bsp.o(i.BSP_Joystick_Input))
+<BR><BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
 </UL>
 
-<P><STRONG><a name="[f4]"></a>BSP_Joystick_Trigger</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, bsp.o(i.BSP_Joystick_Trigger))
-<BR><BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
+<P><STRONG><a name="[ec]"></a>BSP_Joystick_Trigger</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, bsp.o(i.BSP_Joystick_Trigger))
+<BR><BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
 </UL>
 
-<P><STRONG><a name="[d6]"></a>BSP_LCD_DrawChar</STRONG> (Thumb, 260 bytes, Stack size 56 bytes, bsp_bp.o(i.BSP_LCD_DrawChar))
-<BR><BR>[Stack]<UL><LI>Max Depth = 84<LI>Call Chain = BSP_LCD_DrawChar &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
+<P><STRONG><a name="[ce]"></a>BSP_LCD_DrawChar</STRONG> (Thumb, 182 bytes, Stack size 56 bytes, bsp_bp.o(i.BSP_LCD_DrawChar))
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = BSP_LCD_DrawChar &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAddrWindow
-<LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pushColor
+<BR>[Calls]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAddrWindow
+<LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pushColor
 </UL>
-<BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec5
-<LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec4
-<LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawString
+<BR>[Called By]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec5
+<LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec4
+<LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawString
 </UL>
 
-<P><STRONG><a name="[d9]"></a>BSP_LCD_DrawString</STRONG> (Thumb, 84 bytes, Stack size 32 bytes, bsp_bp.o(i.BSP_LCD_DrawString))
-<BR><BR>[Stack]<UL><LI>Max Depth = 116<LI>Call Chain = BSP_LCD_DrawString &rArr; BSP_LCD_DrawChar &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
+<P><STRONG><a name="[d1]"></a>BSP_LCD_DrawString</STRONG> (Thumb, 82 bytes, Stack size 40 bytes, bsp_bp.o(i.BSP_LCD_DrawString))
+<BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = BSP_LCD_DrawString &rArr; BSP_LCD_DrawChar &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawChar
+<BR>[Calls]<UL><LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawChar
 </UL>
-<BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec5
-<LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec4
-<LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
+<BR>[Called By]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec5
+<LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec4
+<LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_initial
 </UL>
 
-<P><STRONG><a name="[da]"></a>BSP_LCD_FillRect</STRONG> (Thumb, 164 bytes, Stack size 32 bytes, bsp_bp.o(i.BSP_LCD_FillRect))
-<BR><BR>[Stack]<UL><LI>Max Depth = 60<LI>Call Chain = BSP_LCD_FillRect &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
+<P><STRONG><a name="[d2]"></a>BSP_LCD_FillRect</STRONG> (Thumb, 118 bytes, Stack size 24 bytes, bsp_bp.o(i.BSP_LCD_FillRect))
+<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = BSP_LCD_FillRect &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAddrWindow
-<LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritedata
+<BR>[Calls]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setAddrWindow
+<LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritedata
 </UL>
-<BR>[Called By]<UL><LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_FillScreen
-</UL>
-
-<P><STRONG><a name="[db]"></a>BSP_LCD_FillScreen</STRONG> (Thumb, 28 bytes, Stack size 16 bytes, bsp_bp.o(i.BSP_LCD_FillScreen))
-<BR><BR>[Stack]<UL><LI>Max Depth = 76<LI>Call Chain = BSP_LCD_FillScreen &rArr; BSP_LCD_FillRect &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
-</UL>
-<BR>[Calls]<UL><LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_FillRect
-</UL>
-<BR>[Called By]<UL><LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
+<BR>[Called By]<UL><LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_FillScreen
 </UL>
 
-<P><STRONG><a name="[dc]"></a>BSP_LCD_Init</STRONG> (Thumb, 10 bytes, Stack size 8 bytes, bsp_bp.o(i.BSP_LCD_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 92<LI>Call Chain = BSP_LCD_Init &rArr; ST7735_InitR &rArr; BSP_LCD_FillScreen &rArr; BSP_LCD_FillRect &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
+<P><STRONG><a name="[d4]"></a>BSP_LCD_FillScreen</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, bsp_bp.o(i.BSP_LCD_FillScreen))
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = BSP_LCD_FillScreen &rArr; BSP_LCD_FillRect &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
 </UL>
-<BR>[Calls]<UL><LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
+<BR>[Calls]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_FillRect
+</UL>
+<BR>[Called By]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
+</UL>
+
+<P><STRONG><a name="[d5]"></a>BSP_LCD_Init</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, bsp_bp.o(i.BSP_LCD_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = BSP_LCD_Init &rArr; ST7735_InitR &rArr; BSP_LCD_FillScreen &rArr; BSP_LCD_FillRect &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
+</UL>
+<BR>[Calls]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_initial
 </UL>
 
-<P><STRONG><a name="[de]"></a>BSP_LCD_OutUDec4</STRONG> (Thumb, 116 bytes, Stack size 24 bytes, bsp_bp.o(i.BSP_LCD_OutUDec4))
-<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = BSP_LCD_OutUDec4 &rArr; BSP_LCD_DrawString &rArr; BSP_LCD_DrawChar &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
+<P><STRONG><a name="[d7]"></a>BSP_LCD_OutUDec4</STRONG> (Thumb, 80 bytes, Stack size 24 bytes, bsp_bp.o(i.BSP_LCD_OutUDec4))
+<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = BSP_LCD_OutUDec4 &rArr; BSP_LCD_DrawString &rArr; BSP_LCD_DrawChar &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawString
-<LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawChar
-<LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage4
+<BR>[Calls]<UL><LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawString
+<LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawChar
+<LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage4
 </UL>
-<BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
-<LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
-</UL>
-
-<P><STRONG><a name="[e0]"></a>BSP_LCD_OutUDec5</STRONG> (Thumb, 116 bytes, Stack size 24 bytes, bsp_bp.o(i.BSP_LCD_OutUDec5))
-<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = BSP_LCD_OutUDec5 &rArr; BSP_LCD_DrawString &rArr; BSP_LCD_DrawChar &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
-</UL>
-<BR>[Calls]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawString
-<LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawChar
-<LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage5
-</UL>
-<BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
+<BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
+<LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
 </UL>
 
-<P><STRONG><a name="[f8]"></a>BSP_LCD_SetCursor</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, bsp_bp.o(i.BSP_LCD_SetCursor))
-<BR><BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
-<LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
-<LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
+<P><STRONG><a name="[d9]"></a>BSP_LCD_OutUDec5</STRONG> (Thumb, 80 bytes, Stack size 24 bytes, bsp_bp.o(i.BSP_LCD_OutUDec5))
+<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = BSP_LCD_OutUDec5 &rArr; BSP_LCD_DrawString &rArr; BSP_LCD_DrawChar &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
+</UL>
+<BR>[Calls]<UL><LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawString
+<LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawChar
+<LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage5
+</UL>
+<BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
 </UL>
 
-<P><STRONG><a name="[c4]"></a>BSP_LightSensor_INTstatus</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, bsp.o(i.BSP_LightSensor_INTstatus))
+<P><STRONG><a name="[f0]"></a>BSP_LCD_SetCursor</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, bsp_bp.o(i.BSP_LCD_SetCursor))
+<BR><BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
+<LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
+<LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
+</UL>
+
+<P><STRONG><a name="[c3]"></a>BSP_LightSensor_INTstatus</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, bsp.o(i.BSP_LightSensor_INTstatus))
 <BR><BR>[Called By]<UL><LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_LightSensor_End
 </UL>
 
-<P><STRONG><a name="[c7]"></a>BSP_LightSensor_Init</STRONG> (Thumb, 76 bytes, Stack size 8 bytes, bsp.o(i.BSP_LightSensor_Init))
+<P><STRONG><a name="[c7]"></a>BSP_LightSensor_Init</STRONG> (Thumb, 62 bytes, Stack size 8 bytes, bsp.o(i.BSP_LightSensor_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = BSP_LightSensor_Init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;i2cinit
+<BR>[Calls]<UL><LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;i2cinit
 </UL>
 <BR>[Called By]<UL><LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_LightSensor_Init
 </UL>
 
-<P><STRONG><a name="[f6]"></a>BSP_Microphone_Get</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, bsp.o(i.BSP_Microphone_Get))
-<BR><BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
+<P><STRONG><a name="[ee]"></a>BSP_Microphone_Get</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, bsp.o(i.BSP_Microphone_Get))
+<BR><BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_on
 </UL>
 
-<P><STRONG><a name="[e3]"></a>BSP_Microphone_Init</STRONG> (Thumb, 176 bytes, Stack size 8 bytes, bsp.o(i.BSP_Microphone_Init))
+<P><STRONG><a name="[dc]"></a>BSP_Microphone_Init</STRONG> (Thumb, 138 bytes, Stack size 8 bytes, bsp.o(i.BSP_Microphone_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = BSP_Microphone_Init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;l_adcinit1
+<BR>[Calls]<UL><LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;l_adcinit1
 </UL>
-<BR>[Called By]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
+<BR>[Called By]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
 </UL>
 
-<P><STRONG><a name="[127]"></a>BSP_displayPaused</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, bsp.o(i.BSP_displayPaused))
+<P><STRONG><a name="[120]"></a>BSP_displayPaused</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, bsp.o(i.BSP_displayPaused))
 <BR><BR>[Called By]<UL><LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Table_paused
 </UL>
 
-<P><STRONG><a name="[126]"></a>BSP_displayPhilStat</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, bsp.o(i.BSP_displayPhilStat))
+<P><STRONG><a name="[11f]"></a>BSP_displayPhilStat</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, bsp.o(i.BSP_displayPhilStat))
 <BR><BR>[Called By]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Table_serving
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Table_paused
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Table_initial
 </UL>
 
-<P><STRONG><a name="[e5]"></a>BSP_init</STRONG> (Thumb, 172 bytes, Stack size 8 bytes, bsp.o(i.BSP_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = BSP_init &rArr; SystemCoreClockUpdate
+<P><STRONG><a name="[de]"></a>BSP_init</STRONG> (Thumb, 154 bytes, Stack size 16 bytes, bsp.o(i.BSP_init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = BSP_init &rArr; BSP_BP_SPI_TFT_Init &rArr; BSP_Delay1ms
 </UL>
-<BR>[Calls]<UL><LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemCoreClockUpdate
+<BR>[Calls]<UL><LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemCoreClockUpdate
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_Joystick_Init
-<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Profile_Init
-<LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_Init
-<LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_Init
-<LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_randomSeed
-<LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Microphone_Init
+<LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Profile_Init
+<LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_Init
+<LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_Init
+<LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Microphone_Init
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPI_TFT_Init
-<LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_RGB_ledsInit
-<LI><a href="#[e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_BuzzerIO_Init
+<LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_RGB_ledsInit
+<LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_BuzzerIO_Init
 <LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Accelerometer_Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[f2]"></a>BSP_ledRedOff</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, bsp.o(i.BSP_ledRedOff))
+<P><STRONG><a name="[ea]"></a>BSP_ledRedOff</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, bsp.o(i.BSP_ledRedOff))
 <BR><BR>[Called By]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_initial
 </UL>
 
-<P><STRONG><a name="[ed]"></a>BSP_random</STRONG> (Thumb, 52 bytes, Stack size 16 bytes, bsp.o(i.BSP_random))
-<BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = BSP_random &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_tickXFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[e5]"></a>BSP_random</STRONG> (Thumb, 40 bytes, Stack size 16 bytes, bsp.o(i.BSP_random))
+<BR><BR>[Stack]<UL><LI>Max Depth = 192<LI>Call Chain = BSP_random &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_publishFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
-<LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspendAll
+<BR>[Calls]<UL><LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspendAll
 </UL>
 <BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_thinking
 <LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_eating
 </UL>
 
-<P><STRONG><a name="[ec]"></a>BSP_randomSeed</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, bsp.o(i.BSP_randomSeed))
-<BR><BR>[Called By]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
-</UL>
-
 <P><STRONG><a name="[c]"></a>GPIOPortA_IRQHandler</STRONG> (Thumb, 58 bytes, Stack size 16 bytes, bsp.o(i.GPIOPortA_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = GPIOPortA_IRQHandler &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = GPIOPortA_IRQHandler &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newXFromISR_
 <LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_postFromISR_
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_tm4c123gh6pm.o(RESET)
 </UL>
-<P><STRONG><a name="[f0]"></a>Heartbeat_ctor</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, blinky.o(i.Heartbeat_ctor))
+<P><STRONG><a name="[e8]"></a>Heartbeat_ctor</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, blinky.o(i.Heartbeat_ctor))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Heartbeat_ctor &rArr; QTimeEvt_ctorX
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_ctorX
+<BR>[Calls]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_ctorX
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_ctor
 </UL>
 <BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[ff]"></a>Philo_ctor</STRONG> (Thumb, 48 bytes, Stack size 16 bytes, philo.o(i.Philo_ctor))
+<P><STRONG><a name="[f7]"></a>Philo_ctor</STRONG> (Thumb, 48 bytes, Stack size 16 bytes, philo.o(i.Philo_ctor))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = Philo_ctor &rArr; QTimeEvt_ctorX
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_ctorX
+<BR>[Calls]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_ctorX
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_ctor
 </UL>
 <BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[eb]"></a>Profile_Init</STRONG> (Thumb, 418 bytes, Stack size 0 bytes, profile.o(i.Profile_Init))
-<BR><BR>[Called By]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
+<P><STRONG><a name="[e4]"></a>Profile_Init</STRONG> (Thumb, 320 bytes, Stack size 8 bytes, profile.o(i.Profile_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = Profile_Init
+</UL>
+<BR>[Called By]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
 </UL>
 
-<P><STRONG><a name="[bc]"></a>QActive_ctor</STRONG> (Thumb, 28 bytes, Stack size 16 bytes, qf_qact.o(i.QActive_ctor))
+<P><STRONG><a name="[bc]"></a>QActive_ctor</STRONG> (Thumb, 26 bytes, Stack size 16 bytes, qf_qact.o(i.QActive_ctor))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = QActive_ctor
 </UL>
-<BR>[Calls]<UL><LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_bzero
-<LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QHsm_ctor
+<BR>[Calls]<UL><LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_bzero
+<LI><a href="#[fb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QHsm_ctor
 </UL>
-<BR>[Called By]<UL><LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_ctor
-<LI><a href="#[125]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Table_ctor
-<LI><a href="#[122]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Sensor_ctor
-<LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_ctor
+<BR>[Called By]<UL><LI><a href="#[e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_ctor
+<LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Table_ctor
+<LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Sensor_ctor
+<LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_ctor
 <LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BLE_uart_ctor
 </UL>
 
-<P><STRONG><a name="[104]"></a>QActive_get_</STRONG> (Thumb, 114 bytes, Stack size 16 bytes, qf_actq.o(i.QActive_get_))
-<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = QActive_get_ &rArr; ulTaskNotifyTake &rArr; prvAddCurrentTaskToDelayedList &rArr; vListInsert
+<P><STRONG><a name="[fc]"></a>QActive_get_</STRONG> (Thumb, 110 bytes, Stack size 16 bytes, qf_actq.o(i.QActive_get_))
+<BR><BR>[Stack]<UL><LI>Max Depth = 60<LI>Call Chain = QActive_get_ &rArr; ulTaskNotifyTake &rArr; prvAddCurrentTaskToDelayedList &rArr; vListInsert
 </UL>
-<BR>[Calls]<UL><LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ulTaskNotifyTake
-<LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ulTaskNotifyTake
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Called By]<UL><LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;task_function
 </UL>
 
-<P><STRONG><a name="[ba]"></a>QActive_postFromISR_</STRONG> (Thumb, 212 bytes, Stack size 32 bytes, qf_port.o(i.QActive_postFromISR_))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[ba]"></a>QActive_postFromISR_</STRONG> (Thumb, 172 bytes, Stack size 24 bytes, qf_port.o(i.QActive_postFromISR_))
+<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
-<LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskNotifyGiveFromISR
-<LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gcFromISR
+<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskNotifyGiveFromISR
+<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gcFromISR
 </UL>
-<BR>[Called By]<UL><LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationTickHook
-<LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickXFromISR_
-<LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publishFromISR_
+<BR>[Called By]<UL><LI><a href="#[131]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationTickHook
+<LI><a href="#[116]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickXFromISR_
+<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publishFromISR_
 <LI><a href="#[12]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_IRQHandler
 <LI><a href="#[c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIOPortA_IRQHandler
 <LI><a href="#[3e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC1Seq3_IRQHandler
 </UL>
 
-<P><STRONG><a name="[9a]"></a>QActive_postLIFO_</STRONG> (Thumb, 122 bytes, Stack size 24 bytes, qf_actq.o(i.QActive_postLIFO_))
-<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = QActive_postLIFO_ &rArr; xTaskGenericNotify &rArr; vPortExitCritical
+<P><STRONG><a name="[9a]"></a>QActive_postLIFO_</STRONG> (Thumb, 114 bytes, Stack size 16 bytes, qf_actq.o(i.QActive_postLIFO_))
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = QActive_postLIFO_ &rArr; xTaskGenericNotify &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
-<LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> qf_qact.o(.constdata)
 </UL>
-<P><STRONG><a name="[99]"></a>QActive_post_</STRONG> (Thumb, 178 bytes, Stack size 24 bytes, qf_actq.o(i.QActive_post_))
-<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = QActive_post_ &rArr; xTaskGenericNotify &rArr; vPortExitCritical
+<P><STRONG><a name="[99]"></a>QActive_post_</STRONG> (Thumb, 168 bytes, Stack size 24 bytes, qf_actq.o(i.QActive_post_))
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = QActive_post_ &rArr; QF_gc &rArr; QMPool_put &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
-<LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
-<LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> qf_qact.o(.constdata)
 </UL>
-<P><STRONG><a name="[10c]"></a>QActive_setAttr</STRONG> (Thumb, 34 bytes, Stack size 16 bytes, qf_port.o(i.QActive_setAttr))
+<P><STRONG><a name="[104]"></a>QActive_setAttr</STRONG> (Thumb, 30 bytes, Stack size 16 bytes, qf_port.o(i.QActive_setAttr))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = QActive_setAttr
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
@@ -1255,23 +1211,23 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[96]"></a>QActive_start_</STRONG> (Thumb, 162 bytes, Stack size 56 bytes, qf_port.o(i.QActive_start_))
+<P><STRONG><a name="[96]"></a>QActive_start_</STRONG> (Thumb, 148 bytes, Stack size 48 bytes, qf_port.o(i.QActive_start_))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152 + Unknown Stack Size
-<LI>Call Chain = QActive_start_ &rArr; xTaskCreateStatic &rArr; prvInitialiseNewTask
+<LI>Call Chain = QActive_start_ &rArr; xTaskCreateStatic &rArr; prvInitialiseNewTask &rArr; pxPortInitialiseStack
 </UL>
-<BR>[Calls]<UL><LI><a href="#[10d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QEQueue_init
-<LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_add_
+<BR>[Calls]<UL><LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QEQueue_init
+<LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_add_
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
-<LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCreateStatic
+<LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCreateStatic
 </UL>
 <BR>[Address Reference Count : 2]<UL><LI> qf_actq.o(.constdata)
 <LI> qf_qact.o(.constdata)
 </UL>
-<P><STRONG><a name="[bd]"></a>QActive_subscribe</STRONG> (Thumb, 86 bytes, Stack size 16 bytes, qf_ps.o(i.QActive_subscribe))
+<P><STRONG><a name="[bd]"></a>QActive_subscribe</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, qf_ps.o(i.QActive_subscribe))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = QActive_subscribe &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_initial
@@ -1280,73 +1236,73 @@ Global Symbols
 <LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_initial
 </UL>
 
-<P><STRONG><a name="[10d]"></a>QEQueue_init</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, qf_qeq.o(i.QEQueue_init))
+<P><STRONG><a name="[105]"></a>QEQueue_init</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, qf_qeq.o(i.QEQueue_init))
 <BR><BR>[Called By]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_start_
 </UL>
 
-<P><STRONG><a name="[11b]"></a>QF_LOG2</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, qf_act.o(i.QF_LOG2))
-<BR><BR>[Called By]<UL><LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
-<LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publishFromISR_
+<P><STRONG><a name="[113]"></a>QF_LOG2</STRONG> (Thumb, 34 bytes, Stack size 0 bytes, qf_act.o(i.QF_LOG2))
+<BR><BR>[Called By]<UL><LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
+<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publishFromISR_
 </UL>
 
-<P><STRONG><a name="[10e]"></a>QF_add_</STRONG> (Thumb, 50 bytes, Stack size 16 bytes, qf_act.o(i.QF_add_))
+<P><STRONG><a name="[106]"></a>QF_add_</STRONG> (Thumb, 46 bytes, Stack size 16 bytes, qf_act.o(i.QF_add_))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = QF_add_ &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Called By]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_start_
 </UL>
 
-<P><STRONG><a name="[102]"></a>QF_bzero</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, qf_act.o(i.QF_bzero))
-<BR><BR>[Called By]<UL><LI><a href="#[119]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_psInit
+<P><STRONG><a name="[fa]"></a>QF_bzero</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, qf_act.o(i.QF_bzero))
+<BR><BR>[Called By]<UL><LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_psInit
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_ctor
 </UL>
 
-<P><STRONG><a name="[10b]"></a>QF_gc</STRONG> (Thumb, 78 bytes, Stack size 16 bytes, qf_dyn.o(i.QF_gc))
+<P><STRONG><a name="[103]"></a>QF_gc</STRONG> (Thumb, 82 bytes, Stack size 16 bytes, qf_dyn.o(i.QF_gc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = QF_gc &rArr; QMPool_put &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_put
-<LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_put
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
-<BR>[Called By]<UL><LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
+<BR>[Called By]<UL><LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;task_function
+<LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
 <LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_post_
-<LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;task_function
 </UL>
 
-<P><STRONG><a name="[109]"></a>QF_gcFromISR</STRONG> (Thumb, 108 bytes, Stack size 16 bytes, qf_port.o(i.QF_gcFromISR))
+<P><STRONG><a name="[100]"></a>QF_gcFromISR</STRONG> (Thumb, 90 bytes, Stack size 16 bytes, qf_port.o(i.QF_gcFromISR))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = QF_gcFromISR &rArr; QMPool_putFromISR
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
-<LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_putFromISR
+<LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_putFromISR
 </UL>
-<BR>[Called By]<UL><LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publishFromISR_
+<BR>[Called By]<UL><LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publishFromISR_
 <LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_postFromISR_
 </UL>
 
-<P><STRONG><a name="[12e]"></a>QF_init</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, qf_port.o(i.QF_init))
+<P><STRONG><a name="[125]"></a>QF_init</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, qf_port.o(i.QF_init))
 <BR><BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[b9]"></a>QF_newXFromISR_</STRONG> (Thumb, 138 bytes, Stack size 24 bytes, qf_port.o(i.QF_newXFromISR_))
+<P><STRONG><a name="[b9]"></a>QF_newXFromISR_</STRONG> (Thumb, 118 bytes, Stack size 24 bytes, qf_port.o(i.QF_newXFromISR_))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = QF_newXFromISR_ &rArr; QMPool_getFromISR
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
-<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_getFromISR
+<LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_getFromISR
 </UL>
-<BR>[Called By]<UL><LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationTickHook
+<BR>[Called By]<UL><LI><a href="#[131]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationTickHook
 <LI><a href="#[12]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_IRQHandler
 <LI><a href="#[c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIOPortA_IRQHandler
 <LI><a href="#[3e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADC1Seq3_IRQHandler
 </UL>
 
-<P><STRONG><a name="[100]"></a>QF_newX_</STRONG> (Thumb, 138 bytes, Stack size 24 bytes, qf_dyn.o(i.QF_newX_))
-<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = QF_newX_ &rArr; QMPool_get &rArr; vPortExitCritical
+<P><STRONG><a name="[f8]"></a>QF_newX_</STRONG> (Thumb, 118 bytes, Stack size 24 bytes, qf_dyn.o(i.QF_newX_))
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = QF_newX_ &rArr; QMPool_get &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_get
+<BR>[Calls]<UL><LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_get
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Sensor_busy
@@ -1355,102 +1311,100 @@ Global Symbols
 <LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_eating
 </UL>
 
-<P><STRONG><a name="[114]"></a>QF_onStartup</STRONG> (Thumb, 158 bytes, Stack size 8 bytes, bsp.o(i.QF_onStartup))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = QF_onStartup &rArr; __NVIC_SetPriority
+<P><STRONG><a name="[10c]"></a>QF_onStartup</STRONG> (Thumb, 140 bytes, Stack size 16 bytes, bsp.o(i.QF_onStartup))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = QF_onStartup
 </UL>
-<BR>[Calls]<UL><LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__NVIC_SetPriority
-<LI><a href="#[116]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__NVIC_EnableIRQ
+<BR>[Calls]<UL><LI><a href="#[10d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__NVIC_SetPriority
+<LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__NVIC_EnableIRQ
 </UL>
-<BR>[Called By]<UL><LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_run
+<BR>[Called By]<UL><LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_run
 </UL>
 
-<P><STRONG><a name="[117]"></a>QF_poolInit</STRONG> (Thumb, 100 bytes, Stack size 16 bytes, qf_dyn.o(i.QF_poolInit))
+<P><STRONG><a name="[10f]"></a>QF_poolInit</STRONG> (Thumb, 86 bytes, Stack size 24 bytes, qf_dyn.o(i.QF_poolInit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = QF_poolInit &rArr; QMPool_init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_init
+<BR>[Calls]<UL><LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_init
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[119]"></a>QF_psInit</STRONG> (Thumb, 24 bytes, Stack size 16 bytes, qf_ps.o(i.QF_psInit))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = QF_psInit
-</UL>
-<BR>[Calls]<UL><LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_bzero
+<P><STRONG><a name="[111]"></a>QF_psInit</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, qf_ps.o(i.QF_psInit))
+<BR><BR>[Calls]<UL><LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_bzero
 </UL>
 <BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[11a]"></a>QF_publishFromISR_</STRONG> (Thumb, 178 bytes, Stack size 24 bytes, qf_port.o(i.QF_publishFromISR_))
+<P><STRONG><a name="[112]"></a>QF_publishFromISR_</STRONG> (Thumb, 164 bytes, Stack size 40 bytes, qf_port.o(i.QF_publishFromISR_))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = QF_publishFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_LOG2
+<BR>[Calls]<UL><LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_LOG2
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
-<LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gcFromISR
+<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gcFromISR
 <LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_postFromISR_
 </UL>
-<BR>[Called By]<UL><LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationTickHook
+<BR>[Called By]<UL><LI><a href="#[131]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationTickHook
 </UL>
 
-<P><STRONG><a name="[101]"></a>QF_publish_</STRONG> (Thumb, 160 bytes, Stack size 16 bytes, qf_ps.o(i.QF_publish_))
-<BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = QF_publish_ &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_tickXFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[f9]"></a>QF_publish_</STRONG> (Thumb, 148 bytes, Stack size 32 bytes, qf_ps.o(i.QF_publish_))
+<BR><BR>[Stack]<UL><LI>Max Depth = 208<LI>Call Chain = QF_publish_ &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_publishFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
-<LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspendAll
-<LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
-<LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
-<LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_LOG2
+<BR>[Calls]<UL><LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspendAll
+<LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_LOG2
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Called By]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Table_serving
 <LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_eating
 </UL>
 
-<P><STRONG><a name="[11c]"></a>QF_run</STRONG> (Thumb, 22 bytes, Stack size 8 bytes, qf_port.o(i.QF_run))
-<BR><BR>[Stack]<UL><LI>Max Depth = 136 + Unknown Stack Size
-<LI>Call Chain = QF_run &rArr; vTaskStartScheduler &rArr; xTaskCreateStatic &rArr; prvInitialiseNewTask
+<P><STRONG><a name="[114]"></a>QF_run</STRONG> (Thumb, 22 bytes, Stack size 8 bytes, qf_port.o(i.QF_run))
+<BR><BR>[Stack]<UL><LI>Max Depth = 144 + Unknown Stack Size
+<LI>Call Chain = QF_run &rArr; vTaskStartScheduler &rArr; xTaskCreateStatic &rArr; prvInitialiseNewTask &rArr; pxPortInitialiseStack
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
-<LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskStartScheduler
-<LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_onStartup
+<LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskStartScheduler
+<LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_onStartup
 </UL>
 <BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[11e]"></a>QF_tickXFromISR_</STRONG> (Thumb, 234 bytes, Stack size 32 bytes, qf_port.o(i.QF_tickXFromISR_))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = QF_tickXFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[116]"></a>QF_tickXFromISR_</STRONG> (Thumb, 152 bytes, Stack size 24 bytes, qf_port.o(i.QF_tickXFromISR_))
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = QF_tickXFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 <LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_postFromISR_
 </UL>
-<BR>[Called By]<UL><LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationTickHook
+<BR>[Called By]<UL><LI><a href="#[131]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationTickHook
 </UL>
 
-<P><STRONG><a name="[11f]"></a>QF_tickX_</STRONG> (Thumb, 178 bytes, Stack size 24 bytes, qf_time.o(i.QF_tickX_))
+<P><STRONG><a name="[117]"></a>QF_tickX_</STRONG> (Thumb, 142 bytes, Stack size 24 bytes, qf_time.o(i.QF_tickX_))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = QF_tickX_ &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Called By]<UL><LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTicker_dispatch_
 </UL>
 
-<P><STRONG><a name="[103]"></a>QHsm_ctor</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, qep_hsm.o(i.QHsm_ctor))
+<P><STRONG><a name="[fb]"></a>QHsm_ctor</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, qep_hsm.o(i.QHsm_ctor))
 <BR><BR>[Called By]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_ctor
 </UL>
 
-<P><STRONG><a name="[93]"></a>QHsm_dispatch_</STRONG> (Thumb, 258 bytes, Stack size 56 bytes, qep_hsm.o(i.QHsm_dispatch_))
-<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = QHsm_dispatch_ &rArr; QHsm_tran_
+<P><STRONG><a name="[93]"></a>QHsm_dispatch_</STRONG> (Thumb, 236 bytes, Stack size 56 bytes, qep_hsm.o(i.QHsm_dispatch_))
+<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = QHsm_dispatch_ &rArr; QHsm_tran_
 </UL>
-<BR>[Calls]<UL><LI><a href="#[120]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QHsm_tran_
+<BR>[Calls]<UL><LI><a href="#[118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QHsm_tran_
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Address Reference Count : 2]<UL><LI> qep_hsm.o(.constdata)
 <LI> qf_qact.o(.constdata)
 </UL>
-<P><STRONG><a name="[92]"></a>QHsm_init_</STRONG> (Thumb, 168 bytes, Stack size 48 bytes, qep_hsm.o(i.QHsm_init_))
+<P><STRONG><a name="[92]"></a>QHsm_init_</STRONG> (Thumb, 140 bytes, Stack size 48 bytes, qep_hsm.o(i.QHsm_init_))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = QHsm_init_
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
@@ -1458,29 +1412,29 @@ Global Symbols
 <BR>[Address Reference Count : 2]<UL><LI> qep_hsm.o(.constdata)
 <LI> qf_qact.o(.constdata)
 </UL>
-<P><STRONG><a name="[7c]"></a>QHsm_top</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, qep_hsm.o(i.QHsm_top))
+<P><STRONG><a name="[7c]"></a>QHsm_top</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, qep_hsm.o(i.QHsm_top))
 <BR>[Address Reference Count : 10]<UL><LI> qep_hsm.o(i.QHsm_ctor)
 <LI> qep_hsm.o(i.QHsm_init_)
 <LI> blinky.o(i.Heartbeat_start)
 <LI> blinky.o(i.Heartbeat_stop)
+<LI> philo.o(i.Philo_thinking)
 <LI> philo.o(i.Philo_eating)
 <LI> philo.o(i.Philo_hungry)
-<LI> philo.o(i.Philo_thinking)
-<LI> lightsensor.o(i.Sensor_polling)
 <LI> table.o(i.Table_active)
 <LI> ble_uart.o(i.BLE_uart_start)
+<LI> lightsensor.o(i.Sensor_polling)
 </UL>
-<P><STRONG><a name="[113]"></a>QMPool_get</STRONG> (Thumb, 138 bytes, Stack size 24 bytes, qf_mem.o(i.QMPool_get))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = QMPool_get &rArr; vPortExitCritical
+<P><STRONG><a name="[10b]"></a>QMPool_get</STRONG> (Thumb, 120 bytes, Stack size 16 bytes, qf_mem.o(i.QMPool_get))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = QMPool_get &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
-<BR>[Called By]<UL><LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newX_
+<BR>[Called By]<UL><LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newX_
 </UL>
 
-<P><STRONG><a name="[112]"></a>QMPool_getFromISR</STRONG> (Thumb, 146 bytes, Stack size 24 bytes, qf_port.o(i.QMPool_getFromISR))
+<P><STRONG><a name="[10a]"></a>QMPool_getFromISR</STRONG> (Thumb, 124 bytes, Stack size 24 bytes, qf_port.o(i.QMPool_getFromISR))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = QMPool_getFromISR
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
@@ -1488,96 +1442,96 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newXFromISR_
 </UL>
 
-<P><STRONG><a name="[118]"></a>QMPool_init</STRONG> (Thumb, 138 bytes, Stack size 32 bytes, qf_mem.o(i.QMPool_init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = QMPool_init
+<P><STRONG><a name="[110]"></a>QMPool_init</STRONG> (Thumb, 122 bytes, Stack size 24 bytes, qf_mem.o(i.QMPool_init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = QMPool_init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
-<BR>[Called By]<UL><LI><a href="#[117]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_poolInit
+<BR>[Called By]<UL><LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_poolInit
 </UL>
 
-<P><STRONG><a name="[110]"></a>QMPool_put</STRONG> (Thumb, 58 bytes, Stack size 16 bytes, qf_mem.o(i.QMPool_put))
+<P><STRONG><a name="[108]"></a>QMPool_put</STRONG> (Thumb, 58 bytes, Stack size 16 bytes, qf_mem.o(i.QMPool_put))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = QMPool_put &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
-<BR>[Called By]<UL><LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
+<BR>[Called By]<UL><LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
 </UL>
 
-<P><STRONG><a name="[111]"></a>QMPool_putFromISR</STRONG> (Thumb, 84 bytes, Stack size 16 bytes, qf_port.o(i.QMPool_putFromISR))
+<P><STRONG><a name="[109]"></a>QMPool_putFromISR</STRONG> (Thumb, 72 bytes, Stack size 16 bytes, qf_port.o(i.QMPool_putFromISR))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = QMPool_putFromISR
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
-<BR>[Called By]<UL><LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gcFromISR
+<BR>[Called By]<UL><LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gcFromISR
 </UL>
 
-<P><STRONG><a name="[fa]"></a>QTimeEvt_armX</STRONG> (Thumb, 102 bytes, Stack size 24 bytes, qf_time.o(i.QTimeEvt_armX))
+<P><STRONG><a name="[f2]"></a>QTimeEvt_armX</STRONG> (Thumb, 86 bytes, Stack size 24 bytes, qf_time.o(i.QTimeEvt_armX))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = QTimeEvt_armX &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
-<BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
+<BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Sensor_polling
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_thinking
 <LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_eating
 </UL>
 
-<P><STRONG><a name="[f1]"></a>QTimeEvt_ctorX</STRONG> (Thumb, 50 bytes, Stack size 24 bytes, qf_time.o(i.QTimeEvt_ctorX))
+<P><STRONG><a name="[e9]"></a>QTimeEvt_ctorX</STRONG> (Thumb, 48 bytes, Stack size 24 bytes, qf_time.o(i.QTimeEvt_ctorX))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = QTimeEvt_ctorX
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
-<BR>[Called By]<UL><LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_ctor
-<LI><a href="#[122]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Sensor_ctor
-<LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_ctor
+<BR>[Called By]<UL><LI><a href="#[e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_ctor
+<LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Sensor_ctor
+<LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_ctor
 </UL>
 
-<P><STRONG><a name="[fb]"></a>QTimeEvt_disarm</STRONG> (Thumb, 46 bytes, Stack size 16 bytes, qf_time.o(i.QTimeEvt_disarm))
+<P><STRONG><a name="[f3]"></a>QTimeEvt_disarm</STRONG> (Thumb, 46 bytes, Stack size 16 bytes, qf_time.o(i.QTimeEvt_disarm))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = QTimeEvt_disarm &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 </UL>
-<BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
+<BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_thinking
 </UL>
 
-<P><STRONG><a name="[b2]"></a>Q_onAssert</STRONG> (Thumb, 90 bytes, Stack size 0 bytes, bsp.o(i.Q_onAssert))
-<BR><BR>[Called By]<UL><LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
+<P><STRONG><a name="[b2]"></a>Q_onAssert</STRONG> (Thumb, 52 bytes, Stack size 0 bytes, bsp.o(i.Q_onAssert))
+<BR><BR>[Called By]<UL><LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_subscribe
-<LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_put
-<LI><a href="#[118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_init
-<LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_get
-<LI><a href="#[117]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_poolInit
-<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newX_
-<LI><a href="#[f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_ctorX
-<LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
-<LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickX_
-<LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
+<LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_put
+<LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_init
+<LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_get
+<LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_poolInit
+<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newX_
+<LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_ctorX
+<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
+<LI><a href="#[117]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickX_
+<LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
 <LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_start_
 <LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_post_
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_postLIFO_
-<LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_get_
+<LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_get_
 <LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTicker_postLIFO_
-<LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_add_
+<LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_add_
 <LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QHsm_init_
 <LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QHsm_dispatch_
-<LI><a href="#[120]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QHsm_tran_
+<LI><a href="#[118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QHsm_tran_
 <LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
-<LI><a href="#[13c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationStackOverflowHook
-<LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_putFromISR
-<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_getFromISR
-<LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickXFromISR_
-<LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_run
-<LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publishFromISR_
+<LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationStackOverflowHook
+<LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_putFromISR
+<LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_getFromISR
+<LI><a href="#[116]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickXFromISR_
+<LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_run
+<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publishFromISR_
 <LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newXFromISR_
-<LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gcFromISR
-<LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_setAttr
+<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gcFromISR
+<LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_setAttr
 <LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_postFromISR_
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Table_serving
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Table_paused
@@ -1588,777 +1542,740 @@ Global Symbols
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[12a]"></a>RxFifo_Init</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, bsp.o(i.RxFifo_Init))
-<BR><BR>[Called By]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_Init
+<P><STRONG><a name="[121]"></a>RxFifo_Init</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, bsp.o(i.RxFifo_Init))
+<BR><BR>[Called By]<UL><LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_Init
 </UL>
 
-<P><STRONG><a name="[122]"></a>Sensor_ctor</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, lightsensor.o(i.Sensor_ctor))
+<P><STRONG><a name="[11b]"></a>Sensor_ctor</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, lightsensor.o(i.Sensor_ctor))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Sensor_ctor &rArr; QTimeEvt_ctorX
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_ctorX
+<BR>[Calls]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_ctorX
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_ctor
 </UL>
 <BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[b]"></a>SysTick_Handler</STRONG> (Thumb, 46 bytes, Stack size 8 bytes, port.o(i.SysTick_Handler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = SysTick_Handler &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_tickXFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[b]"></a>SysTick_Handler</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, port.o(i.SysTick_Handler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = SysTick_Handler &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_publishFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
+<BR>[Calls]<UL><LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_tm4c123gh6pm.o(RESET)
 </UL>
-<P><STRONG><a name="[e6]"></a>SystemCoreClockUpdate</STRONG> (Thumb, 184 bytes, Stack size 16 bytes, system_tm4c123gh6pm.o(i.SystemCoreClockUpdate))
+<P><STRONG><a name="[df]"></a>SystemCoreClockUpdate</STRONG> (Thumb, 112 bytes, Stack size 16 bytes, system_tm4c123gh6pm.o(i.SystemCoreClockUpdate))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = SystemCoreClockUpdate
 </UL>
-<BR>[Calls]<UL><LI><a href="#[124]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getOscClk
+<BR>[Calls]<UL><LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getOscClk
 </UL>
-<BR>[Called By]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
+<BR>[Called By]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
 </UL>
 
-<P><STRONG><a name="[78]"></a>SystemInit</STRONG> (Thumb, 138 bytes, Stack size 8 bytes, system_tm4c123gh6pm.o(i.SystemInit))
+<P><STRONG><a name="[78]"></a>SystemInit</STRONG> (Thumb, 104 bytes, Stack size 8 bytes, system_tm4c123gh6pm.o(i.SystemInit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = SystemInit
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_tm4c123gh6pm.o(.text)
 </UL>
-<P><STRONG><a name="[125]"></a>Table_ctor</STRONG> (Thumb, 38 bytes, Stack size 16 bytes, table.o(i.Table_ctor))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Table_ctor &rArr; QActive_ctor
+<P><STRONG><a name="[11e]"></a>Table_ctor</STRONG> (Thumb, 34 bytes, Stack size 8 bytes, table.o(i.Table_ctor))
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = Table_ctor &rArr; QActive_ctor
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_ctor
 </UL>
 <BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[ea]"></a>UART0_Init</STRONG> (Thumb, 164 bytes, Stack size 0 bytes, bsp.o(i.UART0_Init))
-<BR><BR>[Called By]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
+<P><STRONG><a name="[e3]"></a>UART0_Init</STRONG> (Thumb, 130 bytes, Stack size 0 bytes, bsp.o(i.UART0_Init))
+<BR><BR>[Called By]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
 </UL>
 
-<P><STRONG><a name="[128]"></a>UART0_OutChar</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, bsp.o(i.UART0_OutChar))
-<BR><BR>[Called By]<UL><LI><a href="#[12]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_IRQHandler
-<LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_OutString
+<P><STRONG><a name="[be]"></a>UART0_OutChar</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, bsp.o(i.UART0_OutChar))
+<BR><BR>[Called By]<UL><LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BLE_uart_start
 </UL>
 
-<P><STRONG><a name="[be]"></a>UART0_OutString</STRONG> (Thumb, 22 bytes, Stack size 4 bytes, bsp.o(i.UART0_OutString))
-<BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = UART0_OutString
-</UL>
-<BR>[Calls]<UL><LI><a href="#[128]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_OutChar
-</UL>
-<BR>[Called By]<UL><LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BLE_uart_start
-</UL>
-
-<P><STRONG><a name="[12]"></a>UART1_IRQHandler</STRONG> (Thumb, 176 bytes, Stack size 24 bytes, bsp.o(i.UART1_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = UART1_IRQHandler &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[12]"></a>UART1_IRQHandler</STRONG> (Thumb, 92 bytes, Stack size 24 bytes, bsp.o(i.UART1_IRQHandler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = UART1_IRQHandler &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newXFromISR_
 <LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_postFromISR_
-<LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr
-<LI><a href="#[128]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_OutChar
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_tm4c123gh6pm.o(RESET)
 </UL>
-<P><STRONG><a name="[e9]"></a>UART1_Init</STRONG> (Thumb, 156 bytes, Stack size 4 bytes, bsp.o(i.UART1_Init))
+<P><STRONG><a name="[e2]"></a>UART1_Init</STRONG> (Thumb, 128 bytes, Stack size 4 bytes, bsp.o(i.UART1_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = UART1_Init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RxFifo_Init
+<BR>[Calls]<UL><LI><a href="#[121]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RxFifo_Init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
-</UL>
-
-<P><STRONG><a name="[12b]"></a>UART1_OutChar</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, bsp.o(i.UART1_OutChar))
-<BR><BR>[Called By]<UL><LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_OutString
+<BR>[Called By]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
 </UL>
 
-<P><STRONG><a name="[fc]"></a>UART1_OutString</STRONG> (Thumb, 22 bytes, Stack size 4 bytes, bsp.o(i.UART1_OutString))
+<P><STRONG><a name="[122]"></a>UART1_OutChar</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, bsp.o(i.UART1_OutChar))
+<BR><BR>[Called By]<UL><LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_OutString
+</UL>
+
+<P><STRONG><a name="[f4]"></a>UART1_OutString</STRONG> (Thumb, 22 bytes, Stack size 4 bytes, bsp.o(i.UART1_OutString))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = UART1_OutString
 </UL>
-<BR>[Calls]<UL><LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_OutChar
+<BR>[Calls]<UL><LI><a href="#[122]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_OutChar
 </UL>
-<BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
+<BR>[Called By]<UL><LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_start
 </UL>
 
-<P><STRONG><a name="[aa]"></a>main</STRONG> (Thumb, 436 bytes, Stack size 24 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 160 + Unknown Stack Size
-<LI>Call Chain = main &rArr; QF_run &rArr; vTaskStartScheduler &rArr; xTaskCreateStatic &rArr; prvInitialiseNewTask
+<P><STRONG><a name="[aa]"></a>main</STRONG> (Thumb, 370 bytes, Stack size 40 bytes, main.o(i.main))
+<BR><BR>[Stack]<UL><LI>Max Depth = 184 + Unknown Stack Size
+<LI>Call Chain = main &rArr; QF_run &rArr; vTaskStartScheduler &rArr; xTaskCreateStatic &rArr; prvInitialiseNewTask &rArr; pxPortInitialiseStack
 </UL>
-<BR>[Calls]<UL><LI><a href="#[119]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_psInit
-<LI><a href="#[117]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_poolInit
+<BR>[Calls]<UL><LI><a href="#[111]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_psInit
+<LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_poolInit
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
-<LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_ctor
-<LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_run
-<LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_init
-<LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_setAttr
-<LI><a href="#[125]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Table_ctor
-<LI><a href="#[122]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Sensor_ctor
-<LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_ctor
+<LI><a href="#[e8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Heartbeat_ctor
+<LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_run
+<LI><a href="#[125]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_init
+<LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_setAttr
+<LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Table_ctor
+<LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Sensor_ctor
+<LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Philo_ctor
 <LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BLE_uart_ctor
-<LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
+<LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main
 </UL>
 
-<P><STRONG><a name="[13a]"></a>pxPortInitialiseStack</STRONG> (Thumb, 38 bytes, Stack size 0 bytes, port.o(i.pxPortInitialiseStack))
-<BR><BR>[Called By]<UL><LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
+<P><STRONG><a name="[12f]"></a>pxPortInitialiseStack</STRONG> (Thumb, 40 bytes, Stack size 8 bytes, port.o(i.pxPortInitialiseStack))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = pxPortInitialiseStack
+</UL>
+<BR>[Called By]<UL><LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
 </UL>
 
-<P><STRONG><a name="[107]"></a>ulTaskNotifyTake</STRONG> (Thumb, 108 bytes, Stack size 16 bytes, tasks.o(i.ulTaskNotifyTake))
-<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = ulTaskNotifyTake &rArr; prvAddCurrentTaskToDelayedList &rArr; vListInsert
+<P><STRONG><a name="[ff]"></a>ulTaskNotifyTake</STRONG> (Thumb, 96 bytes, Stack size 16 bytes, tasks.o(i.ulTaskNotifyTake))
+<BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = ulTaskNotifyTake &rArr; prvAddCurrentTaskToDelayedList &rArr; vListInsert
 </UL>
-<BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
-<LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddCurrentTaskToDelayedList
+<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<LI><a href="#[126]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddCurrentTaskToDelayedList
 </UL>
-<BR>[Called By]<UL><LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_get_
-</UL>
-
-<P><STRONG><a name="[130]"></a>uxListRemove</STRONG> (Thumb, 40 bytes, Stack size 0 bytes, list.o(i.uxListRemove))
-<BR><BR>[Called By]<UL><LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
-<LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
-<LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
-<LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckTasksWaitingTermination
-<LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddCurrentTaskToDelayedList
-<LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskNotifyGiveFromISR
+<BR>[Called By]<UL><LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_get_
 </UL>
 
-<P><STRONG><a name="[140]"></a>vApplicationGetIdleTaskMemory</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, bsp.o(i.vApplicationGetIdleTaskMemory))
-<BR><BR>[Called By]<UL><LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskStartScheduler
+<P><STRONG><a name="[127]"></a>uxListRemove</STRONG> (Thumb, 38 bytes, Stack size 0 bytes, list.o(i.uxListRemove))
+<BR><BR>[Called By]<UL><LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
+<LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvIdleTask
+<LI><a href="#[126]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddCurrentTaskToDelayedList
+<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskNotifyGiveFromISR
 </UL>
 
-<P><STRONG><a name="[137]"></a>vApplicationIdleHook</STRONG> (Thumb, 64 bytes, Stack size 8 bytes, bsp.o(i.vApplicationIdleHook))
+<P><STRONG><a name="[134]"></a>vApplicationGetIdleTaskMemory</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, bsp.o(i.vApplicationGetIdleTaskMemory))
+<BR><BR>[Called By]<UL><LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskStartScheduler
+</UL>
+
+<P><STRONG><a name="[12c]"></a>vApplicationIdleHook</STRONG> (Thumb, 40 bytes, Stack size 8 bytes, bsp.o(i.vApplicationIdleHook))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = vApplicationIdleHook
 </UL>
 <BR>[Called By]<UL><LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvIdleTask
 </UL>
 
-<P><STRONG><a name="[13c]"></a>vApplicationStackOverflowHook</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, bsp.o(i.vApplicationStackOverflowHook))
+<P><STRONG><a name="[130]"></a>vApplicationStackOverflowHook</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, bsp.o(i.vApplicationStackOverflowHook))
 <BR><BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Called By]<UL><LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSwitchContext
 </UL>
 
-<P><STRONG><a name="[13d]"></a>vApplicationTickHook</STRONG> (Thumb, 416 bytes, Stack size 40 bytes, bsp.o(i.vApplicationTickHook))
-<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = vApplicationTickHook &rArr; QF_tickXFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[131]"></a>vApplicationTickHook</STRONG> (Thumb, 306 bytes, Stack size 24 bytes, bsp.o(i.vApplicationTickHook))
+<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = vApplicationTickHook &rArr; QF_publishFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickXFromISR_
-<LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publishFromISR_
+<BR>[Calls]<UL><LI><a href="#[116]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickXFromISR_
+<LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publishFromISR_
 <LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newXFromISR_
 <LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_postFromISR_
 </UL>
-<BR>[Called By]<UL><LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
+<BR>[Called By]<UL><LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
 </UL>
 
-<P><STRONG><a name="[13b]"></a>vListInitialise</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, list.o(i.vListInitialise))
-<BR><BR>[Called By]<UL><LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseTaskLists
+<P><STRONG><a name="[12a]"></a>vListInitialise</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, list.o(i.vListInitialise))
+<BR><BR>[Called By]<UL><LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 </UL>
 
-<P><STRONG><a name="[139]"></a>vListInitialiseItem</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, list.o(i.vListInitialiseItem))
-<BR><BR>[Called By]<UL><LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
+<P><STRONG><a name="[12e]"></a>vListInitialiseItem</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, list.o(i.vListInitialiseItem))
+<BR><BR>[Called By]<UL><LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
 </UL>
 
-<P><STRONG><a name="[131]"></a>vListInsert</STRONG> (Thumb, 52 bytes, Stack size 8 bytes, list.o(i.vListInsert))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = vListInsert
+<P><STRONG><a name="[128]"></a>vListInsert</STRONG> (Thumb, 48 bytes, Stack size 12 bytes, list.o(i.vListInsert))
+<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = vListInsert
 </UL>
-<BR>[Called By]<UL><LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddCurrentTaskToDelayedList
-</UL>
-
-<P><STRONG><a name="[134]"></a>vListInsertEnd</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, list.o(i.vListInsertEnd))
-<BR><BR>[Called By]<UL><LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
-<LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
-<LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
-<LI><a href="#[132]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
-<LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskNotifyGiveFromISR
+<BR>[Called By]<UL><LI><a href="#[126]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddCurrentTaskToDelayedList
 </UL>
 
-<P><STRONG><a name="[105]"></a>vPortEnterCritical</STRONG> (Thumb, 66 bytes, Stack size 8 bytes, port.o(i.vPortEnterCritical))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = vPortEnterCritical
+<P><STRONG><a name="[12b]"></a>vListInsertEnd</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, list.o(i.vListInsertEnd))
+<BR><BR>[Called By]<UL><LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
+<LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
+<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskNotifyGiveFromISR
 </UL>
-<BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
+
+<P><STRONG><a name="[fd]"></a>vPortEnterCritical</STRONG> (Thumb, 48 bytes, Stack size 0 bytes, port.o(i.vPortEnterCritical))
+<BR><BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
-<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
+<BR>[Called By]<UL><LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_subscribe
-<LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_put
-<LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_get
-<LI><a href="#[fb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_disarm
-<LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
-<LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
-<LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ulTaskNotifyTake
-<LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickX_
-<LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
+<LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_put
+<LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_get
+<LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_disarm
+<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
+<LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ulTaskNotifyTake
+<LI><a href="#[117]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickX_
+<LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
 <LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_post_
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_postLIFO_
-<LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_get_
+<LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_get_
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTicker_post_
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTicker_dispatch_
-<LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_add_
-<LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckTasksWaitingTermination
-<LI><a href="#[132]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
+<LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_add_
+<LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvIdleTask
+<LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 </UL>
 
-<P><STRONG><a name="[106]"></a>vPortExitCritical</STRONG> (Thumb, 46 bytes, Stack size 8 bytes, port.o(i.vPortExitCritical))
+<P><STRONG><a name="[fe]"></a>vPortExitCritical</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, port.o(i.vPortExitCritical))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = vPortExitCritical
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
-<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
+<BR>[Called By]<UL><LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_subscribe
-<LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_put
-<LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_get
-<LI><a href="#[fb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_disarm
-<LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
-<LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
-<LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ulTaskNotifyTake
-<LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickX_
-<LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
+<LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_put
+<LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QMPool_get
+<LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_disarm
+<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
+<LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ulTaskNotifyTake
+<LI><a href="#[117]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickX_
+<LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
 <LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_post_
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_postLIFO_
-<LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_get_
+<LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_get_
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTicker_post_
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTicker_dispatch_
-<LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_add_
-<LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckTasksWaitingTermination
-<LI><a href="#[132]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
+<LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_add_
+<LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvIdleTask
+<LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 </UL>
 
-<P><STRONG><a name="[142]"></a>vPortSetupTimerInterrupt</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, port.o(i.vPortSetupTimerInterrupt))
-<BR><BR>[Called By]<UL><LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xPortStartScheduler
+<P><STRONG><a name="[136]"></a>vPortSetupTimerInterrupt</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, port.o(i.vPortSetupTimerInterrupt))
+<BR><BR>[Called By]<UL><LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xPortStartScheduler
 </UL>
 
-<P><STRONG><a name="[13e]"></a>vPortValidateInterruptPriority</STRONG> (Thumb, 82 bytes, Stack size 16 bytes, port.o(i.vPortValidateInterruptPriority))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = vPortValidateInterruptPriority
+<P><STRONG><a name="[132]"></a>vPortValidateInterruptPriority</STRONG> (Thumb, 66 bytes, Stack size 8 bytes, port.o(i.vPortValidateInterruptPriority))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = vPortValidateInterruptPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
-<LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortGetIPSR
+<LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortGetIPSR
 </UL>
-<BR>[Called By]<UL><LI><a href="#[108]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskNotifyGiveFromISR
+<BR>[Called By]<UL><LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskNotifyGiveFromISR
 </UL>
 
-<P><STRONG><a name="[108]"></a>vTaskNotifyGiveFromISR</STRONG> (Thumb, 190 bytes, Stack size 24 bytes, tasks.o(i.vTaskNotifyGiveFromISR))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[101]"></a>vTaskNotifyGiveFromISR</STRONG> (Thumb, 158 bytes, Stack size 24 bytes, tasks.o(i.vTaskNotifyGiveFromISR))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
-<LI><a href="#[13e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortValidateInterruptPriority
-<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
-<LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
+<LI><a href="#[132]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortValidateInterruptPriority
+<LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
+<LI><a href="#[127]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_postFromISR_
 </UL>
 
-<P><STRONG><a name="[11d]"></a>vTaskStartScheduler</STRONG> (Thumb, 134 bytes, Stack size 32 bytes, tasks.o(i.vTaskStartScheduler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 128 + Unknown Stack Size
-<LI>Call Chain = vTaskStartScheduler &rArr; xTaskCreateStatic &rArr; prvInitialiseNewTask
+<P><STRONG><a name="[115]"></a>vTaskStartScheduler</STRONG> (Thumb, 90 bytes, Stack size 32 bytes, tasks.o(i.vTaskStartScheduler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 136 + Unknown Stack Size
+<LI>Call Chain = vTaskStartScheduler &rArr; xTaskCreateStatic &rArr; prvInitialiseNewTask &rArr; pxPortInitialiseStack
 </UL>
-<BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
-<LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xPortStartScheduler
-<LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationGetIdleTaskMemory
-<LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCreateStatic
+<BR>[Calls]<UL><LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xPortStartScheduler
+<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationGetIdleTaskMemory
+<LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCreateStatic
 </UL>
-<BR>[Called By]<UL><LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_run
-</UL>
-
-<P><STRONG><a name="[ee]"></a>vTaskSuspendAll</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, tasks.o(i.vTaskSuspendAll))
-<BR><BR>[Called By]<UL><LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
-<LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_random
+<BR>[Called By]<UL><LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_run
 </UL>
 
-<P><STRONG><a name="[b0]"></a>vTaskSwitchContext</STRONG> (Thumb, 162 bytes, Stack size 16 bytes, tasks.o(i.vTaskSwitchContext))
+<P><STRONG><a name="[e6]"></a>vTaskSuspendAll</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, tasks.o(i.vTaskSuspendAll))
+<BR><BR>[Called By]<UL><LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
+<LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_random
+</UL>
+
+<P><STRONG><a name="[b0]"></a>vTaskSwitchContext</STRONG> (Thumb, 120 bytes, Stack size 16 bytes, tasks.o(i.vTaskSwitchContext))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = vTaskSwitchContext
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
-<LI><a href="#[13c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationStackOverflowHook
+<LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationStackOverflowHook
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PendSV_Handler
 </UL>
 
-<P><STRONG><a name="[141]"></a>xPortStartScheduler</STRONG> (Thumb, 252 bytes, Stack size 16 bytes, port.o(i.xPortStartScheduler))
+<P><STRONG><a name="[135]"></a>xPortStartScheduler</STRONG> (Thumb, 186 bytes, Stack size 16 bytes, port.o(i.xPortStartScheduler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = xPortStartScheduler
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
-<LI><a href="#[142]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortSetupTimerInterrupt
-<LI><a href="#[143]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__asm___6_port_c_39a90d8d__prvEnableVFP
-<LI><a href="#[144]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__asm___6_port_c_39a90d8d__prvStartFirstTask
+<LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortSetupTimerInterrupt
+<LI><a href="#[137]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__asm___6_port_c_39a90d8d__prvEnableVFP
+<LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__asm___6_port_c_39a90d8d__prvStartFirstTask
 </UL>
-<BR>[Called By]<UL><LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskStartScheduler
+<BR>[Called By]<UL><LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskStartScheduler
 </UL>
 
-<P><STRONG><a name="[10f]"></a>xTaskCreateStatic</STRONG> (Thumb, 142 bytes, Stack size 56 bytes, tasks.o(i.xTaskCreateStatic))
-<BR><BR>[Stack]<UL><LI>Max Depth = 96 + Unknown Stack Size
-<LI>Call Chain = xTaskCreateStatic &rArr; prvInitialiseNewTask
+<P><STRONG><a name="[107]"></a>xTaskCreateStatic</STRONG> (Thumb, 96 bytes, Stack size 56 bytes, tasks.o(i.xTaskCreateStatic))
+<BR><BR>[Stack]<UL><LI>Max Depth = 104 + Unknown Stack Size
+<LI>Call Chain = xTaskCreateStatic &rArr; prvInitialiseNewTask &rArr; pxPortInitialiseStack
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
-<LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
-<LI><a href="#[132]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
+<LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
+<LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 </UL>
 <BR>[Called By]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_start_
-<LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskStartScheduler
+<LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskStartScheduler
 </UL>
 
-<P><STRONG><a name="[10a]"></a>xTaskGenericNotify</STRONG> (Thumb, 244 bytes, Stack size 32 bytes, tasks.o(i.xTaskGenericNotify))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = xTaskGenericNotify &rArr; vPortExitCritical
+<P><STRONG><a name="[102]"></a>xTaskGenericNotify</STRONG> (Thumb, 196 bytes, Stack size 24 bytes, tasks.o(i.xTaskGenericNotify))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = xTaskGenericNotify &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
-<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
-<LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
+<LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
+<LI><a href="#[127]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
 </UL>
 <BR>[Called By]<UL><LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_post_
 <LI><a href="#[9a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_postLIFO_
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTicker_post_
 </UL>
 
-<P><STRONG><a name="[123]"></a>xTaskIncrementTick</STRONG> (Thumb, 284 bytes, Stack size 24 bytes, tasks.o(i.xTaskIncrementTick))
-<BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_tickXFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[11c]"></a>xTaskIncrementTick</STRONG> (Thumb, 196 bytes, Stack size 24 bytes, tasks.o(i.xTaskIncrementTick))
+<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_publishFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
-<LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationTickHook
-<LI><a href="#[145]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvResetNextTaskUnblockTime
-<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
-<LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
+<LI><a href="#[131]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationTickHook
+<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvResetNextTaskUnblockTime
+<LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
+<LI><a href="#[127]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<BR>[Called By]<UL><LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
 <LI><a href="#[b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Handler
 </UL>
 
-<P><STRONG><a name="[ef]"></a>xTaskResumeAll</STRONG> (Thumb, 212 bytes, Stack size 16 bytes, tasks.o(i.xTaskResumeAll))
-<BR><BR>[Stack]<UL><LI>Max Depth = 184<LI>Call Chain = xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_tickXFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[e7]"></a>xTaskResumeAll</STRONG> (Thumb, 178 bytes, Stack size 32 bytes, tasks.o(i.xTaskResumeAll))
+<BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_publishFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 <LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
-<LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
-<LI><a href="#[145]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvResetNextTaskUnblockTime
-<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
-<LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
+<LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
+<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvResetNextTaskUnblockTime
+<LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
+<LI><a href="#[127]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
 </UL>
-<BR>[Called By]<UL><LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
-<LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_random
+<BR>[Called By]<UL><LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
+<LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_random
 </UL>
 
 <P><STRONG><a name="[a4]"></a>_fp_init</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, fpinit.o(x$fpl$fpinit))
 <BR><BR>[Called By]<UL><LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_lib_init_fp_1
 </UL>
 
-<P><STRONG><a name="[174]"></a>__fplib_config_fpu_vfp</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, fpinit.o(x$fpl$fpinit), UNUSED)
+<P><STRONG><a name="[169]"></a>__fplib_config_fpu_vfp</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, fpinit.o(x$fpl$fpinit), UNUSED)
 
-<P><STRONG><a name="[175]"></a>__fplib_config_pureend_doubles</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, fpinit.o(x$fpl$fpinit), UNUSED)
+<P><STRONG><a name="[16a]"></a>__fplib_config_pureend_doubles</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, fpinit.o(x$fpl$fpinit), UNUSED)
 <P>
 <H3>
 Local Symbols
 </H3>
-<P><STRONG><a name="[124]"></a>getOscClk</STRONG> (Thumb, 182 bytes, Stack size 0 bytes, system_tm4c123gh6pm.o(i.getOscClk))
-<BR><BR>[Called By]<UL><LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemCoreClockUpdate
+<P><STRONG><a name="[11d]"></a>getOscClk</STRONG> (Thumb, 166 bytes, Stack size 0 bytes, system_tm4c123gh6pm.o(i.getOscClk))
+<BR><BR>[Called By]<UL><LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemCoreClockUpdate
 </UL>
 
-<P><STRONG><a name="[120]"></a>QHsm_tran_</STRONG> (Thumb, 338 bytes, Stack size 32 bytes, qep_hsm.o(i.QHsm_tran_))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = QHsm_tran_
+<P><STRONG><a name="[118]"></a>QHsm_tran_</STRONG> (Thumb, 262 bytes, Stack size 40 bytes, qep_hsm.o(i.QHsm_tran_))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = QHsm_tran_
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Called By]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QHsm_dispatch_
 </UL>
 
-<P><STRONG><a name="[95]"></a>QTicker_dispatch_</STRONG> (Thumb, 38 bytes, Stack size 16 bytes, qf_actq.o(i.QTicker_dispatch_))
+<P><STRONG><a name="[95]"></a>QTicker_dispatch_</STRONG> (Thumb, 36 bytes, Stack size 16 bytes, qf_actq.o(i.QTicker_dispatch_))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = QTicker_dispatch_ &rArr; QF_tickX_ &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickX_
-<LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[117]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_tickX_
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> qf_actq.o(.constdata)
 </UL>
 <P><STRONG><a name="[94]"></a>QTicker_init_</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, qf_actq.o(i.QTicker_init_))
 <BR>[Address Reference Count : 1]<UL><LI> qf_actq.o(.constdata)
 </UL>
-<P><STRONG><a name="[98]"></a>QTicker_postLIFO_</STRONG> (Thumb, 18 bytes, Stack size 16 bytes, qf_actq.o(i.QTicker_postLIFO_))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = QTicker_postLIFO_
-</UL>
-<BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
+<P><STRONG><a name="[98]"></a>QTicker_postLIFO_</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, qf_actq.o(i.QTicker_postLIFO_))
+<BR><BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> qf_actq.o(.constdata)
 </UL>
-<P><STRONG><a name="[97]"></a>QTicker_post_</STRONG> (Thumb, 66 bytes, Stack size 16 bytes, qf_actq.o(i.QTicker_post_))
-<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = QTicker_post_ &rArr; xTaskGenericNotify &rArr; vPortExitCritical
+<P><STRONG><a name="[97]"></a>QTicker_post_</STRONG> (Thumb, 58 bytes, Stack size 8 bytes, qf_actq.o(i.QTicker_post_))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = QTicker_post_ &rArr; xTaskGenericNotify &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[10a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
-<LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<BR>[Calls]<UL><LI><a href="#[102]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> qf_actq.o(.constdata)
 </UL>
-<P><STRONG><a name="[86]"></a>task_function</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, qf_port.o(i.task_function))
-<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = task_function &rArr; QActive_get_ &rArr; ulTaskNotifyTake &rArr; prvAddCurrentTaskToDelayedList &rArr; vListInsert
+<P><STRONG><a name="[86]"></a>task_function</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, qf_port.o(i.task_function))
+<BR><BR>[Stack]<UL><LI>Max Depth = 60<LI>Call Chain = task_function &rArr; QActive_get_ &rArr; ulTaskNotifyTake &rArr; prvAddCurrentTaskToDelayedList &rArr; vListInsert
 </UL>
-<BR>[Calls]<UL><LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
-<LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_get_
+<BR>[Calls]<UL><LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_gc
+<LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_get_
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> qf_port.o(i.QActive_start_)
 </UL>
-<P><STRONG><a name="[12f]"></a>prvAddCurrentTaskToDelayedList</STRONG> (Thumb, 104 bytes, Stack size 24 bytes, tasks.o(i.prvAddCurrentTaskToDelayedList))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = prvAddCurrentTaskToDelayedList &rArr; vListInsert
+<P><STRONG><a name="[126]"></a>prvAddCurrentTaskToDelayedList</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, tasks.o(i.prvAddCurrentTaskToDelayedList))
+<BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = prvAddCurrentTaskToDelayedList &rArr; vListInsert
 </UL>
-<BR>[Calls]<UL><LI><a href="#[131]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsert
-<LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
+<BR>[Calls]<UL><LI><a href="#[128]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsert
+<LI><a href="#[127]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
 </UL>
-<BR>[Called By]<UL><LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ulTaskNotifyTake
-</UL>
-
-<P><STRONG><a name="[132]"></a>prvAddNewTaskToReadyList</STRONG> (Thumb, 150 bytes, Stack size 8 bytes, tasks.o(i.prvAddNewTaskToReadyList))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = prvAddNewTaskToReadyList &rArr; vPortExitCritical
-</UL>
-<BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
-<LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseTaskLists
-<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
-</UL>
-<BR>[Called By]<UL><LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCreateStatic
+<BR>[Called By]<UL><LI><a href="#[ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ulTaskNotifyTake
 </UL>
 
-<P><STRONG><a name="[135]"></a>prvCheckTasksWaitingTermination</STRONG> (Thumb, 60 bytes, Stack size 8 bytes, tasks.o(i.prvCheckTasksWaitingTermination))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = prvCheckTasksWaitingTermination &rArr; vPortExitCritical
+<P><STRONG><a name="[129]"></a>prvAddNewTaskToReadyList</STRONG> (Thumb, 182 bytes, Stack size 24 bytes, tasks.o(i.prvAddNewTaskToReadyList))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = prvAddNewTaskToReadyList &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[106]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
-<LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
-<LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvDeleteTCB
-<LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
+<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
+<LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInitialise
 </UL>
-<BR>[Called By]<UL><LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvIdleTask
-</UL>
-
-<P><STRONG><a name="[136]"></a>prvDeleteTCB</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, tasks.o(i.prvDeleteTCB))
-<BR><BR>[Called By]<UL><LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckTasksWaitingTermination
+<BR>[Called By]<UL><LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCreateStatic
 </UL>
 
-<P><STRONG><a name="[91]"></a>prvIdleTask</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, tasks.o(i.prvIdleTask))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = prvIdleTask &rArr; prvCheckTasksWaitingTermination &rArr; vPortExitCritical
+<P><STRONG><a name="[91]"></a>prvIdleTask</STRONG> (Thumb, 50 bytes, Stack size 0 bytes, tasks.o(i.prvIdleTask))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = prvIdleTask &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[137]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationIdleHook
-<LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckTasksWaitingTermination
+<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
+<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
+<LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vApplicationIdleHook
+<LI><a href="#[127]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> tasks.o(i.vTaskStartScheduler)
 </UL>
-<P><STRONG><a name="[138]"></a>prvInitialiseNewTask</STRONG> (Thumb, 178 bytes, Stack size 40 bytes, tasks.o(i.prvInitialiseNewTask))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40 + Unknown Stack Size
-<LI>Call Chain = prvInitialiseNewTask
+<P><STRONG><a name="[12d]"></a>prvInitialiseNewTask</STRONG> (Thumb, 168 bytes, Stack size 40 bytes, tasks.o(i.prvInitialiseNewTask))
+<BR><BR>[Stack]<UL><LI>Max Depth = 48 + Unknown Stack Size
+<LI>Call Chain = prvInitialiseNewTask &rArr; pxPortInitialiseStack
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
-<LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pxPortInitialiseStack
-<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInitialiseItem
+<LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pxPortInitialiseStack
+<LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInitialiseItem
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memset
 </UL>
-<BR>[Called By]<UL><LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCreateStatic
+<BR>[Called By]<UL><LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCreateStatic
 </UL>
 
-<P><STRONG><a name="[133]"></a>prvInitialiseTaskLists</STRONG> (Thumb, 64 bytes, Stack size 8 bytes, tasks.o(i.prvInitialiseTaskLists))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = prvInitialiseTaskLists
-</UL>
-<BR>[Calls]<UL><LI><a href="#[13b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInitialise
-</UL>
-<BR>[Called By]<UL><LI><a href="#[132]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
+<P><STRONG><a name="[139]"></a>prvResetNextTaskUnblockTime</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, tasks.o(i.prvResetNextTaskUnblockTime))
+<BR><BR>[Called By]<UL><LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
 </UL>
 
-<P><STRONG><a name="[145]"></a>prvResetNextTaskUnblockTime</STRONG> (Thumb, 42 bytes, Stack size 0 bytes, tasks.o(i.prvResetNextTaskUnblockTime))
-<BR><BR>[Called By]<UL><LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
-<LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
-</UL>
-
-<P><STRONG><a name="[90]"></a>prvTaskExitError</STRONG> (Thumb, 46 bytes, Stack size 0 bytes, port.o(i.prvTaskExitError))
+<P><STRONG><a name="[90]"></a>prvTaskExitError</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, port.o(i.prvTaskExitError))
 <BR><BR>[Calls]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;assert_failed
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> port.o(i.pxPortInitialiseStack)
 </UL>
-<P><STRONG><a name="[7d]"></a>Heartbeat_initial</STRONG> (Thumb, 140 bytes, Stack size 16 bytes, blinky.o(i.Heartbeat_initial))
-<BR><BR>[Stack]<UL><LI>Max Depth = 132<LI>Call Chain = Heartbeat_initial &rArr; BSP_LCD_DrawString &rArr; BSP_LCD_DrawChar &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
+<P><STRONG><a name="[7d]"></a>Heartbeat_initial</STRONG> (Thumb, 138 bytes, Stack size 16 bytes, blinky.o(i.Heartbeat_initial))
+<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = Heartbeat_initial &rArr; BSP_LCD_DrawString &rArr; BSP_LCD_DrawChar &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_subscribe
-<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_ledRedOff
-<LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_Init
-<LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawString
+<LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_ledRedOff
+<LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_Init
+<LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawString
 <LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_Joystick_Init
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> blinky.o(i.Heartbeat_ctor)
 </UL>
-<P><STRONG><a name="[7e]"></a>Heartbeat_off</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, blinky.o(i.Heartbeat_off))
-<BR>[Address Reference Count : 3]<UL><LI> blinky.o(i.Heartbeat_on)
+<P><STRONG><a name="[7e]"></a>Heartbeat_off</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, blinky.o(i.Heartbeat_off))
+<BR>[Address Reference Count : 3]<UL><LI> blinky.o(i.Heartbeat_initial)
+<LI> blinky.o(i.Heartbeat_on)
 <LI> blinky.o(i.Heartbeat_start)
-<LI> blinky.o(i.Heartbeat_initial)
 </UL>
-<P><STRONG><a name="[7f]"></a>Heartbeat_on</STRONG> (Thumb, 214 bytes, Stack size 16 bytes, blinky.o(i.Heartbeat_on))
-<BR><BR>[Stack]<UL><LI>Max Depth = 156<LI>Call Chain = Heartbeat_on &rArr; BSP_LCD_OutUDec4 &rArr; BSP_LCD_DrawString &rArr; BSP_LCD_DrawChar &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
+<P><STRONG><a name="[80]"></a>Heartbeat_on</STRONG> (Thumb, 194 bytes, Stack size 16 bytes, blinky.o(i.Heartbeat_on))
+<BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = Heartbeat_on &rArr; BSP_LCD_OutUDec4 &rArr; BSP_LCD_DrawString &rArr; BSP_LCD_DrawChar &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Microphone_Get
-<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_SetCursor
-<LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec4
-<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Joystick_Trigger
-<LI><a href="#[f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Joystick_Input
-<LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_LedBlueDuty
-<LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Accelerometer_Input
-<LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AccelerometerGet
+<BR>[Calls]<UL><LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Microphone_Get
+<LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_SetCursor
+<LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec4
+<LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Joystick_Trigger
+<LI><a href="#[ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Joystick_Input
+<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_LedBlueDuty
+<LI><a href="#[f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Accelerometer_Input
+<LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_AccelerometerGet
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> blinky.o(i.Heartbeat_off)
 </UL>
-<P><STRONG><a name="[80]"></a>Heartbeat_start</STRONG> (Thumb, 228 bytes, Stack size 24 bytes, blinky.o(i.Heartbeat_start))
-<BR><BR>[Stack]<UL><LI>Max Depth = 164 + Unknown Stack Size
+<P><STRONG><a name="[7f]"></a>Heartbeat_start</STRONG> (Thumb, 190 bytes, Stack size 16 bytes, blinky.o(i.Heartbeat_start))
+<BR><BR>[Stack]<UL><LI>Max Depth = 168 + Unknown Stack Size
 <LI>Call Chain = Heartbeat_start &rArr; BSP_LCD_OutUDec5 &rArr; BSP_LCD_DrawString &rArr; BSP_LCD_DrawChar &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
 </UL>
-<BR>[Calls]<UL><LI><a href="#[fb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_disarm
-<LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
-<LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_OutString
-<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_SetCursor
-<LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec5
-<LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec4
-<LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawString
-<LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_LedBlueDuty
-<LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_Buzzer_Freq
+<BR>[Calls]<UL><LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_disarm
+<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
+<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_OutString
+<LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_SetCursor
+<LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec5
+<LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec4
+<LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawString
+<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_LedBlueDuty
+<LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_Buzzer_Freq
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memset
-<LI><a href="#[fd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
+<LI><a href="#[f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
 </UL>
 <BR>[Address Reference Count : 3]<UL><LI> blinky.o(i.Heartbeat_off)
 <LI> blinky.o(i.Heartbeat_on)
 <LI> blinky.o(i.Heartbeat_stop)
 </UL>
-<P><STRONG><a name="[81]"></a>Heartbeat_stop</STRONG> (Thumb, 42 bytes, Stack size 16 bytes, blinky.o(i.Heartbeat_stop))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = Heartbeat_stop
+<P><STRONG><a name="[81]"></a>Heartbeat_stop</STRONG> (Thumb, 34 bytes, Stack size 8 bytes, blinky.o(i.Heartbeat_stop))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = Heartbeat_stop
 </UL>
-<BR>[Calls]<UL><LI><a href="#[fe]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_Buzzer_Freq
+<BR>[Calls]<UL><LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_Buzzer_Freq
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> blinky.o(i.Heartbeat_start)
 </UL>
-<P><STRONG><a name="[d4]"></a>L_waitTillReady</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, bsp.o(i.L_waitTillReady))
-<BR><BR>[Called By]<UL><LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Send3
-<LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Recv2
+<P><STRONG><a name="[cc]"></a>L_waitTillReady</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, bsp.o(i.L_waitTillReady))
+<BR><BR>[Called By]<UL><LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Send3
+<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Recv2
 </UL>
 
-<P><STRONG><a name="[116]"></a>__NVIC_EnableIRQ</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, bsp.o(i.__NVIC_EnableIRQ))
-<BR><BR>[Called By]<UL><LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_onStartup
+<P><STRONG><a name="[10e]"></a>__NVIC_EnableIRQ</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, bsp.o(i.__NVIC_EnableIRQ))
+<BR><BR>[Called By]<UL><LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_onStartup
 </UL>
 
-<P><STRONG><a name="[115]"></a>__NVIC_SetPriority</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, bsp.o(i.__NVIC_SetPriority))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = __NVIC_SetPriority
-</UL>
-<BR>[Called By]<UL><LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_onStartup
+<P><STRONG><a name="[10d]"></a>__NVIC_SetPriority</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, bsp.o(i.__NVIC_SetPriority))
+<BR><BR>[Called By]<UL><LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_onStartup
 </UL>
 
-<P><STRONG><a name="[c0]"></a>adcinit0</STRONG> (Thumb, 58 bytes, Stack size 0 bytes, bsp.o(i.adcinit0))
+<P><STRONG><a name="[c0]"></a>adcinit0</STRONG> (Thumb, 46 bytes, Stack size 0 bytes, bsp.o(i.adcinit0))
 <BR><BR>[Called By]<UL><LI><a href="#[c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_Joystick_Init
 <LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Accelerometer_Init
 </UL>
 
-<P><STRONG><a name="[e2]"></a>i2cinit</STRONG> (Thumb, 126 bytes, Stack size 0 bytes, bsp.o(i.i2cinit))
+<P><STRONG><a name="[db]"></a>i2cinit</STRONG> (Thumb, 100 bytes, Stack size 0 bytes, bsp.o(i.i2cinit))
 <BR><BR>[Called By]<UL><LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LightSensor_Init
 </UL>
 
-<P><STRONG><a name="[e4]"></a>l_adcinit1</STRONG> (Thumb, 58 bytes, Stack size 0 bytes, bsp.o(i.l_adcinit1))
-<BR><BR>[Called By]<UL><LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Microphone_Init
+<P><STRONG><a name="[dd]"></a>l_adcinit1</STRONG> (Thumb, 46 bytes, Stack size 0 bytes, bsp.o(i.l_adcinit1))
+<BR><BR>[Called By]<UL><LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Microphone_Init
 </UL>
 
-<P><STRONG><a name="[84]"></a>Philo_eating</STRONG> (Thumb, 166 bytes, Stack size 24 bytes, philo.o(i.Philo_eating))
-<BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = Philo_eating &rArr; QF_publish_ &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_tickXFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[84]"></a>Philo_eating</STRONG> (Thumb, 132 bytes, Stack size 16 bytes, philo.o(i.Philo_eating))
+<BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = Philo_eating &rArr; QF_publish_ &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_publishFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
-<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newX_
-<LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
+<BR>[Calls]<UL><LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
+<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newX_
+<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
-<LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_random
+<LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_random
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> philo.o(i.Philo_hungry)
 </UL>
-<P><STRONG><a name="[85]"></a>Philo_hungry</STRONG> (Thumb, 152 bytes, Stack size 24 bytes, philo.o(i.Philo_hungry))
-<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = Philo_hungry &rArr; QF_newX_ &rArr; QMPool_get &rArr; vPortExitCritical
+<P><STRONG><a name="[85]"></a>Philo_hungry</STRONG> (Thumb, 116 bytes, Stack size 16 bytes, philo.o(i.Philo_hungry))
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = Philo_hungry &rArr; QF_newX_ &rArr; QMPool_get &rArr; vPortExitCritical
 </UL>
-<BR>[Calls]<UL><LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newX_
+<BR>[Calls]<UL><LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newX_
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> philo.o(i.Philo_thinking)
 </UL>
-<P><STRONG><a name="[82]"></a>Philo_initial</STRONG> (Thumb, 44 bytes, Stack size 16 bytes, philo.o(i.Philo_initial))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = Philo_initial &rArr; QActive_subscribe &rArr; vPortExitCritical
+<P><STRONG><a name="[82]"></a>Philo_initial</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, philo.o(i.Philo_initial))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Philo_initial &rArr; QActive_subscribe &rArr; vPortExitCritical
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_subscribe
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> philo.o(i.Philo_ctor)
 </UL>
-<P><STRONG><a name="[83]"></a>Philo_thinking</STRONG> (Thumb, 150 bytes, Stack size 24 bytes, philo.o(i.Philo_thinking))
-<BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = Philo_thinking &rArr; BSP_random &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_tickXFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[83]"></a>Philo_thinking</STRONG> (Thumb, 120 bytes, Stack size 8 bytes, philo.o(i.Philo_thinking))
+<BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = Philo_thinking &rArr; BSP_random &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_publishFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[fb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_disarm
-<LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
+<BR>[Calls]<UL><LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_disarm
+<LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
-<LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_random
+<LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_random
 </UL>
-<BR>[Address Reference Count : 2]<UL><LI> philo.o(i.Philo_eating)
-<LI> philo.o(i.Philo_initial)
+<BR>[Address Reference Count : 2]<UL><LI> philo.o(i.Philo_initial)
+<LI> philo.o(i.Philo_eating)
 </UL>
-<P><STRONG><a name="[8e]"></a>Table_active</STRONG> (Thumb, 46 bytes, Stack size 16 bytes, table.o(i.Table_active))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = Table_active
+<P><STRONG><a name="[8e]"></a>Table_active</STRONG> (Thumb, 34 bytes, Stack size 8 bytes, table.o(i.Table_active))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = Table_active
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
 </UL>
 <BR>[Address Reference Count : 2]<UL><LI> table.o(i.Table_paused)
 <LI> table.o(i.Table_serving)
 </UL>
-<P><STRONG><a name="[8c]"></a>Table_initial</STRONG> (Thumb, 78 bytes, Stack size 16 bytes, table.o(i.Table_initial))
+<P><STRONG><a name="[8c]"></a>Table_initial</STRONG> (Thumb, 70 bytes, Stack size 16 bytes, table.o(i.Table_initial))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = Table_initial &rArr; QActive_subscribe &rArr; vPortExitCritical
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_subscribe
-<LI><a href="#[126]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_displayPhilStat
+<LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_displayPhilStat
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> table.o(i.Table_ctor)
 </UL>
-<P><STRONG><a name="[8f]"></a>Table_paused</STRONG> (Thumb, 222 bytes, Stack size 24 bytes, table.o(i.Table_paused))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = Table_paused
+<P><STRONG><a name="[8f]"></a>Table_paused</STRONG> (Thumb, 186 bytes, Stack size 16 bytes, table.o(i.Table_paused))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = Table_paused
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
-<LI><a href="#[126]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_displayPhilStat
-<LI><a href="#[127]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_displayPaused
+<LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_displayPhilStat
+<LI><a href="#[120]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_displayPaused
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> table.o(i.Table_serving)
 </UL>
-<P><STRONG><a name="[8d]"></a>Table_serving</STRONG> (Thumb, 568 bytes, Stack size 32 bytes, table.o(i.Table_serving))
-<BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = Table_serving &rArr; QF_publish_ &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_tickXFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
+<P><STRONG><a name="[8d]"></a>Table_serving</STRONG> (Thumb, 462 bytes, Stack size 40 bytes, table.o(i.Table_serving))
+<BR><BR>[Stack]<UL><LI>Max Depth = 248<LI>Call Chain = Table_serving &rArr; QF_publish_ &rArr; xTaskResumeAll &rArr; xTaskIncrementTick &rArr; vApplicationTickHook &rArr; QF_publishFromISR_ &rArr; QActive_postFromISR_ &rArr; vTaskNotifyGiveFromISR &rArr; vPortValidateInterruptPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
-<LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newX_
+<BR>[Calls]<UL><LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_publish_
+<LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newX_
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Q_onAssert
-<LI><a href="#[126]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_displayPhilStat
+<LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_displayPhilStat
 </UL>
 <BR>[Address Reference Count : 2]<UL><LI> table.o(i.Table_initial)
 <LI> table.o(i.Table_paused)
 </UL>
-<P><STRONG><a name="[dd]"></a>ST7735_InitR</STRONG> (Thumb, 90 bytes, Stack size 8 bytes, bsp_bp.o(i.ST7735_InitR))
-<BR><BR>[Stack]<UL><LI>Max Depth = 84<LI>Call Chain = ST7735_InitR &rArr; BSP_LCD_FillScreen &rArr; BSP_LCD_FillRect &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
+<P><STRONG><a name="[d6]"></a>ST7735_InitR</STRONG> (Thumb, 104 bytes, Stack size 16 bytes, bsp_bp.o(i.ST7735_InitR))
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = ST7735_InitR &rArr; BSP_LCD_FillScreen &rArr; BSP_LCD_FillRect &rArr; setAddrWindow &rArr; BSP_BP_SPIwritedata
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_SetCursor
-<LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_FillScreen
-<LI><a href="#[121]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
-<LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritedata
-<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritecommand
+<BR>[Calls]<UL><LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_SetCursor
+<LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_FillScreen
+<LI><a href="#[119]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;commandList
+<LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritedata
+<LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritecommand
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPI_TFT_Init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_Init
+<BR>[Called By]<UL><LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_Init
 </UL>
 
-<P><STRONG><a name="[121]"></a>commandList</STRONG> (Thumb, 86 bytes, Stack size 24 bytes, bsp_bp.o(i.commandList))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = commandList &rArr; BSP_Delay1ms
+<P><STRONG><a name="[119]"></a>commandList</STRONG> (Thumb, 74 bytes, Stack size 24 bytes, bsp_bp.o(i.commandList))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = commandList &rArr; BSP_Delay1ms
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Delay1ms
-<LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritedata
-<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritecommand
+<BR>[Calls]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_Delay1ms
+<LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritedata
+<LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritecommand
 </UL>
-<BR>[Called By]<UL><LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
+<BR>[Called By]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ST7735_InitR
 </UL>
 
-<P><STRONG><a name="[12c]"></a>fillmessage</STRONG> (Thumb, 64 bytes, Stack size 12 bytes, bsp_bp.o(i.fillmessage))
+<P><STRONG><a name="[123]"></a>fillmessage</STRONG> (Thumb, 46 bytes, Stack size 12 bytes, bsp_bp.o(i.fillmessage))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12 + In Cycle
 <LI>Call Chain = fillmessage &rArr;  fillmessage (Cycle)
 </UL>
-<BR>[Calls]<UL><LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage
+<BR>[Calls]<UL><LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage
 </UL>
-<BR>[Called By]<UL><LI><a href="#[e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage5
-<LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage4
-<LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage
-</UL>
-
-<P><STRONG><a name="[df]"></a>fillmessage4</STRONG> (Thumb, 90 bytes, Stack size 8 bytes, bsp_bp.o(i.fillmessage4))
-<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = fillmessage4 &rArr; fillmessage &rArr;  fillmessage (Cycle)
-</UL>
-<BR>[Calls]<UL><LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage
-</UL>
-<BR>[Called By]<UL><LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec4
+<BR>[Called By]<UL><LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage5
+<LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage4
+<LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage
 </UL>
 
-<P><STRONG><a name="[e1]"></a>fillmessage5</STRONG> (Thumb, 116 bytes, Stack size 8 bytes, bsp_bp.o(i.fillmessage5))
-<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = fillmessage5 &rArr; fillmessage &rArr;  fillmessage (Cycle)
+<P><STRONG><a name="[d8]"></a>fillmessage4</STRONG> (Thumb, 60 bytes, Stack size 0 bytes, bsp_bp.o(i.fillmessage4))
+<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = fillmessage4 &rArr; fillmessage &rArr;  fillmessage (Cycle)
 </UL>
-<BR>[Calls]<UL><LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage
+<BR>[Calls]<UL><LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage
 </UL>
-<BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec5
+<BR>[Called By]<UL><LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec4
 </UL>
 
-<P><STRONG><a name="[c5]"></a>lightsensorend</STRONG> (Thumb, 80 bytes, Stack size 16 bytes, bsp_bp.o(i.lightsensorend))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = lightsensorend &rArr; BSP_I2C_Send3
+<P><STRONG><a name="[da]"></a>fillmessage5</STRONG> (Thumb, 76 bytes, Stack size 0 bytes, bsp_bp.o(i.fillmessage5))
+<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = fillmessage5 &rArr; fillmessage &rArr;  fillmessage (Cycle)
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Send3
-<LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Send1
-<LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Recv2
+<BR>[Calls]<UL><LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fillmessage
+</UL>
+<BR>[Called By]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_OutUDec5
+</UL>
+
+<P><STRONG><a name="[c5]"></a>lightsensorend</STRONG> (Thumb, 84 bytes, Stack size 24 bytes, bsp_bp.o(i.lightsensorend))
+<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = lightsensorend &rArr; BSP_I2C_Recv2
+</UL>
+<BR>[Calls]<UL><LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Send3
+<LI><a href="#[124]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Send1
+<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Recv2
 </UL>
 <BR>[Called By]<UL><LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_LightSensor_End
 </UL>
 
-<P><STRONG><a name="[c3]"></a>lightsensorstart</STRONG> (Thumb, 36 bytes, Stack size 8 bytes, bsp_bp.o(i.lightsensorstart))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = lightsensorstart &rArr; BSP_I2C_Send3
+<P><STRONG><a name="[c4]"></a>lightsensorstart</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, bsp_bp.o(i.lightsensorstart))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = lightsensorstart &rArr; BSP_I2C_Recv2
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Send3
-<LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Recv2
+<BR>[Calls]<UL><LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Send3
+<LI><a href="#[cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_I2C_Recv2
 </UL>
 <BR>[Called By]<UL><LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_LightSensor_Start
 <LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_LightSensor_End
 </UL>
 
-<P><STRONG><a name="[d8]"></a>pushColor</STRONG> (Thumb, 18 bytes, Stack size 8 bytes, bsp_bp.o(i.pushColor))
-<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = pushColor &rArr; BSP_BP_SPIwritedata
+<P><STRONG><a name="[d0]"></a>pushColor</STRONG> (Thumb, 20 bytes, Stack size 8 bytes, bsp_bp.o(i.pushColor))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = pushColor &rArr; BSP_BP_SPIwritedata
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritedata
+<BR>[Calls]<UL><LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritedata
 </UL>
-<BR>[Called By]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawChar
-</UL>
-
-<P><STRONG><a name="[d7]"></a>setAddrWindow</STRONG> (Thumb, 106 bytes, Stack size 24 bytes, bsp_bp.o(i.setAddrWindow))
-<BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = setAddrWindow &rArr; BSP_BP_SPIwritedata
-</UL>
-<BR>[Calls]<UL><LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritedata
-<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritecommand
-</UL>
-<BR>[Called By]<UL><LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_FillRect
-<LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawChar
+<BR>[Called By]<UL><LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawChar
 </UL>
 
-<P><STRONG><a name="[8a]"></a>Sensor_busy</STRONG> (Thumb, 102 bytes, Stack size 24 bytes, lightsensor.o(i.Sensor_busy))
-<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = Sensor_busy &rArr; QF_newX_ &rArr; QMPool_get &rArr; vPortExitCritical
+<P><STRONG><a name="[cf]"></a>setAddrWindow</STRONG> (Thumb, 102 bytes, Stack size 24 bytes, bsp_bp.o(i.setAddrWindow))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = setAddrWindow &rArr; BSP_BP_SPIwritedata
 </UL>
-<BR>[Calls]<UL><LI><a href="#[100]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newX_
+<BR>[Calls]<UL><LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritedata
+<LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_SPIwritecommand
+</UL>
+<BR>[Called By]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_FillRect
+<LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LCD_DrawChar
+</UL>
+
+<P><STRONG><a name="[8a]"></a>Sensor_busy</STRONG> (Thumb, 80 bytes, Stack size 16 bytes, lightsensor.o(i.Sensor_busy))
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = Sensor_busy &rArr; QF_newX_ &rArr; QMPool_get &rArr; vPortExitCritical
+</UL>
+<BR>[Calls]<UL><LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QF_newX_
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> lightsensor.o(i.Sensor_idle)
 </UL>
-<P><STRONG><a name="[87]"></a>Sensor_idle</STRONG> (Thumb, 58 bytes, Stack size 16 bytes, lightsensor.o(i.Sensor_idle))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = Sensor_idle
+<P><STRONG><a name="[88]"></a>Sensor_idle</STRONG> (Thumb, 48 bytes, Stack size 8 bytes, lightsensor.o(i.Sensor_idle))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = Sensor_idle
 </UL>
 <BR>[Address Reference Count : 2]<UL><LI> lightsensor.o(i.Sensor_busy)
 <LI> lightsensor.o(i.Sensor_processing)
 </UL>
-<P><STRONG><a name="[89]"></a>Sensor_initial</STRONG> (Thumb, 24 bytes, Stack size 16 bytes, lightsensor.o(i.Sensor_initial))
-<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Sensor_initial &rArr; BSP_BP_LightSensor_Init &rArr; BSP_LightSensor_Init
+<P><STRONG><a name="[89]"></a>Sensor_initial</STRONG> (Thumb, 22 bytes, Stack size 8 bytes, lightsensor.o(i.Sensor_initial))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = Sensor_initial &rArr; BSP_BP_LightSensor_Init &rArr; BSP_LightSensor_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_LightSensor_Init
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> lightsensor.o(i.Sensor_ctor)
 </UL>
-<P><STRONG><a name="[8b]"></a>Sensor_polling</STRONG> (Thumb, 124 bytes, Stack size 16 bytes, lightsensor.o(i.Sensor_polling))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = Sensor_polling &rArr; BSP_BP_LightSensor_End &rArr; lightsensorend &rArr; BSP_I2C_Send3
+<P><STRONG><a name="[8b]"></a>Sensor_polling</STRONG> (Thumb, 102 bytes, Stack size 16 bytes, lightsensor.o(i.Sensor_polling))
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = Sensor_polling &rArr; BSP_BP_LightSensor_End &rArr; lightsensorend &rArr; BSP_I2C_Recv2
 </UL>
-<BR>[Calls]<UL><LI><a href="#[fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
+<BR>[Calls]<UL><LI><a href="#[f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QTimeEvt_armX
 <LI><a href="#[c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_LightSensor_Start
 <LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_BP_LightSensor_End
 </UL>
 <BR>[Address Reference Count : 2]<UL><LI> lightsensor.o(i.Sensor_initial)
 <LI> lightsensor.o(i.Sensor_processing)
 </UL>
-<P><STRONG><a name="[88]"></a>Sensor_processing</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, lightsensor.o(i.Sensor_processing))
+<P><STRONG><a name="[87]"></a>Sensor_processing</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, lightsensor.o(i.Sensor_processing))
 <BR>[Address Reference Count : 3]<UL><LI> lightsensor.o(i.Sensor_busy)
 <LI> lightsensor.o(i.Sensor_idle)
 <LI> lightsensor.o(i.Sensor_polling)
 </UL>
-<P><STRONG><a name="[7a]"></a>BLE_uart_initial</STRONG> (Thumb, 42 bytes, Stack size 16 bytes, ble_uart.o(i.BLE_uart_initial))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = BLE_uart_initial &rArr; QActive_subscribe &rArr; vPortExitCritical
+<P><STRONG><a name="[7a]"></a>BLE_uart_initial</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, ble_uart.o(i.BLE_uart_initial))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = BLE_uart_initial &rArr; QActive_subscribe &rArr; vPortExitCritical
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;QActive_subscribe
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> ble_uart.o(i.BLE_uart_ctor)
 </UL>
-<P><STRONG><a name="[7b]"></a>BLE_uart_start</STRONG> (Thumb, 68 bytes, Stack size 16 bytes, ble_uart.o(i.BLE_uart_start))
-<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = BLE_uart_start &rArr; UART0_OutString
+<P><STRONG><a name="[7b]"></a>BLE_uart_start</STRONG> (Thumb, 52 bytes, Stack size 16 bytes, ble_uart.o(i.BLE_uart_start))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = BLE_uart_start
 </UL>
-<BR>[Calls]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_OutString
+<BR>[Calls]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_OutChar
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> ble_uart.o(i.BLE_uart_initial)
 </UL><P>
