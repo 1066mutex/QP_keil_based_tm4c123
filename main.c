@@ -48,6 +48,7 @@ int main() {
     static QSubscrList subscrSto[MAX_PUB_SIG];
     static QF_MPOOL_EL(TableEvt) smlPoolSto[2*N_PHILO]; /* small pool */
     static QF_MPOOL_EL(UartEvt) medlPoolSto[2 * N_PHILO]; /* medium pool */
+    static QF_MPOOL_EL(SoundEvt) lrglPoolSto[2 * N_PHILO]; /* medium pool */
 
     static StackType_t philoStack[N_PHILO][configMINIMAL_STACK_SIZE];
     static StackType_t tableStack[configMINIMAL_STACK_SIZE];
@@ -71,6 +72,7 @@ int main() {
     //!  for more info see book page 350
     QF_poolInit(smlPoolSto, sizeof(smlPoolSto), sizeof(smlPoolSto[0]));
     QF_poolInit(medlPoolSto, sizeof(medlPoolSto), sizeof(medlPoolSto[0]));
+    QF_poolInit(lrglPoolSto, sizeof(lrglPoolSto), sizeof(lrglPoolSto[0]));
 
     /* initialize the Board Support Package
     * NOTE: BSP_init() is called *after* initializing publish-subscribe and

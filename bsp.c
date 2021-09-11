@@ -169,7 +169,8 @@ void UART0_IRQHandler(void) {
     }
 }
 #endif
-
+ uint32_t current1;
+ uint32_t swArray;
 /* Application hooks used in this project ==================================*/
 /* NOTE: only the "FromISR" API variants are allowed in vApplicationTickHook */
 void vApplicationTickHook(void) {  //! called by freeRtos tick()
@@ -188,16 +189,10 @@ void vApplicationTickHook(void) {  //! called by freeRtos tick()
         uint32_t depressed1;
         uint32_t previous1;
     } buttons1 = {~0U, ~0U};
-    uint32_t current1;
+    swArray= 0;
+    current1 = 0;
     uint32_t tmp1;
 
-    // joystick button debouncing.
-    static struct ButtonsDebouncing2 {
-        uint32_t depressed1;
-        uint32_t previous1;
-    } buttons2 = {~0U, ~0U};
-    uint32_t current2;
-    uint32_t tmp2;
     //! used to inform RTOS of a thread switch request.
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
@@ -238,7 +233,12 @@ void vApplicationTickHook(void) {  //! called by freeRtos tick()
         }
     }
     //! debounce BoosterPack user buttons TODO: can select not to use the tiva buttons.
-    current1 = ~BSTR_BTN_SWS_PORT->DATA_Bits[BSTR_BTN_SW3 | BSTR_BTN_SW4]; /* read SW1 and SW2 */
+    swArray |= ((BSTR_BTN_SWS_PORT->DATA_Bits[BSTR_BTN_SW3]) );
+    swArray |= ((BSTR_BTN_SWS_PORT->DATA_Bits[BSTR_BTN_SW4]) );
+    swArray |= (BSP_BP_JST_BTN_PORT->DATA_Bits[BSP_BP_JST_BTN_PIN]);
+    //NOTE* swArray is packed as 32bit value 0x000000C0. 
+    //current1 = ~BSTR_BTN_SWS_PORT->DATA_Bits[BSTR_BTN_SW3 | BSTR_BTN_SW4]; /* read SW1 and SW2 */
+    current1 = ~swArray; /* read SW1 and SW2 */
     tmp1 = buttons1.depressed1;                                            /* save the debounced depressed1 buttons1 */
     buttons1.depressed1 |= (buttons1.previous1 & current1);                /* set depressed1 */
     buttons1.depressed1 &= (buttons1.previous1 | current1);                /* clear released */
@@ -272,25 +272,15 @@ void vApplicationTickHook(void) {  //! called by freeRtos tick()
         }
     }
 
-    //! debounce BoosterPack Joystick button TODO: can select not to use the tiva buttons.
-    current2 = ~BSP_BP_JST_BTN_PORT->DATA_Bits[BSP_BP_JST_BTN_PIN]; /* read SW1 and SW2 */
-    tmp2 = buttons2.depressed1;                                     /* save the debounced depressed1 buttons1 */
-    buttons2.depressed1 |= (buttons2.previous1 & current2);         /* set depressed1 */
-    buttons2.depressed1 &= (buttons2.previous1 | current2);         /* clear released */
-    buttons2.previous1 = current2;                                  /* update the history */
-    tmp2 ^= buttons2.depressed1;                                    /* changed debounced depressed1 */
-    if ((tmp2 & BSP_BP_JST_BTN_PIN) != 0U) {                        /* debounced SW1 state changed? */
-        if ((buttons2.depressed1 & BSP_BP_JST_BTN_PIN) != 0U) {     /* is SW1 depressed1? */
-            /* demonstrate the ISR APIs: QF_PUBLISH_FROM_ISR and Q_NEW_FROM_ISR */
-            QF_PUBLISH_FROM_ISR(Q_NEW_FROM_ISR(QEvt, JOYSTICK_PRESSED_SIG),
-                                &xHigherPriorityTaskWoken,
-                                &l_TickHook);
-        } else { /* the button is released */
-            /* demonstrate the ISR APIs: POST_FROM_ISR and Q_NEW_FROM_ISR */
-            QACTIVE_POST_FROM_ISR(AO_Heartbeat,  // BUG: this was set to AO_table
-                                  Q_NEW_FROM_ISR(QEvt, JOYSTICK_DEPRESSED_SIG),
-                                  &xHigherPriorityTaskWoken,
-                                  &l_TickHook);
+    //! debounce BoosterPack Joystick button 
+    
+    if ((tmp1 & BSP_BP_JST_BTN_PIN) != 0U) {                     // debounced SW1 state changed?
+        if ((buttons1.depressed1 & BSP_BP_JST_BTN_PIN) != 0U) {  // is SW depressed1?
+            static QEvt const jstBtnPrsEvt = {JOYSTICK_PRESSED_SIG, 0U, 0U};
+            QF_PUBLISH_FROM_ISR(&jstBtnPrsEvt, &xHigherPriorityTaskWoken, &l_TickHook);
+        } else {  // the button is released
+            static QEvt const jstBtnDprsEvt = {JOYSTICK_DEPRESSED_SIG, 0U, 0U};
+            QF_PUBLISH_FROM_ISR(&jstBtnDprsEvt, &xHigherPriorityTaskWoken, &l_TickHook);
         }
     }
 
@@ -415,6 +405,7 @@ void BSP_init(void) {
     //mcuTempSensorInit();
     //! use when profiling TODO: add ifdef guards
     Profile_Init();
+    BSP_LCD_Init();
     BSP_randomSeed(1234U);
 
     /* initialize the QS software tracing... */
@@ -1337,23 +1328,82 @@ static void mcuTempSensorInit(void) {
     ADC0->ACTSS |= (1U << 3);  //  enable sample sequencer 3
 }
 // TODO place in the isr section above.
+// void ADC1Seq3_IRQHandler(void) {
+//     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+//     ADC1->ISC |= (1U << 3);  // clear interrupt flag
+
+//     TempEvt *reading = Q_NEW_FROM_ISR(TempEvt, NEW_TEMP_DATA_SIG);
+//     // read adc coversion result from SS3 FIFO and convert to °C using
+//     // Temp = 147.5 – ((75 × Vref(+) – Vref(–)) × ADC_output)) / 4096. tm4c vref == 3.3v
+//     //
+//     // reading->temp = 147 - ((247 * ADC0->SSFIFO3) / 4096);
+//     reading->temp = (ADC1->SSFIFO3 >> 2);
+//     QACTIVE_POST_FROM_ISR(AO_Heartbeat,
+//                           (QEvt *)reading,
+//                           &xHigherPriorityTaskWoken,
+//                           &ADCSeq3_IRQHandler);
+
+//     /* the usual end of FreeRTOS ISR... */
+//     portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+// }
+
+#define SAMPLE_LENGTH 12
+typedef struct {
+    int16_t soundBuff[SAMPLE_LENGTH];
+    uint8_t idx;
+    enum state { INDEX_0,
+                 PACKING } state;
+} adcIsr;
+adcIsr adcData;
+
+void ADC1Seq3_IRQHandler(void);  // prototype
+// at least one of two things has happened:
+// hardware RX FIFO goes from 1 to 2 or more items
+// UART receiver has timed out
+
+// TODO: needs deleting.
 void ADC1Seq3_IRQHandler(void) {
+    adcIsr *adcDataPtr = &adcData;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    uint32_t status = ADC1->RIS; /* get the raw interrupt status */
+    while ((ADC1->RIS & (1U << 3)) == 0) {
+    };  // wait for conversion
+    ADC1->ISC = status;          /* clear the asserted interrupts */
+    switch (adcDataPtr->state) {
+        case INDEX_0: {
+            // pack the fist data
+            adcDataPtr->soundBuff[adcDataPtr->idx++] = (ADC1->SSFIFO3);
+            adcDataPtr->state = PACKING;
+            break;
+        }
+        case PACKING: {
+            if (adcDataPtr->idx != SAMPLE_LENGTH) {
+                // pack the all the data
+                adcDataPtr->soundBuff[adcDataPtr->idx++] = (ADC1->SSFIFO3);
 
-    ADC1->ISC |= (1U << 3);  // clear interrupt flag
+            } else {
+                
+                SoundEvt *micData = Q_NEW_FROM_ISR(SoundEvt, NEW_TEMP_DATA_SIG);
+                for (int i = 0; i < SAMPLE_LENGTH; i++) {
+                    micData->soundBuf[i] = adcDataPtr->soundBuff[i];
+                }
+                adcDataPtr->idx = 0;
+                adcDataPtr->state = INDEX_0;
+                QACTIVE_POST_FROM_ISR(AO_Heartbeat,
+                                      (QEvt *)micData,
+                                      &xHigherPriorityTaskWoken,
+                                      &ADCSeq3_IRQHandler);
+            }
 
-    TempEvt *reading = Q_NEW_FROM_ISR(TempEvt, NEW_TEMP_DATA_SIG);
-    // read adc coversion result from SS3 FIFO and convert to °C using
-    // Temp = 147.5 – ((75 × Vref(+) – Vref(–)) × ADC_output)) / 4096. tm4c vref == 3.3v
-    //
-    // reading->temp = 147 - ((247 * ADC0->SSFIFO3) / 4096);
-    reading->temp = (ADC1->SSFIFO3 >> 2);
-    QACTIVE_POST_FROM_ISR(AO_Heartbeat,
-                          (QEvt *)reading,
-                          &xHigherPriorityTaskWoken,
-                          &ADCSeq3_IRQHandler);
+            break;
+        }
 
-    /* the usual end of FreeRTOS ISR... */
+        default:
+            break;
+    }
+
+    /* let FreeRTOS determine if context switch is needed...  */
     portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
 

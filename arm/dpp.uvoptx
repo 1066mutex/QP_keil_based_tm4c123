@@ -119,10 +119,6 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
-          <Key>DLGUARM</Key>
-        </SetRegEntry>
-        <SetRegEntry>
-          <Number>0</Number>
           <Key>ARMRTXEVENTFLAGS</Key>
           <Name>-L70 -Z18 -C0 -M0 -T1</Name>
         </SetRegEntry>
@@ -151,9 +147,25 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>2070</LineNumber>
+          <LineNumber>275</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>14780</Address>
+          <Address>5686</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\blinky.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\dpp\../blinky.c\275</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>1387</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>1462</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -162,7 +174,23 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\bsp.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\dpp\../bsp.c\2070</Expression>
+          <Expression>\\dpp\../bsp.c\1387</Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
+          <LineNumber>435</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>7908</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>C:\Users\Itai\Documents\Embedded_New\QM_projects\keil_V\qpc\ports\freertos\qf_port.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\dpp\C:/Users/Itai/Documents/Embedded_New/QM_projects/keil_V/qpc/ports/freertos/qf_port.c\435</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -222,6 +250,21 @@
           <count>2</count>
           <WinNumber>2</WinNumber>
           <ItemText>messBuff[20]</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>current</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>swArray</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>current1</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

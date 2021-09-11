@@ -89,8 +89,8 @@ static QState Heartbeat_initial(Heartbeat* const me, QEvt const* const e){
     QActive_subscribe(&me->super, BUTTON3_PRESSED_SIG);
 
     BSP_ledRedOff();
-    BSP_LCD_Init(); // TODO: move to bsp_init()
-    BSP_BP_Joystick_Init();  // TODO: move to bsp_init()
+   // BSP_LCD_Init(); // TODO: move to bsp_init()
+   // BSP_BP_Joystick_Init();  // TODO: move to bsp_init()
     // TODO: make display objects with parameters for strings, location, colour etc.
     //       don't have to use magic numbers.
     BSP_LCD_DrawString(0, 4, "SysTemp:", LCD_YELLOW);
@@ -138,17 +138,16 @@ static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
             break;
         }
         case BUTTON3_PRESSED_SIG: {
-            UART1_OutString(me->urtFrame);
+            UART0_OutString("BTN3");
 
             me->urtIdx = 0;
-            BSP_LCD_DrawString(9, 10, me->urtFrame, LCD_CYAN);
-            memset(me->urtFrame,1,strlen(me->urtFrame));
+            BSP_LCD_DrawString(9, 10, "BTN3", LCD_CYAN);
+            //memset(me->urtFrame,1,strlen(me->urtFrame));
             status_ = Q_HANDLED();
             break;
         }
-        case SHOW_UART_DATA_SIG: {
-         
-         
+        case BUTTON4_PRESSED_SIG: {
+            UART0_OutString("BTN4");
             status_ = Q_HANDLED();
             break;
         }
@@ -176,7 +175,7 @@ static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
             // }
             //BSP_Microphone_Input(&me->sound);
             BSP_LCD_SetCursor(3, 3);
-            BSP_LCD_OutUDec4(Q_EVT_CAST(TempEvt)->temp, LCD_GREEN);  // mic data
+            BSP_LCD_OutUDec4(Q_EVT_CAST(SoundEvt)->soundBuf[0], LCD_GREEN);  // mic data
 
             status_ = Q_HANDLED();
 

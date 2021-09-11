@@ -75,10 +75,10 @@ typedef struct {
 typedef struct{
 /* protected: */
     QEvt super;
-
 /* public: */
+   int16_t soundBuf[128];
     uint32_t temp;
-} TempEvt;
+} SoundEvt;
 /* Events UartEvt========================================================= */
 
 typedef struct {
