@@ -39,6 +39,7 @@
 #include "ports.h"
 #include "profile.h"
 #include <stdint.h>
+//#include "arm_math.h"
 
 #include "TM4C123GH6PM.h" /* the device specific header (TI) */
 #include "UART0.h"        //! used for testing uart device
@@ -165,7 +166,7 @@ void UART1_IRQHandler(void);
 void ADC1Seq3_IRQHandler(void);
 
 /**
- * UART1 ISR handler.
+ * @brief UART1 ISR handler.
  * collects all received characters from the Uart FIFO buffer into a  
  * single event object and then post it to the BLE handler active object 
  * for processing.
@@ -187,7 +188,7 @@ void UART1_IRQHandler(void) {
     }
     Q_ASSERT(evt->len < UART1_FIFO_LEN);  // did'nt get  all the data.
 
-    QACTIVE_POST_FROM_ISR(AO_BLE_uart,
+    QACTIVE_POST_FROM_ISR(AO_Bluetooth,
                           &evt->super,
                           &xHigherPriorityTaskWoken,
                           &UART1_IRQHandler);
@@ -229,7 +230,7 @@ void UART1_IRQHandler(void) {
  */
 typedef struct {
     int16_t soundBuff[SAMPLE_LENGTH];
-    uint8_t idx;
+    uint16_t idx;
     enum state { INDEX_0,
                  PACKING } state;
 } adcIsr;
@@ -242,6 +243,7 @@ adcIsr adcData;
  * then post it to the microphone handler active object for processing
  */
 void ADC1Seq3_IRQHandler(void) {
+    
     adcIsr *adcDataPtr = &adcData;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     uint32_t status = ADC1->RIS; // get the raw interrupt status 
@@ -251,16 +253,16 @@ void ADC1Seq3_IRQHandler(void) {
     switch (adcDataPtr->state) {
         case INDEX_0: {
             // pack the first data
-            // 
-            adcDataPtr->soundBuff[adcDataPtr->idx++] = (ADC1->SSFIFO3);
+            //
+            adcDataPtr->soundBuff[adcDataPtr->idx++] = ((uint16_t)ADC1->SSFIFO3) - (uint16_t)(2048);  // (>> 1) divide by 2
             adcDataPtr->state = PACKING;
             break;
         }
-        case PACKING: {
+        case PACKING: { // pack the rest of the data
             if (adcDataPtr->idx != SAMPLE_LENGTH) {
                 // pack the all the data
-                // 
-            adcDataPtr->soundBuff[adcDataPtr->idx++] = (ADC1->SSFIFO3);
+                //
+                adcDataPtr->soundBuff[adcDataPtr->idx++] = ((uint16_t)ADC1->SSFIFO3) - (uint16_t)(2048);
 
             } else if (adcDataPtr->idx == SAMPLE_LENGTH) {
                 RawSoundEvt *micData = Q_NEW_FROM_ISR(RawSoundEvt, NEW_SOUND_DATA_SIG);
@@ -271,7 +273,7 @@ void ADC1Seq3_IRQHandler(void) {
                 adcDataPtr->state = INDEX_0;
                 // packing is finised, post data to AO
                 // 
-                QACTIVE_POST_FROM_ISR(AO_UI,
+                QACTIVE_POST_FROM_ISR(AO_soundSensor,
                                       (QEvt *)micData,
                                       &xHigherPriorityTaskWoken,
                                       &ADCSeq3_IRQHandler);
@@ -286,6 +288,7 @@ void ADC1Seq3_IRQHandler(void) {
 
     /* let FreeRTOS determine if context switch is needed...  */
     portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+   
 }
 
 #ifdef Q_SPY
@@ -413,7 +416,7 @@ void BSP_init(void) {
 
     /* enable clock for to the peripherals used by this application... */
     /* enable Run mode for GPIOD, GPIOF */
-    SYSCTL->RCGCGPIO |= PORTD | PORTF;
+    SYSCTL->RCGCGPIO |= PORTD | PORTF | PORTB;
 
     /* configure the LEDs and push buttons */
     LEDS_PORT->DIR |= (LED_RED | LED_GREEN | LED_BLUE); /* set as output */
@@ -425,6 +428,11 @@ void BSP_init(void) {
     /* configure the User Switches on tm4c123 board */
     LEDS_PORT->DIR &= ~(BTN_SW1 | BTN_SW2); /*  set direction: input */
     ROM_GPIOPadConfigSet(GPIOF_BASE, (BTN_SW1 | BTN_SW2),
+                         GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
+   
+    /* configure the input for bluetooth status pin HM-10 module*/
+    BLE_STATUS_PORT->DIR &= ~(BLE_STATE_PIN); /*  set direction: input */
+    ROM_GPIOPadConfigSet(GPIOB_BASE, (BLE_STATE_PIN),
                          GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPU);
 
     /* booster pack User Switches initialization */
@@ -548,6 +556,18 @@ void BSP_BP_TFT_DC_DATA(void) {
     BP_LCD_RS_PORT->DATA_Bits[BP_LCD_RS_PIN] = BP_LCD_RS_PIN;
 }
 //...........................................................................
+/**
+ * @brief BSP_BLE_SATE
+ * checks the status of the pin connected to the bluetooth device.
+ * 
+ * @return uint8_t 
+ *         1 == ble is connected to external device
+ *         0 == no device connected
+ */
+uint8_t BSP_BLE_SATE(void) {
+   return BLE_STATUS_PORT->DATA_Bits[BLE_STATE_PIN] ;
+}
+//...........................................................................
 
 // TODO: will not need this but a good example on toggling leds as display.
 void BSP_displayPhilStat(uint8_t n, char const *stat) {
@@ -619,7 +639,7 @@ void QF_onStartup(void) {
     NVIC_SetPriority(GPIOA_IRQn, GPIOA_PRIO);
     NVIC_SetPriority(ADC1SS3_IRQn, ADC1SS3_PRIO);
     NVIC_SetPriority(UART1_IRQn, UART1_PRIO);
-    NVIC_SetPriority(UART0_IRQn, UART0_PRIO);
+
     /* ... */
 
     /* enable IRQs... */
@@ -649,7 +669,7 @@ void Q_onAssert(char const *module, int loc) {
     /* light up all LEDs */
     GPIOF->DATA_Bits[LED_GREEN | LED_RED | LED_BLUE] = 0xFFU;
     /* for debugging, hang on in an endless loop toggling the RED LED... */
-    while (GPIOF->DATA_Bits[BTN_SW1] != 0) {
+    while (GPIOF->DATA_Bits[BTN_SW1] != 1) {
         GPIOF->DATA = LED_RED;
         GPIOF->DATA = 0U;
     }
@@ -876,7 +896,7 @@ void BSP_BP_BuzzerIO_Init(uint16_t duty) {
     if (duty > 1023) {
         return;  // invalid input
     }
-    // ***************** Timer1A initialization *****************
+    // ***************** pwm1 initialization *****************
     SYSCTL->RCGCGPIO |= 0x0020;  // !activate clock for Port F DONE
     while ((SYSCTL->PRGPIO & 0x20) == 0) {
     };                     // allow time for clock to stabilize
@@ -886,7 +906,7 @@ void BSP_BP_BuzzerIO_Init(uint16_t duty) {
     GPIOF->PCTL = (GPIOF->PCTL & 0xFFFFF0FF) + 0x00000500;
     GPIOF->AMSEL &= ~0x04;  // disable analog functionality on PF2
 
-    SYSCTL->RCGCPWM |= 0x02;  // activate clock for Timer1
+    SYSCTL->RCGCPWM |= 0x02;  // activate clock for pwm
     while ((SYSCTL->PRPWM & 0x02) == 0) {
     };  // allow time for clock to stabilize
 
@@ -1151,30 +1171,41 @@ uint8_t BSP_BP_SPIwritedata(uint8_t c) {
 }
 
 //! delay function required for initialisation of LCD display.
+//BUG: not sure if this will work with the arm none eabi gcc compiler!
+// try the TI compiler version
 
 // delay function from sysctl.c
 // which delays 3.3*ulCount cycles
 // ulCount=23746 => 1ms = 23746*3.3cycle/loop/80,000
+
+//Code Composer Studio Code
+// void parrotdelay(uint32_t ulCount) {
+//     __asm(
+//         "    subs    r0, #1\n"
+//         "    bne     parrotdelay\n"
+//         "    bx      lr\n");
+// }
+// delay function from sysctl.c
+// which delays 3.3*ulCount cycles
+// ulCount=23746 => 1ms = 23746*3.3cycle/loop/80,000
 #ifdef __TI_COMPILER_VERSION__
-  //Code Composer Studio Code
-  void parrotdelay(uint32_t ulCount){
-  __asm (  "    subs    r0, #1\n"
-      "    bne     Delay\n"
-      "    bx      lr\n");
+//Code Composer Studio Code
+void parrotdelay(uint32_t ulCount) {
+    __asm(
+        "    subs    r0, #1\n"
+        "    bne     Delay\n"
+        "    bx      lr\n");
 }
 
 #else
-  //Keil uVision Code
-  __asm void
-  parrotdelay(uint32_t ulCount)
-  {
-    subs    r0, #1
-    bne     parrotdelay
-    bx      lr
-  }
+//Keil uVision Code
+__asm void
+parrotdelay(uint32_t ulCount) {
+    subs r0, #1 bne parrotdelay
+                 bx lr
+}
 
 #endif
-
 // ------------BSP_Delay1ms------------
 // Simple delay function which delays about n
 // milliseconds.
@@ -1364,7 +1395,7 @@ void BSP_SystemTempGet(void) {
 // Initialize three ADC pins, which correspond with
 // 4x hardware oversampling
 // BoosterPack pins J3.23 (X) (PD0/AIN7), J3.24 (Y) (PD1/AIN6), and
-// J3.25 (Y) (PD2/AIN5).
+// J3.25 (Z) (PD2/AIN5).
 // Input: none
 // Output: none
 void BSP_Accelerometer_Init(void) {
@@ -1382,7 +1413,7 @@ void BSP_Accelerometer_Init(void) {
     ADC0->ACTSS &= ~0x0004;  // 10) disable sample sequencer 2
     ADC0->EMUX &= ~0x0F00;   // 11) seq2 is software trigger
     ADC0->SSMUX2 = 0x0567;   // 12) set channels for SS2
-    ADC0->SAC = 0x05;        // 13) Sample Averaging 0x02==4x hardware oversampling
+    ADC0->SAC = 0x03;        // 13) Sample Averaging 0x02==4x hardware oversampling
     ADC0->SSCTL2 = 0x0600;   // 14) no D0 END0 IE0 TS0 D1 END1 IE1 TS1 D2 TS2, yes IE2 END2
     ADC0->IM &= ~0x0004;     // 15) disable SS2 interrupts
     ADC0->ACTSS |= 0x0004;   // 16) enable sample sequencer 2
@@ -1453,13 +1484,17 @@ void BSP_Microphone_Init(void) {
     GPIOE->DEN &= ~0x20;     // 7) enable analog functionality on PE5
     l_adcinit1();            // 8-9) general ADC initialization
     ADC1->ACTSS &= ~0x0008;  // 10) disable sample sequencer 3
-    ADC1->EMUX &= ~0xF000;   // 11) seq3 is software trigger
+    ADC1->EMUX &= ~0xF000;   // 11) clear seq3 trigger
+    ADC1->EMUX |= 0x6000;   // 11) seq3 is PWM gen 0 triggered
     ADC1->SSMUX3 = 0x0008;   // 12) set channels for SS3
     ADC1->SSCTL3 = 0x0006;   // 13) no D0 TS0, yes IE0 END0
+    ADC1->TSSEL |= 0x6000;    // 14) PWM gen 3 Trigger Source
     //ADC1->SAC |= 0x6;        // 14) 4x hardware oversampling
     //ADC1->PP |= 0x00300000;  // 14) Resolution 0x30 0000==12-bit
     ADC1->IM |= 0x0008;     // 15) enable SS3 interrupts
     ADC1->ACTSS |= 0x0008;  // 16) enable sample sequencer 3
+// initialize pwm0 for triggering
+    BSP_ADC_PWM_Init();
 }
 
 // TODO: documentation as a polling/blocking call
@@ -2006,6 +2041,7 @@ void UART0_InString(char *bufPt, uint16_t max) {
     }
     *bufPt = 0;
 }
+/* End UART0_InString ============================================================================*/
 
 /**
  * @brief Switch debouncing.
@@ -2092,4 +2128,73 @@ static void l_switchDebounce(void) {
             QF_PUBLISH_FROM_ISR(&jstBtnDprsEvt, &xHigherPriorityTaskWoken, &l_TickHook);
         }
     }
+}
+/* End l_switchDebounce =====================================================================*/
+
+
+// DMA configuration ===============================================================
+// pingpog mode
+// sample length of 512 or start with 128
+// 16 bit
+// Two data arrays
+
+// ADC PWM configuration ===========================================
+// select pwm channel
+// 500ms 10% duty cycle.
+
+
+void BSP_ADC_PWM_Init(void) {
+    
+    SYSCTL->RCGCPWM |= 0x01;  // activate clock for pwm
+    while ((SYSCTL->PRPWM & 0x01) == 0) {
+    };  // allow time for clock to stabilize
+
+    //M1PWM6------------------
+    SYSCTL->RCC |= (0x00100000);  /* Enable System Clock Divisor function  */
+    SYSCTL->RCC &= ~(0x000E0000); /* clear divide  */
+    SYSCTL->RCC |= (0x00060000);  /* divide sysclk by 0002 0000 /2. 6 0000 /4. */
+    // update the pwm clock freq divider used.
+  
+    PWM0->_0_CTL = 0;           // Disable Generator 0 counter
+    PWM0->_0_CTL &= ~(1 << 1);  // select down count mode of counter 1
+    // cont0ols when the output is enable and disabled according to Reload and CMPA values
+    PWM0->_0_GENA |= (0x000000C0 | 0x00000008); /* Set PWM output when counter matches PWMCMPA clear on reload*/
+    PWM0->_0_LOAD = 3125U;                      // set load value for 50Hz 16MHz/65 = 250kHz and (250KHz/5000)
+    PWM0->_0_INTEN = 0x0A00;                    // Trigger ADC when counter matches CMPA
+    //P0M1->_0_CMPA = 265; 10% duty register not configured, pwm output stays at 0.
+    PWM0->_0_CTL |= 0x01;      // Enable Generator 3 counter
+    PWM0->ENABLE |= (1U << 6); /* Enable PWM1 channel 0 output */
+}
+// start pwm trigger for ADC1
+void BSP_ADC_PWM_Start(void){
+    PWM0->_0_CMPA = 1562;  // 10 % duty 
+}
+
+
+//! helper function to be moved to own file
+uint8_t friden_sqrt(uint32_t val) {
+    uint32_t rem = 0;
+    uint32_t root = 0;
+    for (int i = 0; i < 16; i++) {
+        root <<= 1;
+        rem = ((rem << 2) + (val >> 30));
+        val <<= 2;
+        root++;
+        if (root <= rem) {
+            rem -= root;
+            root++;
+        } else
+            root--;
+    }
+    return (uint8_t)(root >> 1);
+}
+
+uint32_t sqrt32(uint32_t s) {
+    uint32_t t;             // t*t will become s
+    int n;                  // loop counter
+    t = s / 16 + 1;         // initial guess
+    for (n = 16; n; --n) {  // will finish
+        t = ((t * t + s) / t) / 2;
+    }
+    return t;
 }

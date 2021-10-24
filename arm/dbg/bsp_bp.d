@@ -1,4 +1,4 @@
-.\dbg\bsp_bp.o: bsp_bp.c
+.\dbg\bsp_bp.o: ..\Booster_pack\bsp_bp.c
 .\dbg\bsp_bp.o: ..\..\qpc\include\qpc.h
 .\dbg\bsp_bp.o: ..\..\qpc\ports\freertos\qf_port.h
 .\dbg\bsp_bp.o: ..\FreeRTOS\Source\include\FreeRTOS.h
@@ -23,4 +23,4 @@
 .\dbg\bsp_bp.o: ..\..\qpc\include\qs_dummy.h
 .\dbg\bsp_bp.o: ..\..\FreeRtos_proj\bsp.h
 .\dbg\bsp_bp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\dbg\bsp_bp.o: bsp_bp.h
+.\dbg\bsp_bp.o: ..\Booster_pack\bsp_bp.h

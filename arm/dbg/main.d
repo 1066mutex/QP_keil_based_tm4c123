@@ -21,6 +21,7 @@
 .\dbg\main.o: ..\..\qpc\include\qpset.h
 .\dbg\main.o: ..\..\qpc\include\qassert.h
 .\dbg\main.o: ..\..\qpc\include\qs_dummy.h
-.\dbg\main.o: ..\dpp.h
+.\dbg\main.o: ..\logger.h
+.\dbg\main.o: ..\defs.h
 .\dbg\main.o: ..\bsp.h
 .\dbg\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

@@ -12,7 +12,7 @@
 
 
 #include "qpc.h"
-#include "dpp.h"
+#include "logger.h"
 #include "bsp.h"
 #include "bsp_bp.h"
 
@@ -25,14 +25,15 @@ typedef struct
     QActive super;
     // private
 QTimeEvt timeEvt;
+QTimeEvt timeEvt_hb;
 uint16_t heartbeat_time;
 uint16_t buzzer_freq;
 uint16_t joystickAxis0;
 uint16_t joystickAxis1;
-uint16_t accelaAxisX;
+int16_t accelaAxisX;
 uint16_t accelaAxisY;
 uint16_t accelaAxisZ;
-uint16_t sound;
+int32_t sound;
 uint8_t tempAvg[2];
 uint8_t tempAvgInx;
 uint16_t urtCharToInt;
@@ -67,6 +68,7 @@ void Heartbeat_ctor(void){
     // 
     QActive_ctor(&me->super, Q_STATE_CAST(&Heartbeat_initial));
     QTimeEvt_ctorX(&me->timeEvt, &me->super, TIMEOUT1_SIG, 0U);
+    //QTimeEvt_ctorX(&me->timeEvt, &me->super, TIMEOUT_HEARTBEAT_SIG, 0U);
 }
 
 static QState Heartbeat_initial(Heartbeat* const me, QEvt const* const e){
@@ -86,13 +88,12 @@ static QState Heartbeat_initial(Heartbeat* const me, QEvt const* const e){
     QActive_subscribe(&me->super, BUTTON4_DEPRESSED_SIG);
     QActive_subscribe(&me->super, BUTTON4_PRESSED_SIG);
     QActive_subscribe(&me->super, JOYSTICK_PRESSED_SIG);
+    QActive_subscribe(&me->super, JOYSTICK_DEPRESSED_SIG);
     QActive_subscribe(&me->super, BUTTON3_PRESSED_SIG);
 
-    BSP_ledRedOff();
-   // BSP_LCD_Init(); // TODO: move to bsp_init()
-   // BSP_BP_Joystick_Init();  // TODO: move to bsp_init()
+
     // TODO: make display objects with parameters for strings, location, colour etc.
-    //       don't have to use magic numbers.
+    //       don't have to use magic numbers. place in defs.h
     BSP_LCD_DrawString(0, 4, "SysTemp:", LCD_YELLOW);
     BSP_LCD_DrawString(0, 5, "Acc x:", LCD_ORANGE);
     BSP_LCD_DrawString(0, 6, "Acc y:", LCD_ORANGE);
@@ -101,6 +102,8 @@ static QState Heartbeat_initial(Heartbeat* const me, QEvt const* const e){
     me->buzzer_freq = 10;
     me->urtIdx = 0 ;
     me->urtFrameState = WAITING;    // uart frame state machine start state.
+            /* arm the time event to expire in half a second and every half second */
+            QTimeEvt_armX(&me->timeEvt, BSP_TICKS_PER_SEC / 2U, BSP_TICKS_PER_SEC / 50U);
     return Q_TRAN(&Heartbeat_off);  //*go to off (1)
 }
 static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
@@ -111,8 +114,6 @@ static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
     switch (e->sig) {
 
         case Q_ENTRY_SIG: {
-            /* arm the time event to expire in half a second and every half second */
-            QTimeEvt_armX(&me->timeEvt, BSP_TICKS_PER_SEC / 2U, BSP_TICKS_PER_SEC / 16U);
             //! the timer will expire once for the first value, then use the second value
             //! continuously
            //BSP_Microphone_Get();
@@ -122,7 +123,7 @@ static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
         
         case Q_EXIT_SIG: {
             // dis-arm timer
-            QTimeEvt_disarm(&me->timeEvt);
+           // QTimeEvt_disarm(&me->timeEvt);
             //BSP_BP_LedBlueOff();
             BSP_BP_LedBlueDuty(0);
             status_ = Q_HANDLED();
@@ -157,14 +158,14 @@ static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
             break;
         }
         case JOYSTICK_PRESSED_SIG: {
-            BSP_BP_Buzzer_Freq(0.00033);
+             BSP_BP_Buzzer_Freq(0.00033);
             status_ = Q_TRAN(&Heartbeat_stop);
             break;
         }
-        case NEW_TEMP_DATA_SIG: {
+        case NEW_SOUND_DATA_SIG: {
             // average
             // if (me->tempAvgInx < 2){
-            //     me->tempAvg[me->tempAvgInx] = Q_EVT_CAST(TempEvt)->temp;
+            //     me->tempAvg[me->tempAvgInx] = Q_EVT_CAST(RawSoundEvt)->temp;
             //     me->tempAvgInx++;
             // }else{
 
@@ -174,8 +175,11 @@ static QState Heartbeat_start(Heartbeat* const me, QEvt const* const e){
 
             // }
             //BSP_Microphone_Input(&me->sound);
+            me->sound = Q_EVT_CAST(RawSoundEvt)->sound;
+            UART0_OutUDec(Q_EVT_CAST(RawSoundEvt)->sound);  // mic data
+            UART0_OutString("\r\n");
             BSP_LCD_SetCursor(3, 3);
-            BSP_LCD_OutUDec4(Q_EVT_CAST(SoundEvt)->soundBuf[0], LCD_GREEN);  // mic data
+            BSP_LCD_OutUDec4(Q_EVT_CAST(RawSoundEvt)->sound, LCD_GREEN);  // mic data
 
             status_ = Q_HANDLED();
 
@@ -226,7 +230,7 @@ static QState Heartbeat_on(Heartbeat* const me, QEvt const* const e){
 
             BSP_Accelerometer_Input(&me->accelaAxisX, &me->accelaAxisY, &me->accelaAxisZ);
             BSP_LCD_SetCursor(6, 5);
-            BSP_LCD_OutUDec4(me->accelaAxisX, LCD_RED);
+            BSP_LCD_OutUDec4(((me->accelaAxisX)-519)*100/196, LCD_RED);
             BSP_LCD_SetCursor(6, 6);
             BSP_LCD_OutUDec4(me->accelaAxisY, LCD_BLUE);
             BSP_LCD_SetCursor(6, 7);

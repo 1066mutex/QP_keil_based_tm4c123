@@ -21,10 +21,11 @@
 .\dbg\bsp.o: ..\..\qpc\include\qpset.h
 .\dbg\bsp.o: ..\..\qpc\include\qassert.h
 .\dbg\bsp.o: ..\..\qpc\include\qs_dummy.h
+.\dbg\bsp.o: ..\defs.h
 .\dbg\bsp.o: ..\bsp.h
 .\dbg\bsp.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
-.\dbg\bsp.o: ..\dpp.h
-.\dbg\bsp.o: ..\arm\bsp_bp.h
+.\dbg\bsp.o: ..\logger.h
+.\dbg\bsp.o: ..\Booster_pack\bsp_bp.h
 .\dbg\bsp.o: ..\ports.h
 .\dbg\bsp.o: ..\profile.h
 .\dbg\bsp.o: ..\ek-tm4c123gxl\TM4C123GH6PM.h

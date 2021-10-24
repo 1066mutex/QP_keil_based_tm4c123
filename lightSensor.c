@@ -1,9 +1,9 @@
 
 #include "qpc.h"
-#include "dpp.h"
 #include "bsp.h"
+#include "logger.h"
 #include "bsp_bp.h"
-#include "profile.h"
+#include "profile.h" // TODO: not sure if this is necessary remove and test build
 
 /* Active object class  ############################################*/
 
@@ -13,7 +13,7 @@ typedef struct SensorTag {    /* the Sensor active object */
 
     QTimeEvt timeEvt;         /* private time event generator */
     uint16_t lightSensorPollingRate;         /* private light sensor polling rate */
-    uint32_t lightData;         /* private light sensor measurement */
+    uint32_t lightData;         /* private light sensor measurements */
   
 } Sensor;
 
@@ -150,7 +150,7 @@ QState Sensor_busy(Sensor * const me, QEvt const * const e) {
         // send processed data to blinky to be displayed.
         OPT3001Evt *ltData = Q_NEW(OPT3001Evt, NEW_LIGHT_DATA_SIG);
         ltData->lightData = me->lightData/100;
-        QACTIVE_POST(AO_Heartbeat, &ltData->super, me); 
+        QACTIVE_POST(AO_UI, &ltData->super, me);
         status = Q_TRAN(&Sensor_idle);
         break;
         }

@@ -13,7 +13,7 @@
 #include "qpc.h"
 #include "bsp.h"
 #include "bsp_bp.h"
-#include "dpp.h"
+#include "logger.h"
 
 /* Active object class  ############################################*/
 
